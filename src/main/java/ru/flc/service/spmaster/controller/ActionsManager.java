@@ -5,28 +5,66 @@ import org.dav.service.view.Title;
 import ru.flc.service.spmaster.util.AppConstants;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
 
 public class ActionsManager
 {
 	private AbstractAction connectDbAction;
 	private AbstractAction disconnectDbAction;
 	private AbstractAction execSpAction;
-	private AbstractAction settingsAction;
-	private AbstractAction helpAction;
+	private AbstractAction showSettingsAction;
+	private AbstractAction showHelpAction;
 
-	private ActionProcessor processor;
+	private Controller controller;
 	private ResourceManager resourceManager;
 
-	public ActionsManager(ActionProcessor processor, ResourceManager resourceManager)
+	public ActionsManager(Controller controller, ResourceManager resourceManager)
 	{
-		this.processor = processor;
+		this.controller = controller;
 		this.resourceManager = resourceManager;
-
-		initActions();
 	}
 
 	private void initActions()
 	{
+		connectDbAction = new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				controller.connectToDatabase();
+			}
+		};
+
+		disconnectDbAction = new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				controller.disconnectFromDatabase();
+			}
+		};
+
+		execSpAction = new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				controller.execStoredProcedure();
+			}
+		};
+
+		showSettingsAction = new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				controller.showSettings();
+			}
+		};
+
+		showHelpAction = new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				controller.showHelp();
+			}
+		};
 
 		resetActions();
 	}
@@ -48,12 +86,12 @@ public class ActionsManager
 				new Title(resourceManager, AppConstants.KEY_ACTION_EXECSP_DESCR).getText(),
 				AppConstants.ICON_NAME_EXECUTE);
 
-		resetAction(settingsAction,
+		resetAction(showSettingsAction,
 				new Title(resourceManager, AppConstants.KEY_ACTION_SHOW_SETTINGS).getText(),
 				new Title(resourceManager, AppConstants.KEY_ACTION_SHOW_SETTINGS_DESCR).getText(),
 				AppConstants.ICON_NAME_SETTINGS);
 
-		resetAction(helpAction,
+		resetAction(showHelpAction,
 				new Title(resourceManager, AppConstants.KEY_ACTION_SHOW_HELP).getText(),
 				new Title(resourceManager, AppConstants.KEY_ACTION_SHOW_HELP_DESCR).getText(),
 				AppConstants.ICON_NAME_QUESTION);
@@ -74,14 +112,14 @@ public class ActionsManager
 		return execSpAction;
 	}
 
-	public AbstractAction getSettingsAction()
+	public AbstractAction getShowSettingsAction()
 	{
-		return settingsAction;
+		return showSettingsAction;
 	}
 
-	public AbstractAction getAboutAction()
+	public AbstractAction getShowHelpAction()
 	{
-		return helpAction;
+		return showHelpAction;
 	}
 
 	private void resetAction(AbstractAction action,

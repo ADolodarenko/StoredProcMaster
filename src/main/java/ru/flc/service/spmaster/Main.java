@@ -2,7 +2,11 @@ package ru.flc.service.spmaster;
 
 import org.dav.service.filesystem.FileSystem;
 import org.dav.service.log.LogUtil;
+import ru.flc.service.spmaster.controller.Controller;
+import ru.flc.service.spmaster.model.data.DatabaseModel;
+import ru.flc.service.spmaster.model.settings.AppSettingsModel;
 import ru.flc.service.spmaster.util.AppConstants;
+import ru.flc.service.spmaster.util.AppResourceManager;
 import ru.flc.service.spmaster.view.MainFrame;
 
 import javax.swing.*;
@@ -14,7 +18,11 @@ public class Main
 	{
 		setLogger();
 
-		EventQueue.invokeLater(() -> runGUI());
+		Controller controller = new Controller();
+		controller.setDataModel(new DatabaseModel());
+		controller.setSettingsModel(new AppSettingsModel(AppResourceManager.getInstance()));
+
+		EventQueue.invokeLater(() -> runGUI(controller));
 	}
 
 	private static void setLogger()
@@ -46,11 +54,11 @@ public class Main
 		}
 	}
 
-	private static void runGUI()
+	private static void runGUI(Controller controller)
 	{
 		setLookAndFeel();
 
-		JFrame mainFrame = new MainFrame();
+		JFrame mainFrame = new MainFrame(controller);
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.setLocationRelativeTo(null);
 		mainFrame.setVisible(true);
