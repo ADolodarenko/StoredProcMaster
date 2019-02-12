@@ -8,6 +8,8 @@ public class AppConstants
 	public static final String KEY_ACTION_CONNECTDB_DESCR = "ActionConnectDbDescript";
 	public static final String KEY_ACTION_DISCONNECTDB = "ActionDisconnectDb";
 	public static final String KEY_ACTION_DISCONNECTDB_DESCR = "ActionDisconnectDbDescr";
+	public static final String KEY_ACTION_REFRESHSP = "ActionRefreshSpList";
+	public static final String KEY_ACTION_REFRESHSP_DESCR = "ActionRefreshSpListDescr";
 	public static final String KEY_ACTION_EXECSP = "ActionExecuteSp";
 	public static final String KEY_ACTION_EXECSP_DESCR = "ActionExecuteSpDescr";
 	public static final String KEY_ACTION_SHOW_SETTINGS = "ActionShowSettings";
@@ -23,9 +25,10 @@ public class AppConstants
 
 	public static final String ICON_NAME_ABOUT = "hedgehogs.png";
 	public static final String ICON_NAME_MAIN = "fire.png";
-	public static final String ICON_NAME_CONNECTDB = "exec.png";
-	public static final String ICON_NAME_DISCONNECTDB = "exec.png";
-	public static final String ICON_NAME_EXECUTE = "exec.png";
-	public static final String ICON_NAME_SETTINGS = "settings.png";
-	public static final String ICON_NAME_QUESTION = "question.png";
+	public static final String ICON_NAME_CONNECTDB = "y_db_connect.png";
+	public static final String ICON_NAME_DISCONNECTDB = "y_db_disconnect.png";
+	public static final String ICON_NAME_REFRESH = "y_refresh.png";
+	public static final String ICON_NAME_EXECUTE = "y_exec.png";
+	public static final String ICON_NAME_SETTINGS = "y_settings.png";
+	public static final String ICON_NAME_QUESTION = "y_question.png";
 }

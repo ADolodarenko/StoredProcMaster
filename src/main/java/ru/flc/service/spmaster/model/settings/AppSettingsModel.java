@@ -5,13 +5,9 @@ import org.dav.service.settings.Settings;
 import org.dav.service.settings.ViewSettings;
 import org.dav.service.util.ResourceManager;
 
-import java.awt.*;
 
 public class AppSettingsModel implements SettingsModel
 {
-	private static final Dimension MAIN_WIN_PREF_SIZE = new Dimension(600, 400);
-	private static final Dimension MAIN_WIN_MIN_SIZE = new Dimension(600, 400);
-
 	private Exception lastException;
 
 	private ResourceManager resourceManager;
@@ -20,14 +16,17 @@ public class AppSettingsModel implements SettingsModel
 	private ViewSettings viewSettings;
 	private OperationalSettings operationalSettings;
 
+	private ViewConstraints viewConstraints;
+
 	public AppSettingsModel(ResourceManager resourceManager)
 	{
 		this.resourceManager = resourceManager;
 
 		try
 		{
+			viewConstraints = new ViewConstraints();
 			dbSettings = new DatabaseSettings(this.resourceManager);
-			viewSettings = new ViewSettings(this.resourceManager, MAIN_WIN_PREF_SIZE);
+			viewSettings = new ViewSettings(this.resourceManager, viewConstraints.getPreferredSize());
 			operationalSettings = new OperationalSettings(this.resourceManager);
 
 			loadAllSettings();
@@ -80,6 +79,30 @@ public class AppSettingsModel implements SettingsModel
 			{
 				lastException = e;
 			}
+	}
+
+	@Override
+	public ResourceManager getResourceManager()
+	{
+		return resourceManager;
+	}
+
+	@Override
+	public ViewConstraints getViewConstraints()
+	{
+		return viewConstraints;
+	}
+
+	@Override
+	public ViewSettings getViewSettings()
+	{
+		return viewSettings;
+	}
+
+	@Override
+	public void resetCurrentLocale()
+	{
+		resourceManager.setCurrentLocale(viewSettings.getAppLocale());
 	}
 
 	@Override

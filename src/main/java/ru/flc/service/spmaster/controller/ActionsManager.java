@@ -11,6 +11,7 @@ public class ActionsManager
 {
 	private AbstractAction connectDbAction;
 	private AbstractAction disconnectDbAction;
+	private AbstractAction refreshSpListAction;
 	private AbstractAction execSpAction;
 	private AbstractAction showSettingsAction;
 	private AbstractAction showHelpAction;
@@ -22,6 +23,8 @@ public class ActionsManager
 	{
 		this.controller = controller;
 		this.resourceManager = resourceManager;
+
+		initActions();
 	}
 
 	private void initActions()
@@ -39,6 +42,14 @@ public class ActionsManager
 			public void actionPerformed(ActionEvent e)
 			{
 				controller.disconnectFromDatabase();
+			}
+		};
+
+		refreshSpListAction = new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				controller.refreshStoredProcedureList();
 			}
 		};
 
@@ -81,6 +92,11 @@ public class ActionsManager
 				new Title(resourceManager, AppConstants.KEY_ACTION_DISCONNECTDB_DESCR).getText(),
 				AppConstants.ICON_NAME_DISCONNECTDB);
 
+		resetAction(refreshSpListAction,
+				new Title(resourceManager, AppConstants.KEY_ACTION_REFRESHSP).getText(),
+				new Title(resourceManager, AppConstants.KEY_ACTION_REFRESHSP_DESCR).getText(),
+				AppConstants.ICON_NAME_REFRESH);
+
 		resetAction(execSpAction,
 				new Title(resourceManager, AppConstants.KEY_ACTION_EXECSP).getText(),
 				new Title(resourceManager, AppConstants.KEY_ACTION_EXECSP_DESCR).getText(),
@@ -105,6 +121,11 @@ public class ActionsManager
 	public AbstractAction getDisconnectDbAction()
 	{
 		return disconnectDbAction;
+	}
+
+	public AbstractAction getRefreshSpListAction()
+	{
+		return refreshSpListAction;
 	}
 
 	public AbstractAction getExecSpAction()

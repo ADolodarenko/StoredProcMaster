@@ -2,6 +2,8 @@ package ru.flc.service.spmaster;
 
 import org.dav.service.filesystem.FileSystem;
 import org.dav.service.log.LogUtil;
+import org.dav.service.util.ResourceManager;
+import org.dav.service.view.ViewUtils;
 import ru.flc.service.spmaster.controller.Controller;
 import ru.flc.service.spmaster.model.data.DatabaseModel;
 import ru.flc.service.spmaster.model.settings.AppSettingsModel;
@@ -18,9 +20,12 @@ public class Main
 	{
 		setLogger();
 
+		ResourceManager resourceManager = AppResourceManager.getInstance();
+		ViewUtils.resetResourceManager(resourceManager);
+
 		Controller controller = new Controller();
+		controller.setSettingsModel(new AppSettingsModel(resourceManager));
 		controller.setDataModel(new DatabaseModel());
-		controller.setSettingsModel(new AppSettingsModel(AppResourceManager.getInstance()));
 
 		EventQueue.invokeLater(() -> runGUI(controller));
 	}
