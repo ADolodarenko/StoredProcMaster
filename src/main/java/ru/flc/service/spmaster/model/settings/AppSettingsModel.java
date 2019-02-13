@@ -4,6 +4,9 @@ import org.dav.service.settings.DatabaseSettings;
 import org.dav.service.settings.Settings;
 import org.dav.service.settings.ViewSettings;
 import org.dav.service.util.ResourceManager;
+import ru.flc.service.spmaster.view.View;
+
+import javax.swing.*;
 
 
 public class AppSettingsModel implements SettingsModel
@@ -97,6 +100,19 @@ public class AppSettingsModel implements SettingsModel
 	public ViewSettings getViewSettings()
 	{
 		return viewSettings;
+	}
+
+	@Override
+	public void updateViewBounds(View view)
+	{
+		if (view instanceof JFrame)
+		{
+			JFrame viewFrame = (JFrame) view;
+
+			viewSettings.setMainWindowMaximized(viewFrame.getExtendedState() == JFrame.MAXIMIZED_BOTH);
+			viewSettings.setMainWindowPosition(viewFrame.getBounds().getLocation());
+			viewSettings.setMainWindowSize(viewFrame.getSize());
+		}
 	}
 
 	@Override

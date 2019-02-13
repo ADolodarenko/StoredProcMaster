@@ -4,6 +4,7 @@ public class AppConstants
 {
 	private AppConstants(){}
 
+	//Actions
 	public static final String KEY_ACTION_CONNECTDB = "ActionConnectDb";
 	public static final String KEY_ACTION_CONNECTDB_DESCR = "ActionConnectDbDescript";
 	public static final String KEY_ACTION_DISCONNECTDB = "ActionDisconnectDb";
@@ -19,10 +20,18 @@ public class AppConstants
 
 	public static final String KEY_PARAM_SCRIPT_FILE_PATH = "ScriptFilePath";
 
+	//Titles for main frame
+	public static final String KEY_PANEL_PROC_LIST = "PanelStoredProcList";
+	public static final String KEY_PANEL_PROC_TEXT = "PanelStoredProcText";
+	public static final String KEY_PANEL_PROC_RESULT = "PanelStoredProcResult";
+	public static final String KEY_PANEL_LOG = "PanelLog";
+
+	//Names
 	public static final String MESS_LOGGING_PROPERTIES_FILE_NAME = "sp_master_logging.conf";
 	public static final String MESS_CONFIG_FILE_NAME = "sp_master.conf";
 	public static final String MESS_RESOURCE_BUNDLE_NAME = "StoredProcMaster";
 
+	//Images
 	public static final String ICON_NAME_ABOUT = "hedgehogs.png";
 	public static final String ICON_NAME_MAIN = "fire.png";
 	public static final String ICON_NAME_CONNECTDB = "y_db_connect.png";

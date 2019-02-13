@@ -101,6 +101,18 @@ public class Controller
 			view.setActualBounds(settingsModel.getViewSettings());
 	}
 
+	public void updateViewBounds()
+	{
+		if (checkView() && checkSettingsModel())
+			settingsModel.updateViewBounds(view);
+	}
+
+	public void saveAllSettings()
+	{
+		if (checkSettingsModel())
+			settingsModel.saveAllSettings();
+	}
+
 	private boolean checkDataModel()
 	{
 		return dataModel != null;
