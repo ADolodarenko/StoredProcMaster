@@ -16,6 +16,8 @@ import ru.flc.service.spmaster.view.thirdparty.TextLineNumber;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -104,6 +106,8 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 					settings.getMainWindowPosition().y,
 					settings.getMainWindowSize().width,
 					settings.getMainWindowSize().height);
+
+		resetPanelsMinimumSizes();
 	}
 
 	@Override
@@ -194,7 +198,6 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 		procTextPane = new JScrollPane(procTextArea);
 		procTextPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		procTextPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-		procTextPane.setMinimumSize(getProcPaneTextMinimumSize()); //TODO: Has it to be here?
 		procTextPane.setRowHeaderView(lineNumber);
 
 		procTextPanel = getPanelWithBorderLayout(procTextPane, BorderLayout.CENTER,
@@ -208,7 +211,6 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 		procResultPane = new JScrollPane(procResultTable);
 		procResultPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		procResultPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-		procResultPane.setMinimumSize(getLogPaneMinimumSize());
 
 		procResultPanel = getPanelWithBorderLayout(procResultPane, BorderLayout.CENTER,
 				AppConstants.KEY_PANEL_PROC_RESULT,	TitledBorder.TOP, TitledBorder.CENTER);
@@ -221,7 +223,6 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 		logPane = new JScrollPane(logTable);
 		logPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		logPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-		logPane.setMinimumSize(getLogPaneMinimumSize());
 
 		logPanel = getPanelWithBorderLayout(logPane, BorderLayout.CENTER, AppConstants.KEY_PANEL_LOG,
 				TitledBorder.TOP, TitledBorder.CENTER);
@@ -249,24 +250,59 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 		return panel;
 	}
 
-	private Dimension getProcPaneTextMinimumSize()
+	private void resetPanelsMinimumSizes()
 	{
-		return new Dimension(getWidth()/2, getHeight()/2);
+		resetPanelMinimumSize(procListPanel);
+		resetPanelMinimumSize(procTextPanel);
+		resetPanelMinimumSize(procResultPanel);
+		resetPanelMinimumSize(logPanel);
 	}
 
-	private Dimension getLogPaneMinimumSize()
+	private void resetPanelMinimumSize(JPanel panel)
 	{
-		return new Dimension(getWidth(), getHeight()/4);
+		if (panel != null)
+		{
+			Dimension minimumSize = getPanelMinimumSize(panel);
+			panel.setMinimumSize(minimumSize);
+
+			panel.repaint();
+		}
+	}
+
+	private Dimension getPanelMinimumSize(JPanel panel)
+	{
+		if (panel == procListPanel)
+			return new Dimension(getWidth()/4, getHeight()/4);
+		else if (panel == procTextPanel)
+			return new Dimension(getWidth()/4, getHeight()/8);
+		else if (panel == procResultPanel)
+			return new Dimension(getWidth()/4, getHeight()/8);
+		else if (panel == logPanel)
+			return new Dimension(getWidth(), getHeight()/4);
+
+		return null;
 	}
 
 	private void initFrame()
 	{
 		setIconImage(resourceManager.getImageIcon(AppConstants.ICON_NAME_MAIN).getImage());
 
+		setResizingPolicy();
+		setClosingPolicy();
+
 		controller.setViewPreferredBounds();
 		controller.setViewActualBounds();
+	}
 
-		setClosingPolicy();
+	private void setResizingPolicy()
+	{
+		addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentResized(ComponentEvent e)
+			{
+				resetPanelsMinimumSizes();
+			}
+		});
 	}
 
 	private void setClosingPolicy()

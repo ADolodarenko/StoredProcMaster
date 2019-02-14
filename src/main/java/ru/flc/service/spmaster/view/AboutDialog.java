@@ -48,7 +48,7 @@ public class AboutDialog extends JDialog
 		imageLabel.setLayout(new BorderLayout());
 
 		titleLabel = new JLabel(" Stored Procedure Master 1.0.0");
-		titleLabel.setFont(new Font(Font.MONOSPACED, Font.BOLD + Font.ITALIC, 20));
+		titleLabel.setFont(new Font(Font.MONOSPACED, Font.BOLD + Font.ITALIC, 18));
 		titleLabel.setForeground(Color.WHITE);
 		imageLabel.add(titleLabel, BorderLayout.NORTH);
 
