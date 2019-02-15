@@ -1,5 +1,6 @@
 package ru.flc.service.spmaster.view;
 
+import org.dav.service.settings.TransmissiveSettings;
 import org.dav.service.settings.ViewSettings;
 import org.dav.service.util.ResourceManager;
 import org.dav.service.view.Title;
@@ -46,6 +47,10 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	private JTable logTable;
 	private JScrollPane logPane;
 	private JPanel logPanel;
+
+	private JSplitPane oneProcPane;
+	private JSplitPane operationalPane;
+	private JSplitPane generalPane;
 
 	public MainFrame(Controller controller)
 	{
@@ -108,6 +113,27 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 					settings.getMainWindowSize().height);
 
 		resetPanelsMinimumSizes();
+		resetSplitDividers();
+	}
+
+	@Override
+	public void showSettings(TransmissiveSettings[] settingsArray)
+	{
+		if (settingsDialog == null)
+		{
+			try
+			{
+				settingsDialog = new SettingsDialog(this, this, resourceManager, settingsArray);
+				settingsDialog.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+			}
+			catch (Exception e)
+			{
+				log(e);
+			}
+		}
+
+		if (settingsDialog != null)
+			settingsDialog.setVisible(true);
 	}
 
 	@Override
@@ -125,7 +151,7 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	@Override
 	public void reloadSettings()
 	{
-
+		controller.resetCurrentLocale();
 	}
 
 	private void initComponents()
@@ -230,9 +256,9 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 
 	private void initSplitPanels()
 	{
-		JSplitPane oneProcPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, procTextPanel, procResultPanel);
-		JSplitPane operationalPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, procListPanel, oneProcPane);
-		JSplitPane generalPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, operationalPane, logPanel);
+		oneProcPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, procTextPanel, procResultPanel);
+		operationalPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, procListPanel, oneProcPane);
+		generalPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, operationalPane, logPanel);
 
 		add(generalPane, BorderLayout.CENTER);
 	}
@@ -262,8 +288,8 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	{
 		if (panel != null)
 		{
-			Dimension minimumSize = getPanelMinimumSize(panel);
-			panel.setMinimumSize(minimumSize);
+			Dimension size = getPanelMinimumSize(panel);
+			panel.setMinimumSize(size);
 
 			panel.repaint();
 		}
@@ -281,6 +307,13 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 			return new Dimension(getWidth(), getHeight()/4);
 
 		return null;
+	}
+
+	private void resetSplitDividers()
+	{
+		generalPane.setResizeWeight(1);
+		operationalPane.setResizeWeight(0);
+		oneProcPane.setResizeWeight(0.5);
 	}
 
 	private void initFrame()
@@ -301,6 +334,7 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 			public void componentResized(ComponentEvent e)
 			{
 				resetPanelsMinimumSizes();
+				resetSplitDividers();
 			}
 		});
 	}

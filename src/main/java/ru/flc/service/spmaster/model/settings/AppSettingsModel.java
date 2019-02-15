@@ -2,6 +2,7 @@ package ru.flc.service.spmaster.model.settings;
 
 import org.dav.service.settings.DatabaseSettings;
 import org.dav.service.settings.Settings;
+import org.dav.service.settings.TransmissiveSettings;
 import org.dav.service.settings.ViewSettings;
 import org.dav.service.util.ResourceManager;
 import ru.flc.service.spmaster.view.View;
@@ -113,6 +114,12 @@ public class AppSettingsModel implements SettingsModel
 			viewSettings.setMainWindowPosition(viewFrame.getBounds().getLocation());
 			viewSettings.setMainWindowSize(viewFrame.getSize());
 		}
+	}
+
+	@Override
+	public TransmissiveSettings[] getVisibleSettings()
+	{
+		return new TransmissiveSettings[]{dbSettings, viewSettings, operationalSettings};
 	}
 
 	@Override

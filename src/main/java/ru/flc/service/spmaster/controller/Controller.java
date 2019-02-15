@@ -1,5 +1,6 @@
 package ru.flc.service.spmaster.controller;
 
+import org.dav.service.settings.TransmissiveSettings;
 import org.dav.service.util.ResourceManager;
 import ru.flc.service.spmaster.model.data.DataModel;
 import ru.flc.service.spmaster.model.settings.SettingsModel;
@@ -61,8 +62,11 @@ public class Controller
 
 	public void showSettings()
 	{
-		JOptionPane.showMessageDialog(null,
-				"Show application settings.", "Message", JOptionPane.INFORMATION_MESSAGE);
+		if (checkSettingsModel() && checkView())
+		{
+			TransmissiveSettings[] settingsArray = settingsModel.getVisibleSettings();
+			view.showSettings(settingsArray);
+		}
 	}
 
 	public void showHelp()
