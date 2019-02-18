@@ -1,5 +1,6 @@
 package ru.flc.service.spmaster.view;
 
+import org.dav.service.settings.DatabaseSettings;
 import org.dav.service.settings.TransmissiveSettings;
 import org.dav.service.settings.ViewSettings;
 import org.dav.service.util.ResourceManager;
@@ -12,9 +13,11 @@ import ru.flc.service.spmaster.controller.ActionsManager;
 import ru.flc.service.spmaster.controller.Controller;
 import ru.flc.service.spmaster.model.settings.ViewConstraints;
 import ru.flc.service.spmaster.util.AppConstants;
+import ru.flc.service.spmaster.util.AppState;
 import ru.flc.service.spmaster.view.thirdparty.TextLineNumber;
 
 import javax.swing.*;
+import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
@@ -52,6 +55,8 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	private JSplitPane operationalPane;
 	private JSplitPane generalPane;
 
+	private JLabel statusLabel;
+
 	public MainFrame(Controller controller)
 	{
 		this.controller = controller;
@@ -63,6 +68,8 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 
 		initComponents();
 		initFrame();
+
+		controller.changeAppState(AppState.DISCONNECTED);
 	}
 
 	@Override
@@ -137,6 +144,34 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	}
 
 	@Override
+	public void showConnectionStatus(DatabaseSettings settings)
+	{
+		if (settings != null)
+		{
+			titleAdjuster.changeComponentTitle(statusLabel, new Title(resourceManager,
+					AppConstants.KEY_PANEL_STATUS_CONNECTED,
+					settings.getHost(), settings.getUserName(), settings.getCatalog()));
+		}
+		else
+		{
+			titleAdjuster.changeComponentTitle(statusLabel, new Title(resourceManager,
+					AppConstants.KEY_PANEL_STATUS_DISCONNECTED));
+		}
+	}
+
+	@Override
+	public void showException(Exception e)
+	{
+		log(e);
+	}
+
+	@Override
+	public void adjustToAppState()
+	{
+		actionsManager.adjustActionsToAppState();
+	}
+
+	@Override
 	public void log(Exception e)
 	{
 
@@ -168,6 +203,8 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 		initLogPanel();
 
 		initSplitPanels();
+
+		initStatusPanel();
 
 		titleAdjuster.resetComponents();
 
@@ -261,6 +298,24 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 		generalPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, operationalPane, logPanel);
 
 		add(generalPane, BorderLayout.CENTER);
+	}
+
+	private void initStatusPanel()
+	{
+		JPanel statusPanel = new JPanel();
+		statusPanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+		statusPanel.setPreferredSize(new Dimension(getWidth(), 20));
+		statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.X_AXIS));
+
+		statusLabel = new JLabel();
+		statusLabel.setHorizontalAlignment(SwingConstants.LEFT);
+		statusPanel.add(statusLabel);
+
+		titleAdjuster.registerComponent(statusLabel, new Title(resourceManager, AppConstants.KEY_PANEL_STATUS_DISCONNECTED));
+
+		add(statusPanel, BorderLayout.SOUTH);
+
+		showConnectionStatus(null);
 	}
 
 	private JPanel getPanelWithBorderLayout(Component inhabitant, Object constraints,

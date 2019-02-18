@@ -1,5 +1,6 @@
 package ru.flc.service.spmaster.controller;
 
+import org.dav.service.settings.DatabaseSettings;
 import org.dav.service.settings.TransmissiveSettings;
 import org.dav.service.util.ResourceManager;
 import ru.flc.service.spmaster.model.data.DataModel;
@@ -15,11 +16,6 @@ public class Controller
 	private SettingsModel settingsModel;
 	private View view;
 	private AppState appState;
-
-	public Controller()
-	{
-		appState = AppState.DISCONNECTED;
-	}
 
 	public void setDataModel(DataModel dataModel)
 	{
@@ -38,14 +34,44 @@ public class Controller
 
 	public void connectToDatabase()
 	{
-		JOptionPane.showMessageDialog(null,
-				"Connect to database.", "Message", JOptionPane.INFORMATION_MESSAGE);
+		if (checkSettingsModel() && checkDataModel())
+		{
+			DatabaseSettings settings = settingsModel.getDatabaseSettings();
+
+			try
+			{
+				dataModel.connectToDatabase(settings);
+				view.showConnectionStatus(settings);
+
+				changeAppState(AppState.CONNECTED);
+			}
+			catch (Exception e)
+			{
+				view.showException(e);
+				view.showConnectionStatus(null);
+
+				changeAppState(AppState.DISCONNECTED);
+			}
+		}
 	}
 
 	public void disconnectFromDatabase()
 	{
-		JOptionPane.showMessageDialog(null,
-				"Disconnect from database.", "Message", JOptionPane.INFORMATION_MESSAGE);
+		if (checkDataModel())
+		{
+			try
+			{
+				dataModel.disconnectFromDatabase();
+			}
+			catch (Exception e)
+			{
+				view.showException(e);
+			}
+
+			view.showConnectionStatus(null);
+
+			changeAppState(AppState.DISCONNECTED);
+		}
 	}
 
 	public void refreshStoredProcedureList()
@@ -130,5 +156,22 @@ public class Controller
 	private boolean checkView()
 	{
 		return view != null;
+	}
+
+	public void changeAppState(AppState newAppState)
+	{
+		appState = newAppState;
+
+		if (checkView())
+			view.adjustToAppState();
+	}
+
+	public boolean checkAppStates(AppState... desirableStates)
+	{
+		for (AppState state : desirableStates)
+			if (state == appState)
+				return true;
+
+		return false;
 	}
 }

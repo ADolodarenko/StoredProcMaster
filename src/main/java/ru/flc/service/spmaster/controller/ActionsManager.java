@@ -3,6 +3,7 @@ package ru.flc.service.spmaster.controller;
 import org.dav.service.util.ResourceManager;
 import org.dav.service.view.Title;
 import ru.flc.service.spmaster.util.AppConstants;
+import ru.flc.service.spmaster.util.AppState;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -151,5 +152,14 @@ public class ActionsManager
 		action.putValue(Action.NAME, actionName);
 		action.putValue(Action.SHORT_DESCRIPTION, actionShortDescription);
 		action.putValue(Action.SMALL_ICON, resourceManager.getImageIcon(actionIconName));
+	}
+
+	public void adjustActionsToAppState()
+	{
+		connectDbAction.setEnabled(controller.checkAppStates(AppState.DISCONNECTED));
+		disconnectDbAction.setEnabled(controller.checkAppStates(AppState.CONNECTED));
+		refreshSpListAction.setEnabled(controller.checkAppStates(AppState.CONNECTED));
+		execSpAction.setEnabled(controller.checkAppStates(AppState.CONNECTED));
+		showSettingsAction.setEnabled(controller.checkAppStates(AppState.DISCONNECTED));
 	}
 }

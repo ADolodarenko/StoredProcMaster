@@ -104,6 +104,12 @@ public class AppSettingsModel implements SettingsModel
 	}
 
 	@Override
+	public DatabaseSettings getDatabaseSettings()
+	{
+		return dbSettings;
+	}
+
+	@Override
 	public void updateViewBounds(View view)
 	{
 		if (view instanceof JFrame)

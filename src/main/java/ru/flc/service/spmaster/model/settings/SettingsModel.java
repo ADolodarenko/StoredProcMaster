@@ -1,5 +1,6 @@
 package ru.flc.service.spmaster.model.settings;
 
+import org.dav.service.settings.DatabaseSettings;
 import org.dav.service.settings.Settings;
 import org.dav.service.settings.TransmissiveSettings;
 import org.dav.service.settings.ViewSettings;
@@ -17,6 +18,7 @@ public interface SettingsModel
 	void resetCurrentLocale();
 	ViewConstraints getViewConstraints();
 	ViewSettings getViewSettings();
+	DatabaseSettings getDatabaseSettings();
 	void updateViewBounds(View view);
 	TransmissiveSettings[] getVisibleSettings();
 }

@@ -25,6 +25,8 @@ public class AppConstants
 	public static final String KEY_PANEL_PROC_TEXT = "PanelStoredProcText";
 	public static final String KEY_PANEL_PROC_RESULT = "PanelStoredProcResult";
 	public static final String KEY_PANEL_LOG = "PanelLog";
+	public static final String KEY_PANEL_STATUS_CONNECTED = "PanelStatusConnected";
+	public static final String KEY_PANEL_STATUS_DISCONNECTED = "PanelStatusDisconnected";
 
 	//Names
 	public static final String MESS_LOGGING_PROPERTIES_FILE_NAME = "sp_master_logging.conf";
