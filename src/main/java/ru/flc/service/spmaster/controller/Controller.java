@@ -4,11 +4,13 @@ import org.dav.service.settings.DatabaseSettings;
 import org.dav.service.settings.TransmissiveSettings;
 import org.dav.service.util.ResourceManager;
 import ru.flc.service.spmaster.model.data.DataModel;
+import ru.flc.service.spmaster.model.data.entity.StoredProc;
 import ru.flc.service.spmaster.model.settings.SettingsModel;
 import ru.flc.service.spmaster.util.AppState;
 import ru.flc.service.spmaster.view.View;
 
 import javax.swing.*;
+import java.util.List;
 
 public class Controller
 {
@@ -76,8 +78,7 @@ public class Controller
 
 	public void refreshStoredProcedureList()
 	{
-		JOptionPane.showMessageDialog(null,
-				"Refresh the list of stored procedures.", "Message", JOptionPane.INFORMATION_MESSAGE);
+		List<StoredProc> storedProcList = dataModel.get
 	}
 
 	public void execStoredProcedure()

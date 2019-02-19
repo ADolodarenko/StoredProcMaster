@@ -5,11 +5,11 @@ import org.dav.service.settings.DatabaseSettings;
 import org.dav.service.settings.Settings;
 import org.dav.service.settings.type.Password;
 import org.dav.service.util.Constants;
+import ru.flc.service.spmaster.model.data.entity.StoredProc;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.SQLWarning;
+import java.sql.*;
+import java.util.LinkedList;
+import java.util.List;
 
 public class AseDataSource implements DataSource
 {
@@ -37,11 +37,27 @@ public class AseDataSource implements DataSource
 		return builder.toString();
 	}
 
+	private static ResultSet executeStatement(PreparedStatement statement) throws SQLException
+	{
+		ResultSet resultSet = statement.executeQuery();
+
+		return resultSet;
+	}
+
+	private static void transferResultToProcList(ResultSet resultSet, List<StoredProc> storedProcList)
+	{
+		;
+	}
+
 	private String url;
 	private String user;
 	private Password password;
+	private String storedProcListGetterName;
 
 	private Connection connection;
+	private DatabaseMetaData metaData;
+
+	private boolean supportStoredProcedures;
 
 	private AseDataSource(){}
 
@@ -55,6 +71,9 @@ public class AseDataSource implements DataSource
 			throw warning;
 
 		connection.setAutoCommit(false);
+
+		metaData = connection.getMetaData();
+		supportStoredProcedures = metaData.supportsStoredProcedures();
 	}
 
 	@Override
@@ -90,6 +109,38 @@ public class AseDataSource implements DataSource
 		url = buildDatabaseUrl(settings);
 		user = settings.getUserName();
 		password = settings.getPassword();
+	}
+
+	@Override
+	public List<StoredProc> getStoredProcList() throws Exception
+	{
+		if (supportStoredProcedures)
+		{
+			List<StoredProc> resultList = new LinkedList<>();
+
+			connection.setAutoCommit(true);
+
+			try (CallableStatement statement = connection.prepareCall("{call " +
+					storedProcListGetterName + " (?)}"))
+			{
+				statement.setString(1, user);
+
+				ResultSet resultSet = executeStatement(statement);
+				transferResultToProcList(resultSet, resultList);
+
+				return resultList;
+			}
+			catch (SQLException e)
+			{
+				throw e;
+			}
+			finally
+			{
+				connection.setAutoCommit(false);
+			}
+		}
+		else
+			throw new Exception(Constants.EXCPT_DATABASE_WITHOUT_SP_SUPPORT);
 	}
 
 	private static class SingletonHelper
