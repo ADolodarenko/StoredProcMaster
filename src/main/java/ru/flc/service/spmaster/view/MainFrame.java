@@ -11,6 +11,7 @@ import org.dav.service.view.dialog.SettingsDialog;
 import org.dav.service.view.dialog.SettingsDialogInvoker;
 import ru.flc.service.spmaster.controller.ActionsManager;
 import ru.flc.service.spmaster.controller.Controller;
+import ru.flc.service.spmaster.model.data.entity.StoredProc;
 import ru.flc.service.spmaster.model.settings.ViewConstraints;
 import ru.flc.service.spmaster.util.AppConstants;
 import ru.flc.service.spmaster.util.AppState;
@@ -24,6 +25,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.List;
 
 public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 {
@@ -35,7 +37,7 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	private SettingsDialog settingsDialog;
 	private AboutDialog aboutDialog;
 
-	private JList<String> procList;
+	private JList<StoredProc> procList;
 	private JScrollPane procListPane;
 	private JPanel procListPanel;
 
@@ -172,6 +174,12 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	}
 
 	@Override
+	public void showStoredProcList(List<StoredProc> storedProcList)
+	{
+		//TODO: reload the list here; think about my own ListModel
+	}
+
+	@Override
 	public void log(Exception e)
 	{
 
@@ -238,6 +246,7 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	private void initProcListPanel()
 	{
 		procList = new JList<>();
+
 		procList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		procListPane = new JScrollPane(procList);

@@ -78,7 +78,15 @@ public class Controller
 
 	public void refreshStoredProcedureList()
 	{
-		List<StoredProc> storedProcList = dataModel.get
+		try
+		{
+			List<StoredProc> storedProcList = dataModel.getStoredProcList();
+			view.showStoredProcList(storedProcList);
+		}
+		catch (Exception e)
+		{
+			view.showException(e);
+		}
 	}
 
 	public void execStoredProcedure()

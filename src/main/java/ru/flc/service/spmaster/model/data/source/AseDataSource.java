@@ -44,9 +44,17 @@ public class AseDataSource implements DataSource
 		return resultSet;
 	}
 
-	private static void transferResultToProcList(ResultSet resultSet, List<StoredProc> storedProcList)
+	private static void transferResultToProcList(ResultSet resultSet, List<StoredProc> storedProcList) throws SQLException
 	{
-		;
+		if (resultSet != null && storedProcList != null)
+			while (resultSet.next())
+			{
+				int id = resultSet.getInt(1);
+				String name = resultSet.getString(2);
+				String description = resultSet.getString(3);
+
+				storedProcList.add(new StoredProc(id, name, description));
+			}
 	}
 
 	private String url;
@@ -125,7 +133,7 @@ public class AseDataSource implements DataSource
 			{
 				statement.setString(1, user);
 
-				ResultSet resultSet = executeStatement(statement);
+				ResultSet resultSet = statement.executeQuery();
 				transferResultToProcList(resultSet, resultList);
 
 				return resultList;

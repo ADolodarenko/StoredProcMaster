@@ -33,7 +33,7 @@ public class StoredProcDao implements AccessObject
 	@Override
 	public List<StoredProc> getStoredProcList() throws Exception
 	{
-		return null;
+		return source.getStoredProcList();
 	}
 
 	@Override
