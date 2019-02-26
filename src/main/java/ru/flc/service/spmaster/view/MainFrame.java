@@ -176,7 +176,7 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	@Override
 	public void showStoredProcList(List<StoredProc> storedProcList)
 	{
-		//TODO: reload the list here; think about my own ListModel
+		//TODO: fill the table with stored procedures here
 	}
 
 	@Override

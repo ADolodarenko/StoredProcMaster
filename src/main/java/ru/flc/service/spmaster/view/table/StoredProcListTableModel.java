@@ -71,9 +71,12 @@ public class StoredProcListTableModel extends AbstractTableModel
 				switch (columnIndex)
 				{
 					case 0:
-						value = row.getDescription();
+						value = row.getId();
 						break;
 					case 1:
+						value = row.getDescription();
+						break;
+					case 2:
 						value = row.getName();
 						break;
 				}

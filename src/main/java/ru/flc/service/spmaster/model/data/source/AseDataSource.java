@@ -6,6 +6,7 @@ import org.dav.service.settings.Settings;
 import org.dav.service.settings.type.Password;
 import org.dav.service.util.Constants;
 import ru.flc.service.spmaster.model.data.entity.StoredProc;
+import ru.flc.service.spmaster.util.AppConstants;
 
 import java.sql.*;
 import java.util.LinkedList;
@@ -60,7 +61,7 @@ public class AseDataSource implements DataSource
 	private String url;
 	private String user;
 	private Password password;
-	private String storedProcListGetterName;
+	private String storedProcListGetterName = AppConstants.MESS_SP_LIST_GETTER_NAME;
 
 	private Connection connection;
 	private DatabaseMetaData metaData;

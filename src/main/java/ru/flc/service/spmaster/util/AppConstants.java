@@ -32,6 +32,7 @@ public class AppConstants
 	public static final String MESS_LOGGING_PROPERTIES_FILE_NAME = "sp_master_logging.conf";
 	public static final String MESS_CONFIG_FILE_NAME = "sp_master.conf";
 	public static final String MESS_RESOURCE_BUNDLE_NAME = "StoredProcMaster";
+	public static final String MESS_SP_LIST_GETTER_NAME = "spm_get_available_proc";
 
 	//Images
 	public static final String ICON_NAME_ABOUT = "hedgehogs.png";
