@@ -27,6 +27,9 @@ public class AppConstants
 	public static final String KEY_PANEL_LOG = "PanelLog";
 	public static final String KEY_PANEL_STATUS_CONNECTED = "PanelStatusConnected";
 	public static final String KEY_PANEL_STATUS_DISCONNECTED = "PanelStatusDisconnected";
+	public static final String KEY_COLUMN_SP_ID = "ColumnStoredProcId";
+	public static final String KEY_COLUMN_SP_DESCRIPT = "ColumnStoredProcDescript";
+	public static final String KEY_COLUMN_SP_NAME = "ColumnStoredProcName";
 
 	//Names
 	public static final String MESS_LOGGING_PROPERTIES_FILE_NAME = "sp_master_logging.conf";
@@ -43,4 +46,5 @@ public class AppConstants
 	public static final String ICON_NAME_EXECUTE = "y_exec.png";
 	public static final String ICON_NAME_SETTINGS = "y_settings.png";
 	public static final String ICON_NAME_QUESTION = "y_question.png";
+	public static final String ICON_NAME_STORED_PROCEDURE = "stored_procedure.png";
 }

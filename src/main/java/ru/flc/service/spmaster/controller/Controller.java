@@ -70,6 +70,7 @@ public class Controller
 				view.showException(e);
 			}
 
+			view.clearData();
 			view.showConnectionStatus(null);
 
 			changeAppState(AppState.DISCONNECTED);
@@ -80,6 +81,8 @@ public class Controller
 	{
 		try
 		{
+			view.clearData();
+
 			List<StoredProc> storedProcList = dataModel.getStoredProcList();
 			view.showStoredProcList(storedProcList);
 		}

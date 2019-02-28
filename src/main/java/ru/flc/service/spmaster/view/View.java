@@ -15,6 +15,7 @@ public interface View
 	void setPreferredBounds(ViewConstraints settings);
 	void setActualBounds(ViewSettings settings);
 	void showSettings(TransmissiveSettings[] settingsArray);
+	void clearData();
 	void showConnectionStatus(DatabaseSettings settings);
 	void showException(Exception e);
 	void adjustToAppState();

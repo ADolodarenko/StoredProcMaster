@@ -15,6 +15,8 @@ import ru.flc.service.spmaster.model.data.entity.StoredProc;
 import ru.flc.service.spmaster.model.settings.ViewConstraints;
 import ru.flc.service.spmaster.util.AppConstants;
 import ru.flc.service.spmaster.util.AppState;
+import ru.flc.service.spmaster.view.table.StoredProcListTable;
+import ru.flc.service.spmaster.view.table.StoredProcListTableModel;
 import ru.flc.service.spmaster.view.thirdparty.TextLineNumber;
 
 import javax.swing.*;
@@ -37,7 +39,8 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	private SettingsDialog settingsDialog;
 	private AboutDialog aboutDialog;
 
-	private JList<StoredProc> procList;
+	private StoredProcListTableModel procListTableModel;
+	private StoredProcListTable procListTable;
 	private JScrollPane procListPane;
 	private JPanel procListPanel;
 
@@ -146,6 +149,13 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	}
 
 	@Override
+	public void clearData()
+	{
+		procListTableModel.clear();
+		procListTableModel.fireTableDataChanged();
+	}
+
+	@Override
 	public void showConnectionStatus(DatabaseSettings settings)
 	{
 		if (settings != null)
@@ -176,7 +186,10 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	@Override
 	public void showStoredProcList(List<StoredProc> storedProcList)
 	{
-		//TODO: fill the table with stored procedures here
+		procListTableModel.addAllRows(storedProcList);
+
+		titleAdjuster.resetComponents();
+		procListTableModel.fireTableDataChanged();
 	}
 
 	@Override
@@ -245,11 +258,10 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 
 	private void initProcListPanel()
 	{
-		procList = new JList<>();
+		procListTableModel = new StoredProcListTableModel(resourceManager, StoredProc.getTitleKeys(), null);
+		procListTable = new StoredProcListTable(procListTableModel, resourceManager);
 
-		procList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-		procListPane = new JScrollPane(procList);
+		procListPane = new JScrollPane(procListTable);
 
 		procListPanel = getPanelWithBorderLayout(procListPane, BorderLayout.CENTER, AppConstants.KEY_PANEL_PROC_LIST,
 				TitledBorder.TOP, TitledBorder.CENTER);
