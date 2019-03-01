@@ -33,4 +33,13 @@ public class DatabaseModel implements DataModel
 		else
 			return null;
 	}
+
+	@Override
+	public List<String> getStoredProcText(StoredProc storedProc) throws Exception
+	{
+		if (storedProcDao != null)
+			return storedProcDao.getStoredProcText(storedProc);
+		else
+			return null;
+	}
 }

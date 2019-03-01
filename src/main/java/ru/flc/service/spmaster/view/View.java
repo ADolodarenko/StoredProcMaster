@@ -20,4 +20,5 @@ public interface View
 	void showException(Exception e);
 	void adjustToAppState();
 	void showStoredProcList(List<StoredProc> storedProcList);
+	void showStoredProcText(List<String> storedProcTextLines);
 }

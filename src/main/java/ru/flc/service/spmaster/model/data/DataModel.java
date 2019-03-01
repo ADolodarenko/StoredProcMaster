@@ -10,4 +10,5 @@ public interface DataModel
 	void connectToDatabase(DatabaseSettings databaseSettings) throws Exception;
 	void disconnectFromDatabase() throws Exception;
 	List<StoredProc> getStoredProcList() throws Exception;
+	List<String> getStoredProcText(StoredProc storedProc) throws Exception;
 }

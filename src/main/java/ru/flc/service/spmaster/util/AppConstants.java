@@ -4,6 +4,13 @@ public class AppConstants
 {
 	private AppConstants(){}
 
+	//Exceptions
+	public static final String EXCPT_CONTROLLER_EMPTY = "Controller is empty.";
+	public static final String EXCPT_SP_LIST_TABLE_EMPTY = "The table that lists stored procedures is empty.";
+
+	//Class names
+	public static final String CLASS_NAME_STOREDPROCLISTTABLEMODEL = "StoredProcListTableModel";
+
 	//Actions
 	public static final String KEY_ACTION_CONNECTDB = "ActionConnectDb";
 	public static final String KEY_ACTION_CONNECTDB_DESCR = "ActionConnectDbDescript";
@@ -36,6 +43,7 @@ public class AppConstants
 	public static final String MESS_CONFIG_FILE_NAME = "sp_master.conf";
 	public static final String MESS_RESOURCE_BUNDLE_NAME = "StoredProcMaster";
 	public static final String MESS_SP_LIST_GETTER_NAME = "spm_get_available_proc";
+	public static final String MESS_SP_TEXT_GETTER_NAME = "spm_get_proc_text";
 
 	//Images
 	public static final String ICON_NAME_ABOUT = "hedgehogs.png";
@@ -46,5 +54,5 @@ public class AppConstants
 	public static final String ICON_NAME_EXECUTE = "y_exec.png";
 	public static final String ICON_NAME_SETTINGS = "y_settings.png";
 	public static final String ICON_NAME_QUESTION = "y_question.png";
-	public static final String ICON_NAME_STORED_PROCEDURE = "stored_procedure.png";
+	public static final String ICON_NAME_STORED_PROCEDURE = "y_stored_procedure.png";
 }

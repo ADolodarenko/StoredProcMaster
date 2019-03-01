@@ -30,15 +30,18 @@ public class StoredProcDao implements AccessObject
 		source.close();
 	}
 
-	@Override
 	public List<StoredProc> getStoredProcList() throws Exception
 	{
 		return source.getStoredProcList();
 	}
 
-	@Override
+	public List<String> getStoredProcText(StoredProc storedProc) throws Exception
+	{
+		return source.getStoredProcText(storedProc);
+	}
+
 	public void execStoredProc(StoredProc proc) throws Exception
 	{
-
+		//TODO: execute the desired stored procedure here
 	}
 }

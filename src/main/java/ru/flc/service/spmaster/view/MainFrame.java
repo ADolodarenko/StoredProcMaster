@@ -17,6 +17,7 @@ import ru.flc.service.spmaster.util.AppConstants;
 import ru.flc.service.spmaster.util.AppState;
 import ru.flc.service.spmaster.view.table.StoredProcListTable;
 import ru.flc.service.spmaster.view.table.StoredProcListTableModel;
+import ru.flc.service.spmaster.view.table.listener.StoredProcListSelectionListener;
 import ru.flc.service.spmaster.view.thirdparty.TextLineNumber;
 
 import javax.swing.*;
@@ -153,6 +154,8 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	{
 		procListTableModel.clear();
 		procListTableModel.fireTableDataChanged();
+
+		procTextArea.setText("");
 	}
 
 	@Override
@@ -190,6 +193,20 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 
 		titleAdjuster.resetComponents();
 		procListTableModel.fireTableDataChanged();
+	}
+
+	@Override
+	public void showStoredProcText(List<String> storedProcTextLines)
+	{
+		procTextArea.setText("");
+
+		if (storedProcTextLines != null && (!storedProcTextLines.isEmpty()))
+		{
+			for (String line : storedProcTextLines)
+				procTextArea.append(line);
+
+			procTextArea.setCaretPosition(0);
+		}
 	}
 
 	@Override
@@ -260,6 +277,7 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	{
 		procListTableModel = new StoredProcListTableModel(resourceManager, StoredProc.getTitleKeys(), null);
 		procListTable = new StoredProcListTable(procListTableModel, resourceManager);
+		procListTable.getSelectionModel().addListSelectionListener(new StoredProcListSelectionListener(procListTable, controller));
 
 		procListPane = new JScrollPane(procListTable);
 

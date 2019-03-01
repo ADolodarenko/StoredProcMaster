@@ -59,7 +59,7 @@ public class Controller
 
 	public void disconnectFromDatabase()
 	{
-		if (checkDataModel())
+		if (checkDataModel() && checkView())
 		{
 			try
 			{
@@ -79,17 +79,36 @@ public class Controller
 
 	public void refreshStoredProcedureList()
 	{
-		try
-		{
-			view.clearData();
+		if (checkDataModel() && checkView())
+			try
+			{
+				view.clearData();
 
-			List<StoredProc> storedProcList = dataModel.getStoredProcList();
-			view.showStoredProcList(storedProcList);
-		}
-		catch (Exception e)
-		{
-			view.showException(e);
-		}
+				List<StoredProc> storedProcList = dataModel.getStoredProcList();
+				view.showStoredProcList(storedProcList);
+			}
+			catch (Exception e)
+			{
+				view.showException(e);
+			}
+	}
+
+	public void showStoredProcedureText(StoredProc storedProc)
+	{
+		if (checkDataModel() && checkView())
+			try
+			{
+				List<String> storedProcTextLines = null;
+
+				if (storedProc != null)
+					storedProcTextLines = dataModel.getStoredProcText(storedProc);
+
+				view.showStoredProcText(storedProcTextLines);
+			}
+			catch (Exception e)
+			{
+				view.showException(e);
+			}
 	}
 
 	public void execStoredProcedure()

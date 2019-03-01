@@ -109,6 +109,19 @@ begin
 
 end
 go
+--Отображение текста заданной ХП
+if (object_id('spm_get_proc_text') is not null) drop proc spm_get_proc_text
+go
+create proc spm_get_proc_text(@proc_id int)
+as
+begin
+
+	select text
+	from syscomments
+	where id = @proc_id
+	
+end
+go
 
 /*
 delete spm_proc_info

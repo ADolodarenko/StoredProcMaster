@@ -38,13 +38,6 @@ public class AseDataSource implements DataSource
 		return builder.toString();
 	}
 
-	private static ResultSet executeStatement(PreparedStatement statement) throws SQLException
-	{
-		ResultSet resultSet = statement.executeQuery();
-
-		return resultSet;
-	}
-
 	private static void transferResultToProcList(ResultSet resultSet, List<StoredProc> storedProcList) throws SQLException
 	{
 		if (resultSet != null && storedProcList != null)
@@ -58,10 +51,19 @@ public class AseDataSource implements DataSource
 			}
 	}
 
+	private static void transferResultToStringList(ResultSet resultSet, List<String> stringList) throws SQLException
+	{
+		if (resultSet != null && stringList != null)
+			while (resultSet.next())
+				stringList.add(resultSet.getString(1));
+	}
+
+
 	private String url;
 	private String user;
 	private Password password;
 	private String storedProcListGetterName = AppConstants.MESS_SP_LIST_GETTER_NAME;
+	private String storedProcTextGetterName = AppConstants.MESS_SP_TEXT_GETTER_NAME;
 
 	private Connection connection;
 	private DatabaseMetaData metaData;
@@ -136,6 +138,38 @@ public class AseDataSource implements DataSource
 
 				ResultSet resultSet = statement.executeQuery();
 				transferResultToProcList(resultSet, resultList);
+
+				return resultList;
+			}
+			catch (SQLException e)
+			{
+				throw e;
+			}
+			finally
+			{
+				connection.setAutoCommit(false);
+			}
+		}
+		else
+			throw new Exception(Constants.EXCPT_DATABASE_WITHOUT_SP_SUPPORT);
+	}
+
+	@Override
+	public List<String> getStoredProcText(StoredProc storedProc) throws Exception
+	{
+		if (supportStoredProcedures)
+		{
+			List<String> resultList = new LinkedList<>();
+
+			connection.setAutoCommit(true);
+
+			try (CallableStatement statement = connection.prepareCall("{call " +
+					storedProcTextGetterName + " (?)}"))
+			{
+				statement.setInt(1, storedProc.getId());
+
+				ResultSet resultSet = statement.executeQuery();
+				transferResultToStringList(resultSet, resultList);
 
 				return resultList;
 			}
