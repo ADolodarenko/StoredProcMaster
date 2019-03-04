@@ -79,7 +79,7 @@ public class Controller
 
 	public void refreshStoredProcedureList()
 	{
-		if (checkDataModel() && checkView())
+		if (checkDataModel() && checkView() && checkAppStates(AppState.CONNECTED))
 			try
 			{
 				view.clearData();

@@ -35,6 +35,7 @@ public class ActionsManager
 			public void actionPerformed(ActionEvent e)
 			{
 				controller.connectToDatabase();
+				controller.refreshStoredProcedureList();
 			}
 		};
 
