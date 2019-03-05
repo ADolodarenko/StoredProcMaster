@@ -3,7 +3,7 @@ package ru.flc.service.spmaster.controller;
 import org.dav.service.util.ResourceManager;
 import org.dav.service.view.Title;
 import ru.flc.service.spmaster.util.AppConstants;
-import ru.flc.service.spmaster.util.AppState;
+import ru.flc.service.spmaster.util.AppStatus;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -157,10 +157,10 @@ public class ActionsManager
 
 	public void adjustActionsToAppState()
 	{
-		connectDbAction.setEnabled(controller.checkAppStates(AppState.DISCONNECTED));
-		disconnectDbAction.setEnabled(controller.checkAppStates(AppState.CONNECTED));
-		refreshSpListAction.setEnabled(controller.checkAppStates(AppState.CONNECTED));
-		execSpAction.setEnabled(controller.checkAppStates(AppState.CONNECTED));
-		showSettingsAction.setEnabled(controller.checkAppStates(AppState.DISCONNECTED));
+		connectDbAction.setEnabled(controller.checkAppStates(AppStatus.DISCONNECTED));
+		disconnectDbAction.setEnabled(controller.checkAppStates(AppStatus.CONNECTED));
+		refreshSpListAction.setEnabled(controller.checkAppStates(AppStatus.CONNECTED));
+		execSpAction.setEnabled(controller.checkAppStates(AppStatus.CONNECTED));
+		showSettingsAction.setEnabled(controller.checkAppStates(AppStatus.DISCONNECTED));
 	}
 }

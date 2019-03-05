@@ -10,6 +10,7 @@ public class AppConstants
 
 	//Class names
 	public static final String CLASS_NAME_STOREDPROCLISTTABLEMODEL = "StoredProcListTableModel";
+	public static final String CLASS_NAME_STOREDPROCSTATUS = "StoredProcStatus";
 
 	//Actions
 	public static final String KEY_ACTION_CONNECTDB = "ActionConnectDb";
@@ -34,7 +35,7 @@ public class AppConstants
 	public static final String KEY_PANEL_LOG = "PanelLog";
 	public static final String KEY_PANEL_STATUS_CONNECTED = "PanelStatusConnected";
 	public static final String KEY_PANEL_STATUS_DISCONNECTED = "PanelStatusDisconnected";
-	public static final String KEY_COLUMN_SP_ID = "ColumnStoredProcId";
+	public static final String KEY_COLUMN_SP_STATUS = "ColumnStoredProcStatus";
 	public static final String KEY_COLUMN_SP_DESCRIPT = "ColumnStoredProcDescript";
 	public static final String KEY_COLUMN_SP_NAME = "ColumnStoredProcName";
 
@@ -55,4 +56,6 @@ public class AppConstants
 	public static final String ICON_NAME_SETTINGS = "y_settings.png";
 	public static final String ICON_NAME_QUESTION = "y_question.png";
 	public static final String ICON_NAME_STORED_PROCEDURE = "y_stored_procedure.png";
+	public static final String ICON_NAME_PROC_AVAILABLE = "proc_available.png";
+	public static final String ICON_NAME_PROC_OCCUPIED = "proc_occupied.png";
 }

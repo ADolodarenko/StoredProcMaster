@@ -6,6 +6,7 @@ import org.dav.service.settings.Settings;
 import org.dav.service.settings.type.Password;
 import org.dav.service.util.Constants;
 import ru.flc.service.spmaster.model.data.entity.StoredProc;
+import ru.flc.service.spmaster.model.data.entity.StoredProcStatus;
 import ru.flc.service.spmaster.util.AppConstants;
 
 import java.sql.*;
@@ -47,7 +48,7 @@ public class AseDataSource implements DataSource
 				String name = resultSet.getString(2);
 				String description = resultSet.getString(3);
 
-				storedProcList.add(new StoredProc(id, name, description));
+				storedProcList.add(new StoredProc(id, name, description, StoredProcStatus.AVAILABLE));
 			}
 	}
 

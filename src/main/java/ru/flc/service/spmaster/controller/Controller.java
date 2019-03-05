@@ -6,7 +6,7 @@ import org.dav.service.util.ResourceManager;
 import ru.flc.service.spmaster.model.data.DataModel;
 import ru.flc.service.spmaster.model.data.entity.StoredProc;
 import ru.flc.service.spmaster.model.settings.SettingsModel;
-import ru.flc.service.spmaster.util.AppState;
+import ru.flc.service.spmaster.util.AppStatus;
 import ru.flc.service.spmaster.view.View;
 
 import javax.swing.*;
@@ -17,7 +17,7 @@ public class Controller
 	private DataModel dataModel;
 	private SettingsModel settingsModel;
 	private View view;
-	private AppState appState;
+	private AppStatus appStatus;
 
 	public void setDataModel(DataModel dataModel)
 	{
@@ -45,14 +45,14 @@ public class Controller
 				dataModel.connectToDatabase(settings);
 				view.showConnectionStatus(settings);
 
-				changeAppState(AppState.CONNECTED);
+				changeAppState(AppStatus.CONNECTED);
 			}
 			catch (Exception e)
 			{
 				view.showException(e);
 				view.showConnectionStatus(null);
 
-				changeAppState(AppState.DISCONNECTED);
+				changeAppState(AppStatus.DISCONNECTED);
 			}
 		}
 	}
@@ -73,13 +73,13 @@ public class Controller
 			view.clearData();
 			view.showConnectionStatus(null);
 
-			changeAppState(AppState.DISCONNECTED);
+			changeAppState(AppStatus.DISCONNECTED);
 		}
 	}
 
 	public void refreshStoredProcedureList()
 	{
-		if (checkDataModel() && checkView() && checkAppStates(AppState.CONNECTED))
+		if (checkDataModel() && checkView() && checkAppStates(AppStatus.CONNECTED))
 			try
 			{
 				view.clearData();
@@ -189,18 +189,18 @@ public class Controller
 		return view != null;
 	}
 
-	public void changeAppState(AppState newAppState)
+	public void changeAppState(AppStatus newAppStatus)
 	{
-		appState = newAppState;
+		appStatus = newAppStatus;
 
 		if (checkView())
 			view.adjustToAppState();
 	}
 
-	public boolean checkAppStates(AppState... desirableStates)
+	public boolean checkAppStates(AppStatus... desirableStates)
 	{
-		for (AppState state : desirableStates)
-			if (state == appState)
+		for (AppStatus state : desirableStates)
+			if (state == appStatus)
 				return true;
 
 		return false;

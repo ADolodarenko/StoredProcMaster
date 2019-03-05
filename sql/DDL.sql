@@ -26,6 +26,14 @@ alter table spm_login_proc
     add constraint fk_spm_login_proc_login foreign key (login_id)
     references master..syslogins (suid)
 go
+--Статусы ХП - нужно ли?
+if (object_id('spm_proc_status') is not null) drop table spm_proc_status
+go
+create table spm_proc_status(
+status_id int not null,
+status_name varchar(255) not null,
+constraint pk_spm_proc_status primary key clustered (status_id))
+go
 --Загрузка доступных пользователю ХП
 if (object_id('spm_get_available_proc') is not null) drop proc spm_get_available_proc
 go
