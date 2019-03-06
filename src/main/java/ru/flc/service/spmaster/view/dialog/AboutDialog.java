@@ -1,4 +1,4 @@
-package ru.flc.service.spmaster.view;
+package ru.flc.service.spmaster.view.dialog;
 
 import org.dav.service.util.ResourceManager;
 import ru.flc.service.spmaster.util.AppConstants;

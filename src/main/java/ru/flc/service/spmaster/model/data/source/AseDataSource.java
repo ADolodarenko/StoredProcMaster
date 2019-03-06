@@ -7,6 +7,7 @@ import org.dav.service.settings.type.Password;
 import org.dav.service.util.Constants;
 import ru.flc.service.spmaster.model.data.entity.StoredProc;
 import ru.flc.service.spmaster.model.data.entity.StoredProcStatus;
+import ru.flc.service.spmaster.model.data.entity.User;
 import ru.flc.service.spmaster.util.AppConstants;
 
 import java.sql.*;
@@ -44,11 +45,16 @@ public class AseDataSource implements DataSource
 		if (resultSet != null && storedProcList != null)
 			while (resultSet.next())
 			{
-				int id = resultSet.getInt(1);
-				String name = resultSet.getString(2);
-				String description = resultSet.getString(3);
+				int id = resultSet.getInt(AppConstants.MESS_SP_LIST_COL_NAME_PROC_ID);
+				String name = resultSet.getString(AppConstants.MESS_SP_LIST_COL_NAME_PROC_NAME);
+				String description = resultSet.getString(AppConstants.MESS_SP_LIST_COL_NAME_PROC_DESCR);
+				StoredProcStatus procStatus = getProcStatusById(resultSet.getInt(AppConstants.MESS_SP_LIST_COL_NAME_PROC_STATUS_ID));
+				User occupant = getProcOccupantByParams(procStatus,
+						resultSet.getInt(AppConstants.MESS_SP_LIST_COL_NAME_OCCUPANT_ID),
+						resultSet.getString(AppConstants.MESS_SP_LIST_COL_NAME_OCCUPANT_LOGIN),
+						resultSet.getString(AppConstants.MESS_SP_LIST_COL_NAME_OCCUPANT_NAME));
 
-				storedProcList.add(new StoredProc(id, name, description, StoredProcStatus.AVAILABLE));
+				storedProcList.add(new StoredProc(id, name, description, procStatus, occupant));
 			}
 	}
 
@@ -57,6 +63,38 @@ public class AseDataSource implements DataSource
 		if (resultSet != null && stringList != null)
 			while (resultSet.next())
 				stringList.add(resultSet.getString(1));
+	}
+
+	private static StoredProcStatus getProcStatusById(int statusId)
+	{
+		switch (statusId)
+		{
+			case 1:
+				return StoredProcStatus.AVAILABLE;
+			case 2:
+				return StoredProcStatus.OCCUPIED;
+			default:
+				return StoredProcStatus.UNKNOWN;
+		}
+	}
+
+	private static User getProcOccupantByParams(StoredProcStatus procStatus,
+												int occupantId, String occupantLogin, String occupantName)
+	{
+		User occupant = null;
+
+		if (procStatus == StoredProcStatus.OCCUPIED)
+		{
+			if (occupantLogin == null)
+				occupantLogin = "";
+
+			if (occupantName == null)
+				occupantName = "";
+
+			occupant = new User(occupantId, occupantLogin, occupantName);
+		}
+
+		return occupant;
 	}
 
 

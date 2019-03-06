@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+/**
+ * A ResourceManager for the application, that works with locales, configuration file and image paths.
+ */
 public class AppResourceManager implements ResourceManager
 {
 	private static AppResourceManager instance;

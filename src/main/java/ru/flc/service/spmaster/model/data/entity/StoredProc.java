@@ -18,13 +18,16 @@ public class StoredProc
 	private String name;
 	private String description;
 	private StoredProcStatus status;
+	private User occupant;
 
-	public StoredProc(int id, String name, String description, StoredProcStatus status)
+	public StoredProc(int id, String name, String description,
+					  StoredProcStatus status, User occupant)
 	{
 		this.id = id;
 		this.name = name;
 		this.description = description;
 		this.status = status;
+		this.occupant = occupant;
 	}
 
 	public int getId()
@@ -47,13 +50,13 @@ public class StoredProc
 		return status;
 	}
 
-	public void setStatus(StoredProcStatus status)
-	{
-		this.status = status;
-	}
-
 	public boolean isAvailable()
 	{
 		return status == StoredProcStatus.AVAILABLE;
+	}
+
+	public User getOccupant()
+	{
+		return occupant;
 	}
 }

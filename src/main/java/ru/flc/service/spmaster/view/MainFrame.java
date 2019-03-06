@@ -15,6 +15,7 @@ import ru.flc.service.spmaster.model.data.entity.StoredProc;
 import ru.flc.service.spmaster.model.settings.ViewConstraints;
 import ru.flc.service.spmaster.util.AppConstants;
 import ru.flc.service.spmaster.util.AppStatus;
+import ru.flc.service.spmaster.view.dialog.AboutDialog;
 import ru.flc.service.spmaster.view.table.StoredProcListTable;
 import ru.flc.service.spmaster.view.table.StoredProcListTableModel;
 import ru.flc.service.spmaster.view.table.listener.StoredProcListSelectionListener;

@@ -14,6 +14,9 @@ import ru.flc.service.spmaster.view.MainFrame;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * This is the application entry point.
+ */
 public class Main
 {
 	public static void main(String[] args)

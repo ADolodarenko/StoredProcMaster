@@ -1,15 +1,17 @@
 package ru.flc.service.spmaster.util;
 
-public class AppConstants
+/**
+ * The application constants store.
+ */
+public final class AppConstants
 {
-	private AppConstants(){}
-
 	//Exceptions
 	public static final String EXCPT_CONTROLLER_EMPTY = "Controller is empty.";
 	public static final String EXCPT_SP_LIST_TABLE_EMPTY = "The table that lists stored procedures is empty.";
 
 	//Class names
 	public static final String CLASS_NAME_STOREDPROCLISTTABLEMODEL = "StoredProcListTableModel";
+	public static final String CLASS_NAME_STOREDPROCLISTTABLE = "StoredProcListTable";
 	public static final String CLASS_NAME_STOREDPROCSTATUS = "StoredProcStatus";
 
 	//Actions
@@ -45,6 +47,13 @@ public class AppConstants
 	public static final String MESS_RESOURCE_BUNDLE_NAME = "StoredProcMaster";
 	public static final String MESS_SP_LIST_GETTER_NAME = "spm_get_available_proc";
 	public static final String MESS_SP_TEXT_GETTER_NAME = "spm_get_proc_text";
+	public static final String MESS_SP_LIST_COL_NAME_PROC_ID = "proc_id";
+	public static final String MESS_SP_LIST_COL_NAME_PROC_NAME = "proc_name";
+	public static final String MESS_SP_LIST_COL_NAME_PROC_DESCR = "proc_description";
+	public static final String MESS_SP_LIST_COL_NAME_PROC_STATUS_ID = "proc_status_id";
+	public static final String MESS_SP_LIST_COL_NAME_OCCUPANT_ID = "occupant_id";
+	public static final String MESS_SP_LIST_COL_NAME_OCCUPANT_LOGIN = "occupant_login";
+	public static final String MESS_SP_LIST_COL_NAME_OCCUPANT_NAME = "occupant_name";
 
 	//Images
 	public static final String ICON_NAME_ABOUT = "hedgehogs.png";
@@ -58,4 +67,6 @@ public class AppConstants
 	public static final String ICON_NAME_STORED_PROCEDURE = "y_stored_procedure.png";
 	public static final String ICON_NAME_PROC_AVAILABLE = "proc_available.png";
 	public static final String ICON_NAME_PROC_OCCUPIED = "proc_occupied.png";
+
+	private AppConstants(){}
 }

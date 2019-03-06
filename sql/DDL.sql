@@ -41,13 +41,37 @@ create proc spm_get_available_proc(@login_name varchar(255))
 as
 begin
 
-	select inf.proc_id, obj.name as proc_name, inf.proc_description
-	from master..syslogins lg, spm_login_proc crs, sysobjects obj, spm_proc_info inf
+	/*
+	*	Project: StoredProcMaster
+	*	Description: Getting the list of procedures that are available to the specified login.
+	*	Author: Dolodarenko A.V., 06.03.2019
+	*/
+
+	select inf.proc_id, obj.name as proc_name, inf.proc_description,
+		1 as proc_status_id, convert(int, null) as occupant_id,
+		convert(varchar(255), null) as occupant_login,
+		convert(varchar(255), null) as occupant_name
+	into #pl
+	from master..syslogins lg, spm_login_proc crs, sysobjects obj, spm_proc_info inf 
 	where lg.name = @login_name
 	  and lg.suid = crs.login_id
 	  and crs.proc_id = obj.id
 	  and obj.type = 'P'
 	  and obj.id = inf.proc_id
+	  
+	update #pl
+	set proc_status_id = 2,
+		occupant_id = sp.suid,
+		occupant_login = suser_name(sp.suid),
+		occupant_name = ul.user_name
+	from master..sysprocesses sp, user_list ul
+	where #pl.proc_id = sp.id
+	  and sp.suid *= ul.user_id
+	
+	
+	select proc_id, proc_name, proc_description, proc_status_id,
+			occupant_id, occupant_login, occupant_name
+	from #pl
 	
 end
 go
@@ -132,15 +156,22 @@ end
 go
 
 /*
-delete spm_proc_info
+delete from spm_proc_info
 go
-insert spm_proc_info(proc_id, proc_description) select id, name from sysobjects where type = 'P'
+insert spm_proc_info(proc_id, proc_description)
+select so.id, so.name
+from sysobjects so
+where so.type = 'P'
+  and not exists (select 1 from spm_proc_info where proc_id = so.id)
 go
-spm_set_proc_for_login 'dolodarenko', 179679502, 1
+spm_set_proc_for_login 'dolodarenko', 1978689961, 1
 --
 spm_get_available_proc 'dolodarenko'
 --
 update spm_proc_info
-set proc_description = 'StoredProcMaster: установка полномочий логина на ХП'
-where proc_id = 179679502
+set proc_description = 'Обновление good stock'
+where proc_id = 332859796
+--
+insert spm_proc_status (status_id, status_name) select 1, 'Available'
+insert spm_proc_status (status_id, status_name) select 2, 'Occupied'
 */
