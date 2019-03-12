@@ -7,14 +7,11 @@ import org.dav.service.util.Constants;
 import org.dav.service.util.ResourceManager;
 import ru.flc.service.spmaster.util.AppConstants;
 
-import java.io.File;
 import java.nio.charset.Charset;
 
 public class OperationalSettings extends TransmissiveSettings
 {
-	private static final int PARAM_COUNT = 1;
-
-	private File scriptFilePath;
+	private static final int PARAM_COUNT = 2;
 
 	public OperationalSettings(ResourceManager resourceManager) throws Exception
 	{
@@ -22,8 +19,7 @@ public class OperationalSettings extends TransmissiveSettings
 
 		headers = new ParameterHeader[PARAM_COUNT];
 		headers[0] = new ParameterHeader(Constants.KEY_PARAM_CHARSET, Charset.class, Charset.defaultCharset());
-
-		scriptFilePath = new File(Constants.MESS_CURRENT_PATH);
+		headers[1] = new ParameterHeader(AppConstants.KEY_PARAM_DB_SERVICE_CATALOG, String.class, "");
 
 		init();
 	}
@@ -38,7 +34,7 @@ public class OperationalSettings extends TransmissiveSettings
 	public void save() throws Exception
 	{
 		SettingsManager.setStringValue(headers[0].getKeyString(), getScriptCharset().displayName());
-		SettingsManager.setStringValue(AppConstants.KEY_PARAM_SCRIPT_FILE_PATH, getScriptFilePath().getAbsolutePath());
+		SettingsManager.setStringValue(headers[1].getKeyString(), getServiceCatalog());
 
 		SettingsManager.saveSettings(resourceManager.getConfig());
 	}
@@ -48,19 +44,8 @@ public class OperationalSettings extends TransmissiveSettings
 		return ((Charset) paramMap.get(headers[0].getKeyString()).getValue());
 	}
 
-	public File getScriptFilePath()
+	public String getServiceCatalog()
 	{
-		return scriptFilePath;
-	}
-
-	public void setScriptFilePath(File filePath)
-	{
-		scriptFilePath = filePath;
-	}
-
-	private void loadScriptFilePath()
-	{
-		if (SettingsManager.hasValue(AppConstants.KEY_PARAM_SCRIPT_FILE_PATH))
-			scriptFilePath = new File(SettingsManager.getStringValue(AppConstants.KEY_PARAM_SCRIPT_FILE_PATH));
+		return ((String) paramMap.get(headers[1].getKeyString()).getValue());
 	}
 }

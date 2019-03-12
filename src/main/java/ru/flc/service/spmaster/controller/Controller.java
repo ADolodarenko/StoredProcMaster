@@ -5,6 +5,7 @@ import org.dav.service.settings.TransmissiveSettings;
 import org.dav.service.util.ResourceManager;
 import ru.flc.service.spmaster.model.data.DataModel;
 import ru.flc.service.spmaster.model.data.entity.StoredProc;
+import ru.flc.service.spmaster.model.settings.OperationalSettings;
 import ru.flc.service.spmaster.model.settings.SettingsModel;
 import ru.flc.service.spmaster.util.AppStatus;
 import ru.flc.service.spmaster.view.View;
@@ -38,12 +39,14 @@ public class Controller
 	{
 		if (checkSettingsModel() && checkDataModel())
 		{
-			DatabaseSettings settings = settingsModel.getDatabaseSettings();
+			DatabaseSettings databaseSettings = settingsModel.getDatabaseSettings();
+			OperationalSettings operationalSettings = settingsModel.getOperationalSettings();
 
 			try
 			{
-				dataModel.connectToDatabase(settings);
-				view.showConnectionStatus(settings);
+				dataModel.connectToDatabase(databaseSettings, operationalSettings);
+
+				view.showConnectionStatus(databaseSettings);
 
 				changeAppState(AppStatus.CONNECTED);
 			}

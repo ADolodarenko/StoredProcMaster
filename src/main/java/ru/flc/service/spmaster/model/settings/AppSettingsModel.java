@@ -110,6 +110,12 @@ public class AppSettingsModel implements SettingsModel
 	}
 
 	@Override
+	public OperationalSettings getOperationalSettings()
+	{
+		return operationalSettings;
+	}
+
+	@Override
 	public void updateViewBounds(View view)
 	{
 		if (view instanceof JFrame)

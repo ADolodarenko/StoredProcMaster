@@ -1,6 +1,6 @@
 package ru.flc.service.spmaster.model.data;
 
-import org.dav.service.settings.DatabaseSettings;
+import org.dav.service.settings.Settings;
 import ru.flc.service.spmaster.model.data.dao.AccessObjectFactory;
 import ru.flc.service.spmaster.model.data.dao.StoredProcDao;
 import ru.flc.service.spmaster.model.data.entity.StoredProc;
@@ -12,9 +12,9 @@ public class DatabaseModel implements DataModel
 	private StoredProcDao storedProcDao;
 
 	@Override
-	public void connectToDatabase(DatabaseSettings databaseSettings) throws Exception
+	public void connectToDatabase(Settings... settingsArray) throws Exception
 	{
-		storedProcDao = AccessObjectFactory.getStoredProcObject(databaseSettings);
+		storedProcDao = AccessObjectFactory.getStoredProcObject(settingsArray);
 		storedProcDao.open();
 	}
 

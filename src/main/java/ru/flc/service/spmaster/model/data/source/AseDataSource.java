@@ -8,6 +8,7 @@ import org.dav.service.util.Constants;
 import ru.flc.service.spmaster.model.data.entity.StoredProc;
 import ru.flc.service.spmaster.model.data.entity.StoredProcStatus;
 import ru.flc.service.spmaster.model.data.entity.User;
+import ru.flc.service.spmaster.model.settings.OperationalSettings;
 import ru.flc.service.spmaster.util.AppConstants;
 
 import java.sql.*;
@@ -38,6 +39,14 @@ public class AseDataSource implements DataSource
 		*/
 
 		return builder.toString();
+	}
+
+	private static String getServiceProcedureName(String serviceDatabaseName, String procedureBaseName)
+	{
+		if (serviceDatabaseName != null && ( !serviceDatabaseName.isEmpty() ))
+			return serviceDatabaseName + ".." + procedureBaseName;
+		else
+			return procedureBaseName;
 	}
 
 	private static void transferResultToProcList(ResultSet resultSet, List<StoredProc> storedProcList) throws SQLException
@@ -99,8 +108,10 @@ public class AseDataSource implements DataSource
 
 
 	private String url;
+	private String dbName;
 	private String user;
 	private Password password;
+	private String serviceDbName;
 	private String storedProcListGetterName = AppConstants.MESS_SP_LIST_GETTER_NAME;
 	private String storedProcTextGetterName = AppConstants.MESS_SP_TEXT_GETTER_NAME;
 
@@ -134,18 +145,32 @@ public class AseDataSource implements DataSource
 	}
 
 	@Override
-	public void tune(Settings settings) throws Exception
+	public void tune(Settings... settingsArray) throws Exception
 	{
 		close();
 
-		if (settings != null)
+		if (settingsArray != null && settingsArray.length > 0)
 		{
-			String settingsClassName = settings.getClass().getSimpleName();
+			DatabaseSettings dbSettings = null;
+			OperationalSettings operSettings = null;
 
-			if (Constants.CLASS_NAME_DATABASESETTINGS.equals(settingsClassName))
-				resetParameters((DatabaseSettings)settings);
-			else
-				throw new IllegalArgumentException(Constants.EXCPT_DATABASE_SETTINGS_WRONG);
+			for (Settings settings : settingsArray)
+			{
+				String settingsClassName = settings.getClass().getSimpleName();
+
+				if (Constants.CLASS_NAME_DATABASESETTINGS.equals(settingsClassName))
+					dbSettings = (DatabaseSettings) settings;
+				else if (AppConstants.CLASS_NAME_OPERATIONALSETTINGS.equals(settingsClassName))
+					operSettings = (OperationalSettings) settings;
+			}
+
+			if ( dbSettings == null )
+				throw new IllegalArgumentException(Constants.EXCPT_DATABASE_SETTINGS_EMPTY);
+
+			resetParameters(dbSettings);
+
+			if (operSettings != null)
+				resetParameters(operSettings);
 		}
 		else
 			throw new IllegalArgumentException(Constants.EXCPT_DATABASE_SETTINGS_EMPTY);
@@ -157,8 +182,14 @@ public class AseDataSource implements DataSource
 		DriverManager.registerDriver(sybDriver);
 
 		url = buildDatabaseUrl(settings);
+		dbName = settings.getCatalog();
 		user = settings.getUserName();
 		password = settings.getPassword();
+	}
+
+	private void resetParameters(OperationalSettings settings)
+	{
+		serviceDbName = settings.getServiceCatalog();
 	}
 
 	@Override
@@ -170,10 +201,13 @@ public class AseDataSource implements DataSource
 
 			connection.setAutoCommit(true);
 
+			String procedureName = getServiceProcedureName(serviceDbName, storedProcListGetterName);
+
 			try (CallableStatement statement = connection.prepareCall("{call " +
-					storedProcListGetterName + " (?)}"))
+					procedureName + " (?, ?)}"))
 			{
 				statement.setString(1, user);
+				statement.setString(2, dbName);
 
 				ResultSet resultSet = statement.executeQuery();
 				transferResultToProcList(resultSet, resultList);
@@ -202,10 +236,13 @@ public class AseDataSource implements DataSource
 
 			connection.setAutoCommit(true);
 
+			String procedureName = getServiceProcedureName(serviceDbName, storedProcTextGetterName);
+
 			try (CallableStatement statement = connection.prepareCall("{call " +
-					storedProcTextGetterName + " (?)}"))
+					procedureName + " (?, ?)}"))
 			{
-				statement.setInt(1, storedProc.getId());
+				statement.setString(1, dbName);
+				statement.setInt(2, storedProc.getId());
 
 				ResultSet resultSet = statement.executeQuery();
 				transferResultToStringList(resultSet, resultList);

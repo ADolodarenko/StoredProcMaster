@@ -13,6 +13,7 @@ public final class AppConstants
 	public static final String CLASS_NAME_STOREDPROCLISTTABLEMODEL = "StoredProcListTableModel";
 	public static final String CLASS_NAME_STOREDPROCLISTTABLE = "StoredProcListTable";
 	public static final String CLASS_NAME_STOREDPROCSTATUS = "StoredProcStatus";
+	public static final String CLASS_NAME_OPERATIONALSETTINGS = "OperationalSettings";
 
 	//Actions
 	public static final String KEY_ACTION_CONNECTDB = "ActionConnectDb";
@@ -29,6 +30,7 @@ public final class AppConstants
 	public static final String KEY_ACTION_SHOW_HELP_DESCR = "ActionShowHelpDescr";
 
 	public static final String KEY_PARAM_SCRIPT_FILE_PATH = "ScriptFilePath";
+	public static final String KEY_PARAM_DB_SERVICE_CATALOG = "DatabaseServiceCatalog";
 
 	//Titles for main frame
 	public static final String KEY_PANEL_PROC_LIST = "PanelStoredProcList";

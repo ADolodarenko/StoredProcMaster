@@ -19,6 +19,7 @@ public interface SettingsModel
 	ViewConstraints getViewConstraints();
 	ViewSettings getViewSettings();
 	DatabaseSettings getDatabaseSettings();
+	OperationalSettings getOperationalSettings();
 	void updateViewBounds(View view);
 	TransmissiveSettings[] getVisibleSettings();
 }
