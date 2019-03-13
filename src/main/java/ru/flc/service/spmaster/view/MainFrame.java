@@ -9,6 +9,10 @@ import org.dav.service.view.TitleAdjuster;
 import org.dav.service.view.ViewUtils;
 import org.dav.service.view.dialog.SettingsDialog;
 import org.dav.service.view.dialog.SettingsDialogInvoker;
+import org.dav.service.view.table.LogEvent;
+import org.dav.service.view.table.LogEventTable;
+import org.dav.service.view.table.LogEventTableModel;
+import org.dav.service.view.table.LogEventWriter;
 import ru.flc.service.spmaster.controller.ActionsManager;
 import ru.flc.service.spmaster.controller.Controller;
 import ru.flc.service.spmaster.model.data.entity.StoredProc;
@@ -30,9 +34,13 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 {
+	private static final Logger LOGGER = Logger.getLogger(MainFrame.class.getName());
+
+
 	private Controller controller;
 	private ResourceManager resourceManager;
 	private ActionsManager actionsManager;
@@ -54,7 +62,8 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	private JScrollPane procResultPane;
 	private JPanel procResultPanel;
 
-	private JTable logTable;
+	private LogEventTableModel logTableModel;
+	private LogEventTable logTable;
 	private JScrollPane logPane;
 	private JPanel logPanel;
 
@@ -76,7 +85,7 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 		initComponents();
 		initFrame();
 
-		controller.changeAppState(AppStatus.DISCONNECTED);
+		controller.changeAppStatus(AppStatus.DISCONNECTED);
 	}
 
 	@Override
@@ -182,7 +191,7 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	}
 
 	@Override
-	public void adjustToAppState()
+	public void adjustToAppStatus()
 	{
 		actionsManager.adjustActionsToAppState();
 	}
@@ -213,7 +222,7 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	@Override
 	public void log(Exception e)
 	{
-
+		LogEventWriter.writeThrowable(e, logTableModel);
 	}
 
 	@Override
@@ -321,7 +330,11 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 
 	private void initLogPanel()
 	{
-		logTable = new JTable();
+		LogEvent.setResourceManager(resourceManager);
+		LogEventWriter.setLogger(LOGGER);
+
+		logTableModel = new LogEventTableModel(resourceManager, null);
+		logTable = new LogEventTable(logTableModel);
 
 		logPane = new JScrollPane(logTable);
 		logPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);

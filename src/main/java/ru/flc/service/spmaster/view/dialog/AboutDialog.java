@@ -44,20 +44,22 @@ public class AboutDialog extends JDialog
 
 	private void initComponents()
 	{
-		imageLabel = new JLabel(resourceManager.getImageIcon(AppConstants.ICON_NAME_ABOUT));
-		imageLabel.setLayout(new BorderLayout());
+		setLayout(new BorderLayout());
 
 		titleLabel = new JLabel(" Stored Procedure Master 1.0.0");
 		titleLabel.setFont(new Font(Font.MONOSPACED, Font.BOLD + Font.ITALIC, 18));
-		titleLabel.setForeground(Color.WHITE);
-		imageLabel.add(titleLabel, BorderLayout.NORTH);
+		titleLabel.setForeground(Color.YELLOW);
+		titleLabel.setBackground(Color.BLACK);
+		add(titleLabel, BorderLayout.NORTH);
+
+		imageLabel = new JLabel(resourceManager.getImageIcon(AppConstants.ICON_NAME_ABOUT));
+		add(imageLabel, BorderLayout.CENTER);
 
 		copyrightTitle = new JLabel(" (c) Family Leasure Club");
 		copyrightTitle.setFont(new Font(Font.MONOSPACED, Font.BOLD, 14));
-		copyrightTitle.setForeground(Color.WHITE);
-		imageLabel.add(copyrightTitle, BorderLayout.SOUTH);
-
-		add(imageLabel);
+		copyrightTitle.setForeground(Color.YELLOW);
+		copyrightTitle.setBackground(Color.BLACK);
+		add(copyrightTitle, BorderLayout.SOUTH);
 	}
 
 	private class AboutDialogMouseListener extends MouseAdapter

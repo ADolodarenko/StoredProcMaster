@@ -18,7 +18,7 @@ public interface View
 	void clearData();
 	void showConnectionStatus(DatabaseSettings settings);
 	void showException(Exception e);
-	void adjustToAppState();
+	void adjustToAppStatus();
 	void showStoredProcList(List<StoredProc> storedProcList);
 	void showStoredProcText(List<String> storedProcTextLines);
 }

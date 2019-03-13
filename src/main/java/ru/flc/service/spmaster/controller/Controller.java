@@ -48,14 +48,14 @@ public class Controller
 
 				view.showConnectionStatus(databaseSettings);
 
-				changeAppState(AppStatus.CONNECTED);
+				changeAppStatus(AppStatus.CONNECTED);
 			}
 			catch (Exception e)
 			{
 				view.showException(e);
 				view.showConnectionStatus(null);
 
-				changeAppState(AppStatus.DISCONNECTED);
+				changeAppStatus(AppStatus.DISCONNECTED);
 			}
 		}
 	}
@@ -76,13 +76,13 @@ public class Controller
 			view.clearData();
 			view.showConnectionStatus(null);
 
-			changeAppState(AppStatus.DISCONNECTED);
+			changeAppStatus(AppStatus.DISCONNECTED);
 		}
 	}
 
 	public void refreshStoredProcedureList()
 	{
-		if (checkDataModel() && checkView() && checkAppStates(AppStatus.CONNECTED))
+		if (checkDataModel() && checkView() && checkAppStatuses(AppStatus.CONNECTED))
 			try
 			{
 				view.clearData();
@@ -116,7 +116,8 @@ public class Controller
 
 	public void execStoredProcedure()
 	{
-		JOptionPane.showMessageDialog(null,
+		if (checkDataModel() && checkView())
+			JOptionPane.showMessageDialog(null,
 				"Execute the procedure.", "Message", JOptionPane.INFORMATION_MESSAGE);
 	}
 
@@ -192,18 +193,18 @@ public class Controller
 		return view != null;
 	}
 
-	public void changeAppState(AppStatus newAppStatus)
+	public void changeAppStatus(AppStatus newAppStatus)
 	{
 		appStatus = newAppStatus;
 
 		if (checkView())
-			view.adjustToAppState();
+			view.adjustToAppStatus();
 	}
 
-	public boolean checkAppStates(AppStatus... desirableStates)
+	public boolean checkAppStatuses(AppStatus... desirableStatuses)
 	{
-		for (AppStatus state : desirableStates)
-			if (state == appStatus)
+		for (AppStatus status : desirableStatuses)
+			if (status == appStatus)
 				return true;
 
 		return false;

@@ -157,10 +157,10 @@ public class ActionsManager
 
 	public void adjustActionsToAppState()
 	{
-		connectDbAction.setEnabled(controller.checkAppStates(AppStatus.DISCONNECTED));
-		disconnectDbAction.setEnabled(controller.checkAppStates(AppStatus.CONNECTED));
-		refreshSpListAction.setEnabled(controller.checkAppStates(AppStatus.CONNECTED));
-		execSpAction.setEnabled(controller.checkAppStates(AppStatus.CONNECTED));
-		showSettingsAction.setEnabled(controller.checkAppStates(AppStatus.DISCONNECTED));
+		connectDbAction.setEnabled(controller.checkAppStatuses(AppStatus.DISCONNECTED));
+		disconnectDbAction.setEnabled(controller.checkAppStatuses(AppStatus.CONNECTED));
+		refreshSpListAction.setEnabled(controller.checkAppStatuses(AppStatus.CONNECTED));
+		execSpAction.setEnabled(controller.checkAppStatuses(AppStatus.CONNECTED));
+		showSettingsAction.setEnabled(controller.checkAppStatuses(AppStatus.DISCONNECTED));
 	}
 }

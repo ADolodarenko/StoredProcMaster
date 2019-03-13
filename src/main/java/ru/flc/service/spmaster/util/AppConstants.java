@@ -43,6 +43,10 @@ public final class AppConstants
 	public static final String KEY_COLUMN_SP_DESCRIPT = "ColumnStoredProcDescript";
 	public static final String KEY_COLUMN_SP_NAME = "ColumnStoredProcName";
 
+	//Titles for dialogs
+	public static final String KEY_EXECUTION_DIALOG = "ExecutionDialog";
+	public static final String KEY_BUTTON_EXECUTE = "ExecuteButton";
+
 	//Names
 	public static final String MESS_LOGGING_PROPERTIES_FILE_NAME = "sp_master_logging.conf";
 	public static final String MESS_CONFIG_FILE_NAME = "sp_master.conf";
