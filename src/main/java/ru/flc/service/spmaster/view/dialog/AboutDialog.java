@@ -48,6 +48,7 @@ public class AboutDialog extends JDialog
 
 		titleLabel = new JLabel(" Stored Procedure Master 1.0.0");
 		titleLabel.setFont(new Font(Font.MONOSPACED, Font.BOLD + Font.ITALIC, 18));
+		titleLabel.setOpaque(true);
 		titleLabel.setForeground(Color.YELLOW);
 		titleLabel.setBackground(Color.BLACK);
 		add(titleLabel, BorderLayout.NORTH);
@@ -55,8 +56,9 @@ public class AboutDialog extends JDialog
 		imageLabel = new JLabel(resourceManager.getImageIcon(AppConstants.ICON_NAME_ABOUT));
 		add(imageLabel, BorderLayout.CENTER);
 
-		copyrightTitle = new JLabel(" (c) Family Leasure Club");
+		copyrightTitle = new JLabel(" (c) Family Leasure Club, 2019");
 		copyrightTitle.setFont(new Font(Font.MONOSPACED, Font.BOLD, 14));
+		copyrightTitle.setOpaque(true);
 		copyrightTitle.setForeground(Color.YELLOW);
 		copyrightTitle.setBackground(Color.BLACK);
 		add(copyrightTitle, BorderLayout.SOUTH);
