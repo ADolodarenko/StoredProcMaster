@@ -69,7 +69,11 @@ public class ExecutionDialog extends JDialog
 			{
 				tableModel.addAllRows(parameterList);
 				tableModel.fireTableStructureChanged();
+
+				settingsPanel.setVisible(true);
 			}
+			else
+				settingsPanel.setVisible(false);
 
 			titleAdjuster.resetComponents();
 
@@ -83,7 +87,10 @@ public class ExecutionDialog extends JDialog
 	private void initComponents()
 	{
 		add(initTitlePanel(), BorderLayout.NORTH);
+
 		settingsPanel = initSettingsPanel();
+		add(settingsPanel, BorderLayout.CENTER);
+
 		add(initCommandPanel(), BorderLayout.SOUTH);
 
 		titleAdjuster.registerComponent(this, new Title(resourceManager, AppConstants.KEY_EXECUTION_DIALOG));
