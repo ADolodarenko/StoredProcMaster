@@ -3,6 +3,7 @@ package ru.flc.service.spmaster.view;
 import org.dav.service.settings.DatabaseSettings;
 import org.dav.service.settings.TransmissiveSettings;
 import org.dav.service.settings.ViewSettings;
+import org.dav.service.settings.parameter.Parameter;
 import org.dav.service.util.ResourceManager;
 import org.dav.service.view.Title;
 import org.dav.service.view.TitleAdjuster;
@@ -20,6 +21,7 @@ import ru.flc.service.spmaster.model.settings.ViewConstraints;
 import ru.flc.service.spmaster.util.AppConstants;
 import ru.flc.service.spmaster.util.AppStatus;
 import ru.flc.service.spmaster.view.dialog.AboutDialog;
+import ru.flc.service.spmaster.view.dialog.ExecutionDialog;
 import ru.flc.service.spmaster.view.table.StoredProcListTable;
 import ru.flc.service.spmaster.view.table.StoredProcListTableModel;
 import ru.flc.service.spmaster.view.table.listener.StoredProcListSelectionListener;
@@ -46,6 +48,7 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	private ActionsManager actionsManager;
 	private TitleAdjuster titleAdjuster;
 
+	private ExecutionDialog executionDialog;
 	private SettingsDialog settingsDialog;
 	private AboutDialog aboutDialog;
 
@@ -216,6 +219,29 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 				procTextArea.append(line);
 
 			procTextArea.setCaretPosition(0);
+		}
+	}
+
+	@Override
+	public void showStoredProcInfo(List<Parameter> storedProcParams)
+	{
+		if (executionDialog == null)
+		{
+			try
+			{
+				executionDialog = new ExecutionDialog(this, this, resourceManager);
+				executionDialog.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+			}
+			catch (Exception e)
+			{
+				log(e);
+			}
+		}
+
+		if (executionDialog != null)
+		{
+			executionDialog.setParameterList(storedProcParams);
+			executionDialog.setVisible(true);
 		}
 	}
 

@@ -164,6 +164,10 @@ public class ExecutionDialog extends JDialog
 	{
 		stopTableEditing();
 
+		setVisible(false);
+
+		if (invoker != null)
+			invoker.setFocus();
 	}
 
 	private void exit()

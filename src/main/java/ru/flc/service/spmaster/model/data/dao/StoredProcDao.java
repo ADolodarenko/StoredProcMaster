@@ -1,5 +1,6 @@
 package ru.flc.service.spmaster.model.data.dao;
 
+import org.dav.service.settings.parameter.Parameter;
 import org.dav.service.util.Constants;
 import ru.flc.service.spmaster.model.data.entity.StoredProc;
 import ru.flc.service.spmaster.model.data.source.DataSource;
@@ -38,6 +39,11 @@ public class StoredProcDao implements AccessObject
 	public List<String> getStoredProcText(StoredProc storedProc) throws Exception
 	{
 		return source.getStoredProcText(storedProc);
+	}
+
+	public List<Parameter> getStoredProcParams(StoredProc storedProc) throws Exception
+	{
+		return source.getStoredProcParams(storedProc);
 	}
 
 	public void execStoredProc(StoredProc proc) throws Exception

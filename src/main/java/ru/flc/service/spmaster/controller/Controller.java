@@ -2,6 +2,7 @@ package ru.flc.service.spmaster.controller;
 
 import org.dav.service.settings.DatabaseSettings;
 import org.dav.service.settings.TransmissiveSettings;
+import org.dav.service.settings.parameter.Parameter;
 import org.dav.service.util.ResourceManager;
 import ru.flc.service.spmaster.model.data.DataModel;
 import ru.flc.service.spmaster.model.data.entity.StoredProc;
@@ -10,7 +11,6 @@ import ru.flc.service.spmaster.model.settings.SettingsModel;
 import ru.flc.service.spmaster.util.AppStatus;
 import ru.flc.service.spmaster.view.View;
 
-import javax.swing.*;
 import java.util.List;
 
 public class Controller
@@ -114,11 +114,26 @@ public class Controller
 			}
 	}
 
-	public void execStoredProcedure()
+	public void execStoredProcedure(StoredProc storedProc)
 	{
 		if (checkDataModel() && checkView())
+		{
+			try
+			{
+				List<Parameter> storedProcParams = dataModel.getStoredProcParams(storedProc);
+				view.showStoredProcInfo(storedProcParams);
+			}
+			catch (Exception e)
+			{
+				view.showException(e);
+			}
+
+
+			/*
 			JOptionPane.showMessageDialog(null,
-				"Execute the procedure.", "Message", JOptionPane.INFORMATION_MESSAGE);
+					"Execute the procedure.", "Message", JOptionPane.INFORMATION_MESSAGE);
+			*/
+		}
 	}
 
 	public void showSettings()

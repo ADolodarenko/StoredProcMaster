@@ -3,6 +3,7 @@ package ru.flc.service.spmaster.view;
 import org.dav.service.settings.DatabaseSettings;
 import org.dav.service.settings.TransmissiveSettings;
 import org.dav.service.settings.ViewSettings;
+import org.dav.service.settings.parameter.Parameter;
 import ru.flc.service.spmaster.model.data.entity.StoredProc;
 import ru.flc.service.spmaster.model.settings.ViewConstraints;
 
@@ -21,4 +22,5 @@ public interface View
 	void adjustToAppStatus();
 	void showStoredProcList(List<StoredProc> storedProcList);
 	void showStoredProcText(List<String> storedProcTextLines);
+	void showStoredProcInfo(List<Parameter> storedProcParams);
 }

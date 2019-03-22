@@ -3,6 +3,7 @@ package ru.flc.service.spmaster.model.data.source;
 import com.sybase.jdbcx.SybDriver;
 import org.dav.service.settings.DatabaseSettings;
 import org.dav.service.settings.Settings;
+import org.dav.service.settings.parameter.Parameter;
 import org.dav.service.settings.type.Password;
 import org.dav.service.util.Constants;
 import ru.flc.service.spmaster.model.data.entity.StoredProc;
@@ -72,6 +73,11 @@ public class AseDataSource implements DataSource
 		if (resultSet != null && stringList != null)
 			while (resultSet.next())
 				stringList.add(resultSet.getString(1));
+	}
+
+	private static void transferResultToParamsList(ResultSet resultSet, List<Parameter> parametersList)
+	{
+		;
 	}
 
 	private static StoredProcStatus getProcStatusById(int statusId)
@@ -260,6 +266,17 @@ public class AseDataSource implements DataSource
 		}
 		else
 			throw new Exception(Constants.EXCPT_DATABASE_WITHOUT_SP_SUPPORT);
+	}
+
+	@Override
+	public List<Parameter> getStoredProcParams(StoredProc storedProc) throws Exception
+	{
+		List<Parameter> resultList = new LinkedList<>();
+
+		ResultSet resultSet = metaData.getProcedureColumns(dbName, null, storedProc.getName(), null);
+		transferResultToParamsList(resultSet, resultList);
+
+		return resultList;
 	}
 
 	private static class SingletonHelper

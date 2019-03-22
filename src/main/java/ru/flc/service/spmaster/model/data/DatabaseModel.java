@@ -1,6 +1,7 @@
 package ru.flc.service.spmaster.model.data;
 
 import org.dav.service.settings.Settings;
+import org.dav.service.settings.parameter.Parameter;
 import ru.flc.service.spmaster.model.data.dao.AccessObjectFactory;
 import ru.flc.service.spmaster.model.data.dao.StoredProcDao;
 import ru.flc.service.spmaster.model.data.entity.StoredProc;
@@ -39,6 +40,15 @@ public class DatabaseModel implements DataModel
 	{
 		if (storedProcDao != null)
 			return storedProcDao.getStoredProcText(storedProc);
+		else
+			return null;
+	}
+
+	@Override
+	public List<Parameter> getStoredProcParams(StoredProc storedProc) throws Exception
+	{
+		if (storedProcDao != null)
+			return storedProcDao.getStoredProcParams(storedProc);
 		else
 			return null;
 	}
