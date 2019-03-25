@@ -75,9 +75,16 @@ public class AseDataSource implements DataSource
 				stringList.add(resultSet.getString(1));
 	}
 
-	private static void transferResultToParamsList(ResultSet resultSet, List<Parameter> parametersList)
+	private static void transferResultToParamsList(ResultSet resultSet, List<Parameter> parametersList) throws SQLException
 	{
-		;
+		if (resultSet != null && parametersList != null)
+			while (resultSet.next())
+			{
+				Parameter parameter = getParameterFromRow(resultSet);
+
+				if (parameter != null)
+					parametersList.add(parameter);
+			}
 	}
 
 	private static StoredProcStatus getProcStatusById(int statusId)
@@ -110,6 +117,20 @@ public class AseDataSource implements DataSource
 		}
 
 		return occupant;
+	}
+
+	private static Parameter getParameterFromRow(ResultSet row) throws SQLException
+	{
+		Parameter parameter = null;
+
+		int parameterType = row.getInt(AppConstants.MESS_SP_PARAM_COL_NAME_COLUMN_TYPE);
+
+		if ()  //parameterType in (1, 2, 4)
+		{
+
+		}
+
+		return parameter;
 	}
 
 

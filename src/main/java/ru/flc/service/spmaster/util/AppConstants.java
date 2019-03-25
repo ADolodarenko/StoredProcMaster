@@ -60,6 +60,7 @@ public final class AppConstants
 	public static final String MESS_SP_LIST_COL_NAME_OCCUPANT_ID = "occupant_id";
 	public static final String MESS_SP_LIST_COL_NAME_OCCUPANT_LOGIN = "occupant_login";
 	public static final String MESS_SP_LIST_COL_NAME_OCCUPANT_NAME = "occupant_name";
+	public static final String MESS_SP_PARAM_COL_NAME_COLUMN_TYPE = "COLUMN_TYPE";
 
 	//Images
 	public static final String ICON_NAME_ABOUT = "hedgehogs.png";
