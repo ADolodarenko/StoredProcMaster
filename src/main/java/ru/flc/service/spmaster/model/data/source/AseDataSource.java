@@ -11,16 +11,38 @@ import ru.flc.service.spmaster.model.data.entity.StoredProcStatus;
 import ru.flc.service.spmaster.model.data.entity.User;
 import ru.flc.service.spmaster.model.settings.OperationalSettings;
 import ru.flc.service.spmaster.util.AppConstants;
+import ru.flc.service.spmaster.util.AppUtils;
 
 import java.sql.*;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class AseDataSource implements DataSource
 {
 	public static AseDataSource getInstance()
 	{
 		return SingletonHelper.INSTANCE;
+	}
+
+	private static Map<Integer, Class<?>> databaseTypesMap = new HashMap<>();
+
+	static
+	{
+		databaseTypesMap.put(Types.BIGINT, Long.class);
+		databaseTypesMap.put(Types.BIGINT, Long.class);
+		databaseTypesMap.put(Types.BIGINT, Long.class);
+		databaseTypesMap.put(Types.BIGINT, Long.class);
+		databaseTypesMap.put(Types.BIGINT, Long.class);
+		databaseTypesMap.put(Types.BIGINT, Long.class);
+		databaseTypesMap.put(Types.BIGINT, Long.class);
+		databaseTypesMap.put(Types.BIGINT, Long.class);
+		databaseTypesMap.put(Types.BIGINT, Long.class);
+		databaseTypesMap.put(Types.BIGINT, Long.class);
+		databaseTypesMap.put(Types.BIGINT, Long.class);
+		databaseTypesMap.put(Types.BIGINT, Long.class);
+		databaseTypesMap.put(Types.BIGINT, Long.class);
 	}
 
 	private static String buildDatabaseUrl(DatabaseSettings settings)
@@ -119,18 +141,38 @@ public class AseDataSource implements DataSource
 		return occupant;
 	}
 
-	private static Parameter getParameterFromRow(ResultSet row) throws SQLException
+	private static Parameter getParameterFromRow(ResultSet record) throws SQLException
 	{
 		Parameter parameter = null;
 
-		int parameterType = row.getInt(AppConstants.MESS_SP_PARAM_COL_NAME_COLUMN_TYPE);
+		short parameterType = record.getShort(AppConstants.MESS_SP_PARAM_COL_NAME_COLUMN_TYPE);
 
-		if ()  //parameterType in (1, 2, 4)
+		if (isInOutParameter(parameterType))
 		{
+			String parameterName = record.getString(AppConstants.MESS_SP_PARAM_COL_NAME_COLUMN_NAME);
+
+			int dataType = record.getInt(AppConstants.MESS_SP_PARAM_COL_NAME_DATA_TYPE);
+			Class<?> dataClass = getDataClass(dataType);
+
+
 
 		}
 
 		return parameter;
+	}
+
+	/**
+	 * Tells if a procedure column is an in-, out- or inout-parameter:
+	 * procedureColumnIn (1), procedureColumnInOut (2), procedureColumnOut (4)
+	 */
+	private static boolean isInOutParameter(short spParameterType)
+	{
+		return AppUtils.arrayContainsElement(new short[]{1, 2, 4}, spParameterType);
+	}
+
+	private static Class<?> getDataClass(int dataType)
+	{
+		return databaseTypesMap.get(dataType);
 	}
 
 
