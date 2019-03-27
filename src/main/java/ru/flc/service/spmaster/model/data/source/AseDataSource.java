@@ -13,6 +13,7 @@ import ru.flc.service.spmaster.model.settings.OperationalSettings;
 import ru.flc.service.spmaster.util.AppConstants;
 import ru.flc.service.spmaster.util.AppUtils;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -26,23 +27,36 @@ public class AseDataSource implements DataSource
 		return SingletonHelper.INSTANCE;
 	}
 
-	private static Map<Integer, Class<?>> databaseTypesMap = new HashMap<>();
+	private static Map<Integer, Class<?>> databaseTypesMap;
 
 	static
 	{
+		databaseTypesMap = new HashMap<>();
+
+		databaseTypesMap.put(Types.CHAR, String.class);
+		databaseTypesMap.put(Types.VARCHAR, String.class);
+		databaseTypesMap.put(Types.LONGVARCHAR, String.class);
+		databaseTypesMap.put(Types.NUMERIC, BigDecimal.class);
+		databaseTypesMap.put(Types.DECIMAL, BigDecimal.class);
+		databaseTypesMap.put(Types.BIT, Boolean.class);
+		databaseTypesMap.put(Types.TINYINT, Integer.class);
+		databaseTypesMap.put(Types.SMALLINT, Integer.class);
+		databaseTypesMap.put(Types.INTEGER, Integer.class);
 		databaseTypesMap.put(Types.BIGINT, Long.class);
-		databaseTypesMap.put(Types.BIGINT, Long.class);
-		databaseTypesMap.put(Types.BIGINT, Long.class);
-		databaseTypesMap.put(Types.BIGINT, Long.class);
-		databaseTypesMap.put(Types.BIGINT, Long.class);
-		databaseTypesMap.put(Types.BIGINT, Long.class);
-		databaseTypesMap.put(Types.BIGINT, Long.class);
-		databaseTypesMap.put(Types.BIGINT, Long.class);
-		databaseTypesMap.put(Types.BIGINT, Long.class);
-		databaseTypesMap.put(Types.BIGINT, Long.class);
-		databaseTypesMap.put(Types.BIGINT, Long.class);
-		databaseTypesMap.put(Types.BIGINT, Long.class);
-		databaseTypesMap.put(Types.BIGINT, Long.class);
+		databaseTypesMap.put(Types.REAL, Float.class);
+		databaseTypesMap.put(Types.FLOAT, Double.class);
+		databaseTypesMap.put(Types.DOUBLE, Double.class);
+		databaseTypesMap.put(Types.BINARY, byte[].class);
+		databaseTypesMap.put(Types.VARBINARY, byte[].class);
+		databaseTypesMap.put(Types.LONGVARBINARY, byte[].class);
+		databaseTypesMap.put(Types.DATE, Date.class);
+		databaseTypesMap.put(Types.TIME, Time.class);
+		databaseTypesMap.put(Types.TIMESTAMP, Timestamp.class);
+		databaseTypesMap.put(Types.CLOB, Clob.class);
+		databaseTypesMap.put(Types.BLOB, Blob.class);
+		databaseTypesMap.put(Types.ARRAY, Array.class);
+		databaseTypesMap.put(Types.STRUCT, SQLData.class);
+		databaseTypesMap.put(Types.REF, Ref.class);
 	}
 
 	private static String buildDatabaseUrl(DatabaseSettings settings)
