@@ -2,10 +2,10 @@ package ru.flc.service.spmaster.controller;
 
 import org.dav.service.settings.DatabaseSettings;
 import org.dav.service.settings.TransmissiveSettings;
-import org.dav.service.settings.parameter.Parameter;
 import org.dav.service.util.ResourceManager;
 import ru.flc.service.spmaster.model.data.DataModel;
 import ru.flc.service.spmaster.model.data.entity.StoredProc;
+import ru.flc.service.spmaster.model.data.entity.StoredProcParameter;
 import ru.flc.service.spmaster.model.settings.OperationalSettings;
 import ru.flc.service.spmaster.model.settings.SettingsModel;
 import ru.flc.service.spmaster.util.AppStatus;
@@ -120,7 +120,7 @@ public class Controller
 		{
 			try
 			{
-				List<Parameter> storedProcParams = dataModel.getStoredProcParams(storedProc);
+				List<StoredProcParameter> storedProcParams = dataModel.getStoredProcParams(storedProc);
 				view.showStoredProcInfo(storedProcParams);
 			}
 			catch (Exception e)

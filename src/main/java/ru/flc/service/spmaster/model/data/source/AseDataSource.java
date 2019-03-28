@@ -3,22 +3,20 @@ package ru.flc.service.spmaster.model.data.source;
 import com.sybase.jdbcx.SybDriver;
 import org.dav.service.settings.DatabaseSettings;
 import org.dav.service.settings.Settings;
-import org.dav.service.settings.parameter.Parameter;
 import org.dav.service.settings.type.Password;
 import org.dav.service.util.Constants;
+import ru.flc.service.spmaster.model.DefaultValues;
 import ru.flc.service.spmaster.model.data.entity.StoredProc;
+import ru.flc.service.spmaster.model.data.entity.StoredProcParameter;
 import ru.flc.service.spmaster.model.data.entity.StoredProcStatus;
 import ru.flc.service.spmaster.model.data.entity.User;
 import ru.flc.service.spmaster.model.settings.OperationalSettings;
 import ru.flc.service.spmaster.util.AppConstants;
 import ru.flc.service.spmaster.util.AppUtils;
 
-import java.math.BigDecimal;
 import java.sql.*;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 public class AseDataSource implements DataSource
 {
@@ -27,37 +25,7 @@ public class AseDataSource implements DataSource
 		return SingletonHelper.INSTANCE;
 	}
 
-	private static Map<Integer, Class<?>> databaseTypesMap;
 
-	static
-	{
-		databaseTypesMap = new HashMap<>();
-
-		databaseTypesMap.put(Types.CHAR, String.class);
-		databaseTypesMap.put(Types.VARCHAR, String.class);
-		databaseTypesMap.put(Types.LONGVARCHAR, String.class);
-		databaseTypesMap.put(Types.NUMERIC, BigDecimal.class);
-		databaseTypesMap.put(Types.DECIMAL, BigDecimal.class);
-		databaseTypesMap.put(Types.BIT, Boolean.class);
-		databaseTypesMap.put(Types.TINYINT, Integer.class);
-		databaseTypesMap.put(Types.SMALLINT, Integer.class);
-		databaseTypesMap.put(Types.INTEGER, Integer.class);
-		databaseTypesMap.put(Types.BIGINT, Long.class);
-		databaseTypesMap.put(Types.REAL, Float.class);
-		databaseTypesMap.put(Types.FLOAT, Double.class);
-		databaseTypesMap.put(Types.DOUBLE, Double.class);
-		databaseTypesMap.put(Types.BINARY, byte[].class);
-		databaseTypesMap.put(Types.VARBINARY, byte[].class);
-		databaseTypesMap.put(Types.LONGVARBINARY, byte[].class);
-		databaseTypesMap.put(Types.DATE, Date.class);
-		databaseTypesMap.put(Types.TIME, Time.class);
-		databaseTypesMap.put(Types.TIMESTAMP, Timestamp.class);
-		databaseTypesMap.put(Types.CLOB, Clob.class);
-		databaseTypesMap.put(Types.BLOB, Blob.class);
-		databaseTypesMap.put(Types.ARRAY, Array.class);
-		databaseTypesMap.put(Types.STRUCT, SQLData.class);
-		databaseTypesMap.put(Types.REF, Ref.class);
-	}
 
 	private static String buildDatabaseUrl(DatabaseSettings settings)
 	{
@@ -111,12 +79,12 @@ public class AseDataSource implements DataSource
 				stringList.add(resultSet.getString(1));
 	}
 
-	private static void transferResultToParamsList(ResultSet resultSet, List<Parameter> parametersList) throws SQLException
+	private static void transferResultToParamsList(ResultSet resultSet, List<StoredProcParameter> parametersList) throws Exception
 	{
 		if (resultSet != null && parametersList != null)
 			while (resultSet.next())
 			{
-				Parameter parameter = getParameterFromRow(resultSet);
+				StoredProcParameter parameter = getParameterFromRow(resultSet);
 
 				if (parameter != null)
 					parametersList.add(parameter);
@@ -155,9 +123,9 @@ public class AseDataSource implements DataSource
 		return occupant;
 	}
 
-	private static Parameter getParameterFromRow(ResultSet record) throws SQLException
+	private static StoredProcParameter getParameterFromRow(ResultSet record) throws Exception
 	{
-		Parameter parameter = null;
+		StoredProcParameter parameter = null;
 
 		short parameterType = record.getShort(AppConstants.MESS_SP_PARAM_COL_NAME_COLUMN_TYPE);
 
@@ -165,11 +133,18 @@ public class AseDataSource implements DataSource
 		{
 			String parameterName = record.getString(AppConstants.MESS_SP_PARAM_COL_NAME_COLUMN_NAME);
 
-			int dataType = record.getInt(AppConstants.MESS_SP_PARAM_COL_NAME_DATA_TYPE);
-			Class<?> dataClass = getDataClass(dataType);
+			int databaseTypeId = record.getInt(AppConstants.MESS_SP_PARAM_COL_NAME_DATA_TYPE);
+			Class<?> dataClass = DatabaseTypes.getJavaClass(databaseTypeId);
 
+			if (dataClass == null)
+				throw new Exception();
 
+			Object initialValue = DefaultValues.getValue(dataClass);
 
+			if (initialValue == null)
+				throw new Exception();
+
+			parameter = new StoredProcParameter(parameterName, dataClass, initialValue);
 		}
 
 		return parameter;
@@ -182,11 +157,6 @@ public class AseDataSource implements DataSource
 	private static boolean isInOutParameter(short spParameterType)
 	{
 		return AppUtils.arrayContainsElement(new short[]{1, 2, 4}, spParameterType);
-	}
-
-	private static Class<?> getDataClass(int dataType)
-	{
-		return databaseTypesMap.get(dataType);
 	}
 
 
@@ -346,9 +316,9 @@ public class AseDataSource implements DataSource
 	}
 
 	@Override
-	public List<Parameter> getStoredProcParams(StoredProc storedProc) throws Exception
+	public List<StoredProcParameter> getStoredProcParams(StoredProc storedProc) throws Exception
 	{
-		List<Parameter> resultList = new LinkedList<>();
+		List<StoredProcParameter> resultList = new LinkedList<>();
 
 		ResultSet resultSet = metaData.getProcedureColumns(dbName, null, storedProc.getName(), null);
 		transferResultToParamsList(resultSet, resultList);

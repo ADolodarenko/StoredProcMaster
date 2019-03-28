@@ -3,7 +3,6 @@ package ru.flc.service.spmaster.view;
 import org.dav.service.settings.DatabaseSettings;
 import org.dav.service.settings.TransmissiveSettings;
 import org.dav.service.settings.ViewSettings;
-import org.dav.service.settings.parameter.Parameter;
 import org.dav.service.util.ResourceManager;
 import org.dav.service.view.Title;
 import org.dav.service.view.TitleAdjuster;
@@ -17,6 +16,7 @@ import org.dav.service.view.table.LogEventWriter;
 import ru.flc.service.spmaster.controller.ActionsManager;
 import ru.flc.service.spmaster.controller.Controller;
 import ru.flc.service.spmaster.model.data.entity.StoredProc;
+import ru.flc.service.spmaster.model.data.entity.StoredProcParameter;
 import ru.flc.service.spmaster.model.settings.ViewConstraints;
 import ru.flc.service.spmaster.util.AppConstants;
 import ru.flc.service.spmaster.util.AppStatus;
@@ -223,7 +223,7 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	}
 
 	@Override
-	public void showStoredProcInfo(List<Parameter> storedProcParams)
+	public void showStoredProcInfo(List<StoredProcParameter> storedProcParams)
 	{
 		if (executionDialog == null)
 		{

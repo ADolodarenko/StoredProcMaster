@@ -10,10 +10,12 @@ import org.dav.service.view.table.SettingsTable;
 import org.dav.service.view.table.SettingsTableModel;
 import org.dav.service.view.table.editor.TableCellEditorFactory;
 import org.dav.service.view.table.renderer.TableCellRendererFactory;
+import ru.flc.service.spmaster.model.data.entity.StoredProcParameter;
 import ru.flc.service.spmaster.util.AppConstants;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.LinkedList;
 import java.util.List;
 
 public class ExecutionDialog extends JDialog
@@ -53,9 +55,9 @@ public class ExecutionDialog extends JDialog
 		setResizable(false);
 	}
 
-	public void setParameterList(List<Parameter> parameterList)
+	public void setParameterList(List<StoredProcParameter> storedProcParameters)
 	{
-		this.parameterList = parameterList;
+		this.parameterList = getParameters(storedProcParameters);
 	}
 
 	@Override
@@ -158,6 +160,25 @@ public class ExecutionDialog extends JDialog
 		cancelButton.setMaximumSize(BUTTON_MAX_SIZE);
 		cancelButton.setIcon(resourceManager.getImageIcon(Constants.ICON_NAME_CANCEL));
 		cancelButton.addActionListener(event -> exit());
+	}
+
+	private List<Parameter> getParameters(List<StoredProcParameter> storedProcParameters)
+	{
+		if (storedProcParameters == null)
+			return null;
+
+		List<Parameter> parameters = new LinkedList<>();
+
+		for (StoredProcParameter parameter : storedProcParameters)
+		{
+			String name = parameter.getName();
+			Class<?> type = parameter.getType();
+			Object value = parameter.getValue();
+
+			parameters.add(new Parameter(new Title(resourceManager, name), value, type));
+		}
+
+		return parameters;
 	}
 
 	private void execute()
