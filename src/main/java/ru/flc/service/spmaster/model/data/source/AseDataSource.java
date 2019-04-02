@@ -6,10 +6,7 @@ import org.dav.service.settings.Settings;
 import org.dav.service.settings.type.Password;
 import org.dav.service.util.Constants;
 import ru.flc.service.spmaster.model.DefaultValues;
-import ru.flc.service.spmaster.model.data.entity.StoredProc;
-import ru.flc.service.spmaster.model.data.entity.StoredProcParameter;
-import ru.flc.service.spmaster.model.data.entity.StoredProcStatus;
-import ru.flc.service.spmaster.model.data.entity.User;
+import ru.flc.service.spmaster.model.data.entity.*;
 import ru.flc.service.spmaster.model.settings.OperationalSettings;
 import ru.flc.service.spmaster.util.AppConstants;
 import ru.flc.service.spmaster.util.AppUtils;
@@ -127,38 +124,29 @@ public class AseDataSource implements DataSource
 	{
 		StoredProcParameter parameter = null;
 
-		short parameterType = record.getShort(AppConstants.MESS_SP_PARAM_COL_NAME_COLUMN_TYPE);
+		short parameterTypeId = record.getShort(AppConstants.MESS_SP_PARAM_COL_NAME_COLUMN_TYPE);
+		StoredProcParamType parameterType = StoredProcParamTypesMap.getType(parameterTypeId);
 
-		if (isInOutParameter(parameterType))
+		if (parameterType != null)
 		{
 			String parameterName = record.getString(AppConstants.MESS_SP_PARAM_COL_NAME_COLUMN_NAME);
 
 			int databaseTypeId = record.getInt(AppConstants.MESS_SP_PARAM_COL_NAME_DATA_TYPE);
-			Class<?> dataClass = DatabaseTypes.getJavaClass(databaseTypeId);
+			Class<?> valueClass = DatabaseTypes.getJavaClass(databaseTypeId);
 
-			if (dataClass == null)
+			if (valueClass == null)
 				throw new Exception();
 
-			Object initialValue = DefaultValues.getValue(dataClass);
+			Object initialValue = DefaultValues.getValue(valueClass);
 
 			if (initialValue == null)
 				throw new Exception();
 
-			parameter = new StoredProcParameter(parameterName, dataClass, initialValue);
+			parameter = new StoredProcParameter(parameterType, false, parameterName, valueClass, initialValue);
 		}
 
 		return parameter;
 	}
-
-	/**
-	 * Tells if a procedure column is an in-, out- or inout-parameter:
-	 * procedureColumnIn (1), procedureColumnInOut (2), procedureColumnOut (4)
-	 */
-	private static boolean isInOutParameter(short spParameterType)
-	{
-		return AppUtils.arrayContainsElement(new short[]{1, 2, 4}, spParameterType);
-	}
-
 
 	private String url;
 	private String dbName;

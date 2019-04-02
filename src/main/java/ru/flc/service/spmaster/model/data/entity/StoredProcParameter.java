@@ -2,15 +2,30 @@ package ru.flc.service.spmaster.model.data.entity;
 
 public class StoredProcParameter
 {
+	private StoredProcParamType type;
+	private boolean nullable;
 	private String name;
-	private Class<?> type;
+	private Class<?> valueClass;
 	private Object value;
 
-	public StoredProcParameter(String name, Class<?> type, Object value)
+	public StoredProcParameter(StoredProcParamType type, boolean nullable,
+							   String name, Class<?> valueClass, Object value)
 	{
-		this.name = name;
 		this.type = type;
+		this.nullable = nullable;
+		this.name = name;
+		this.valueClass = valueClass;
 		this.value = value;
+	}
+
+	public StoredProcParamType getType()
+	{
+		return type;
+	}
+
+	public boolean isNullable()
+	{
+		return nullable;
 	}
 
 	public String getName()
@@ -18,9 +33,9 @@ public class StoredProcParameter
 		return name;
 	}
 
-	public Class<?> getType()
+	public Class<?> getValueClass()
 	{
-		return type;
+		return valueClass;
 	}
 
 	public Object getValue()

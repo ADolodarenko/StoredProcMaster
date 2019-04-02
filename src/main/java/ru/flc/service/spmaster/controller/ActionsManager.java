@@ -59,7 +59,7 @@ public class ActionsManager
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				//controller.execStoredProcedure();
+				controller.execStoredProcedure();
 			}
 		};
 

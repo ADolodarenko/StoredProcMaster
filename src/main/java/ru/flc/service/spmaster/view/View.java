@@ -23,4 +23,5 @@ public interface View
 	void showStoredProcList(List<StoredProc> storedProcList);
 	void showStoredProcText(List<String> storedProcTextLines);
 	void showStoredProcInfo(List<StoredProcParameter> storedProcParams);
+	StoredProc getCurrentStoredProc();
 }

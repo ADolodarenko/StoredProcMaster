@@ -114,25 +114,24 @@ public class Controller
 			}
 	}
 
-	public void execStoredProcedure(StoredProc storedProc)
+	public void execStoredProcedure()
 	{
 		if (checkDataModel() && checkView())
 		{
 			try
 			{
-				List<StoredProcParameter> storedProcParams = dataModel.getStoredProcParams(storedProc);
-				view.showStoredProcInfo(storedProcParams);
+				StoredProc storedProc = view.getCurrentStoredProc();
+
+				if (storedProc != null)
+				{
+					List<StoredProcParameter> storedProcParams = dataModel.getStoredProcParams(storedProc);
+					view.showStoredProcInfo(storedProcParams);
+				}
 			}
 			catch (Exception e)
 			{
 				view.showException(e);
 			}
-
-
-			/*
-			JOptionPane.showMessageDialog(null,
-					"Execute the procedure.", "Message", JOptionPane.INFORMATION_MESSAGE);
-			*/
 		}
 	}
 

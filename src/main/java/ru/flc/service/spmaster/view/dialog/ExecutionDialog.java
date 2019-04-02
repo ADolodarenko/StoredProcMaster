@@ -12,6 +12,7 @@ import org.dav.service.view.table.editor.TableCellEditorFactory;
 import org.dav.service.view.table.renderer.TableCellRendererFactory;
 import ru.flc.service.spmaster.model.data.entity.StoredProcParameter;
 import ru.flc.service.spmaster.util.AppConstants;
+import ru.flc.service.spmaster.view.table.StoredProcParamsTable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,7 +32,7 @@ public class ExecutionDialog extends JDialog
 	private List<Parameter> parameterList;
 
 	private SettingsTableModel tableModel;
-	private SettingsTable table;
+	private StoredProcParamsTable table;
 	private JPanel settingsPanel;
 
 	private JLabel imageLabel; //102, 70
@@ -71,6 +72,8 @@ public class ExecutionDialog extends JDialog
 			{
 				tableModel.addAllRows(parameterList);
 				tableModel.fireTableStructureChanged();
+
+				table.setFillsViewportHeight(false);
 
 				settingsPanel.setVisible(true);
 			}
@@ -119,7 +122,7 @@ public class ExecutionDialog extends JDialog
 	{
 		tableModel = new SettingsTableModel(resourceManager, Parameter.getTitleKeys(), null);
 
-		table = new SettingsTable(tableModel,
+		table = new StoredProcParamsTable(tableModel,
 				new TableCellEditorFactory(resourceManager),
 				new TableCellRendererFactory(resourceManager));
 
@@ -172,10 +175,10 @@ public class ExecutionDialog extends JDialog
 		for (StoredProcParameter parameter : storedProcParameters)
 		{
 			String name = parameter.getName();
-			Class<?> type = parameter.getType();
+			Class<?> valueClass = parameter.getValueClass();
 			Object value = parameter.getValue();
 
-			parameters.add(new Parameter(new Title(resourceManager, name), value, type));
+			parameters.add(new Parameter(new Title(resourceManager, name), value, valueClass));
 		}
 
 		return parameters;

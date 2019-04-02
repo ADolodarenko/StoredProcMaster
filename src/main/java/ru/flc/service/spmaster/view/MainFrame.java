@@ -246,6 +246,21 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	}
 
 	@Override
+	public StoredProc getCurrentStoredProc()
+	{
+		ListSelectionModel selectionModel = procListTable.getSelectionModel();
+
+		if ( !selectionModel.isSelectionEmpty() )
+		{
+			int selectionIndex = selectionModel.getMinSelectionIndex();
+
+			return procListTable.getStoredProc(selectionIndex);
+		}
+		else
+			return null;
+	}
+
+	@Override
 	public void log(Exception e)
 	{
 		LogEventWriter.writeThrowable(e, logTableModel);
