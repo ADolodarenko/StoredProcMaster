@@ -5,11 +5,12 @@ import org.dav.service.util.Constants;
 import org.dav.service.util.ResourceManager;
 import org.dav.service.view.Title;
 import org.dav.service.view.TitleAdjuster;
+import org.dav.service.view.UsableGBC;
 import org.dav.service.view.dialog.SettingsDialogInvoker;
-import org.dav.service.view.table.SettingsTable;
 import org.dav.service.view.table.SettingsTableModel;
 import org.dav.service.view.table.editor.TableCellEditorFactory;
 import org.dav.service.view.table.renderer.TableCellRendererFactory;
+import ru.flc.service.spmaster.model.data.entity.StoredProc;
 import ru.flc.service.spmaster.model.data.entity.StoredProcParameter;
 import ru.flc.service.spmaster.util.AppConstants;
 import ru.flc.service.spmaster.view.table.StoredProcParamsTable;
@@ -29,6 +30,7 @@ public class ExecutionDialog extends JDialog
 	private ResourceManager resourceManager;
 	private TitleAdjuster titleAdjuster;
 
+	private StoredProc storedProc;
 	private List<Parameter> parameterList;
 
 	private SettingsTableModel tableModel;
@@ -56,8 +58,9 @@ public class ExecutionDialog extends JDialog
 		setResizable(false);
 	}
 
-	public void setParameterList(List<StoredProcParameter> storedProcParameters)
+	public void tune(StoredProc storedProc, List<StoredProcParameter> storedProcParameters)
 	{
+		this.storedProc = storedProc;
 		this.parameterList = getParameters(storedProcParameters);
 	}
 
@@ -66,6 +69,13 @@ public class ExecutionDialog extends JDialog
 	{
 		if (b)
 		{
+			imageLabel.setIcon(resourceManager.getImageIcon(AppConstants.ICON_NAME_STORED_PROCEDURE));
+
+			if (storedProc == null)
+				procedureLabel.setText("");
+			else
+				procedureLabel.setText(storedProc.getName());
+
 			tableModel.clear();
 
 			if (parameterList != null && (!parameterList.isEmpty()))
@@ -83,6 +93,7 @@ public class ExecutionDialog extends JDialog
 			titleAdjuster.resetComponents();
 
 			pack();
+			repaint();
 			setLocationRelativeTo(owner);
 		}
 
@@ -104,16 +115,23 @@ public class ExecutionDialog extends JDialog
 	private JPanel initTitlePanel()
 	{
 		JPanel panel = new JPanel();
-		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-		panel.setBorder(BorderFactory.createEtchedBorder());
+		panel.setLayout(new GridBagLayout());
+
+		UsableGBC constraints;
+
+		constraints = new UsableGBC(0, 0);
+		constraints.setInsets(new Insets(0, 10, 0, 5));
 
 		imageLabel = new JLabel();
-		imageLabel.setIcon(resourceManager.getImageIcon(AppConstants.ICON_NAME_STORED_PROCEDURE));
-		panel.add(imageLabel);
+		imageLabel.setSize(102, 70);
+		panel.add(imageLabel, constraints);
+
+		constraints = new UsableGBC(1, 0);
+		constraints.setInsets(new Insets(0, 5, 0, 10));
 
 		procedureLabel = new JLabel();
 		procedureLabel.setFont(new Font(Font.MONOSPACED, Font.BOLD + Font.ITALIC, 14));
-		panel.add(procedureLabel);
+		panel.add(procedureLabel, constraints);
 
 		return panel;
 	}
@@ -188,10 +206,7 @@ public class ExecutionDialog extends JDialog
 	{
 		stopTableEditing();
 
-		setVisible(false);
-
-		if (invoker != null)
-			invoker.setFocus();
+		imageLabel.setIcon(resourceManager.getImageIcon(AppConstants.ICON_NAME_EXECUTING));
 	}
 
 	private void exit()

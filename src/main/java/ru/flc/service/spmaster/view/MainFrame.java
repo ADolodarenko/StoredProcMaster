@@ -223,7 +223,7 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	}
 
 	@Override
-	public void showStoredProcInfo(List<StoredProcParameter> storedProcParams)
+	public void showStoredProcInfo(StoredProc storedProc, List<StoredProcParameter> storedProcParams)
 	{
 		if (executionDialog == null)
 		{
@@ -240,7 +240,7 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 
 		if (executionDialog != null)
 		{
-			executionDialog.setParameterList(storedProcParams);
+			executionDialog.tune(storedProc, storedProcParams);
 			executionDialog.setVisible(true);
 		}
 	}

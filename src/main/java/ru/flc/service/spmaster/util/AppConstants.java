@@ -74,7 +74,8 @@ public final class AppConstants
 	public static final String ICON_NAME_EXECUTE = "y_exec.png";
 	public static final String ICON_NAME_SETTINGS = "y_settings.png";
 	public static final String ICON_NAME_QUESTION = "y_question.png";
-	public static final String ICON_NAME_STORED_PROCEDURE = "y_stored_procedure.png";
+	public static final String ICON_NAME_STORED_PROCEDURE = "hardwarechip.png";
+	public static final String ICON_NAME_EXECUTING = "loading_mod_green.gif";
 	public static final String ICON_NAME_PROC_UNKNOWN = "proc_unknown.png";
 	public static final String ICON_NAME_PROC_AVAILABLE = "proc_available.png";
 	public static final String ICON_NAME_PROC_OCCUPIED = "proc_occupied.png";

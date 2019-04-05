@@ -125,7 +125,7 @@ public class Controller
 				if (storedProc != null)
 				{
 					List<StoredProcParameter> storedProcParams = dataModel.getStoredProcParams(storedProc);
-					view.showStoredProcInfo(storedProcParams);
+					view.showStoredProcInfo(storedProc, storedProcParams);
 				}
 			}
 			catch (Exception e)
