@@ -26,8 +26,10 @@ import ru.flc.service.spmaster.view.table.StoredProcListTable;
 import ru.flc.service.spmaster.view.table.StoredProcListTableModel;
 import ru.flc.service.spmaster.view.table.listener.StoredProcListSelectionListener;
 import ru.flc.service.spmaster.view.thirdparty.TextLineNumber;
+import ru.flc.service.spmaster.view.util.ViewComponents;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
@@ -332,8 +334,9 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 
 		procListPane = new JScrollPane(procListTable);
 
-		procListPanel = getPanelWithBorderLayout(procListPane, BorderLayout.CENTER, AppConstants.KEY_PANEL_PROC_LIST,
-				TitledBorder.TOP, TitledBorder.CENTER);
+		procListPanel = ViewComponents.getTitledPanelWithBorderLayout(resourceManager, titleAdjuster,
+				procListPane, BorderLayout.CENTER, BorderFactory.createEmptyBorder(),
+				AppConstants.KEY_PANEL_PROC_LIST, TitledBorder.TOP, TitledBorder.CENTER);
 	}
 
 	private void initProcTextPanel()
@@ -353,7 +356,8 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 		procTextPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		procTextPane.setRowHeaderView(lineNumber);
 
-		procTextPanel = getPanelWithBorderLayout(procTextPane, BorderLayout.CENTER,
+		procTextPanel = ViewComponents.getTitledPanelWithBorderLayout(resourceManager, titleAdjuster,
+				procTextPane, BorderLayout.CENTER, BorderFactory.createEmptyBorder(),
 				AppConstants.KEY_PANEL_PROC_TEXT, TitledBorder.TOP, TitledBorder.CENTER);
 	}
 
@@ -365,7 +369,8 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 		procResultPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		procResultPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
-		procResultPanel = getPanelWithBorderLayout(procResultPane, BorderLayout.CENTER,
+		procResultPanel = ViewComponents.getTitledPanelWithBorderLayout(resourceManager, titleAdjuster,
+				procResultPane, BorderLayout.CENTER, BorderFactory.createEmptyBorder(),
 				AppConstants.KEY_PANEL_PROC_RESULT,	TitledBorder.TOP, TitledBorder.CENTER);
 	}
 
@@ -381,8 +386,9 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 		logPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		logPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
-		logPanel = getPanelWithBorderLayout(logPane, BorderLayout.CENTER, AppConstants.KEY_PANEL_LOG,
-				TitledBorder.TOP, TitledBorder.CENTER);
+		logPanel = ViewComponents.getTitledPanelWithBorderLayout(resourceManager, titleAdjuster,
+				logPane, BorderLayout.CENTER, BorderFactory.createEmptyBorder(),
+				AppConstants.KEY_PANEL_LOG, TitledBorder.TOP, TitledBorder.CENTER);
 	}
 
 	private void initSplitPanels()
@@ -410,19 +416,6 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 		add(statusPanel, BorderLayout.SOUTH);
 
 		showConnectionStatus(null);
-	}
-
-	private JPanel getPanelWithBorderLayout(Component inhabitant, Object constraints,
-											String titleKey, int titleJustification, int titlePosition)
-	{
-		JPanel panel = new JPanel(new BorderLayout());
-
-		panel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(),
-				"", titleJustification, titlePosition));
-		titleAdjuster.registerComponent(panel, new Title(resourceManager, titleKey));
-		panel.add(inhabitant, constraints);
-
-		return panel;
 	}
 
 	private void resetPanelsMinimumSizes()

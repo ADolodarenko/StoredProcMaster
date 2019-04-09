@@ -14,8 +14,10 @@ import ru.flc.service.spmaster.model.data.entity.StoredProc;
 import ru.flc.service.spmaster.model.data.entity.StoredProcParameter;
 import ru.flc.service.spmaster.util.AppConstants;
 import ru.flc.service.spmaster.view.table.StoredProcParamsTable;
+import ru.flc.service.spmaster.view.util.ViewComponents;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.util.LinkedList;
 import java.util.List;
@@ -123,7 +125,13 @@ public class ExecutionDialog extends JDialog
 		constraints.setInsets(new Insets(0, 10, 0, 5));
 
 		imageLabel = new JLabel();
-		imageLabel.setSize(102, 70);
+
+		Dimension imageSize = new Dimension(102, 70);
+		imageLabel.setMinimumSize(imageSize);
+		imageLabel.setPreferredSize(imageSize);
+		imageLabel.setMaximumSize(imageSize);
+		imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
 		panel.add(imageLabel, constraints);
 
 		constraints = new UsableGBC(1, 0);
@@ -146,9 +154,9 @@ public class ExecutionDialog extends JDialog
 
 		JScrollPane tablePane = new JScrollPane(table);
 
-		JPanel panel = new JPanel(new BorderLayout());
-		panel.setBorder(BorderFactory.createEtchedBorder());
-		panel.add(tablePane, BorderLayout.CENTER);
+		JPanel panel = ViewComponents.getTitledPanelWithBorderLayout(resourceManager, titleAdjuster,
+				tablePane, BorderLayout.CENTER, BorderFactory.createEtchedBorder(),
+				AppConstants.KEY_PANEL_PROC_PARAMETERS, TitledBorder.TOP, TitledBorder.CENTER);
 
 		return panel;
 	}

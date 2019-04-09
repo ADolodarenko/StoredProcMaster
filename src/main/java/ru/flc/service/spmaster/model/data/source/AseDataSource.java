@@ -142,7 +142,7 @@ public class AseDataSource implements DataSource
 			if (initialValue == null)
 				throw new Exception();
 
-			parameter = new StoredProcParameter(parameterType, false, parameterName, valueClass, initialValue);
+			parameter = new StoredProcParameter(parameterType, false, parameterName, valueClass, initialValue, false);
 		}
 
 		return parameter;

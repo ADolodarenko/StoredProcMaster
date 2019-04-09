@@ -47,6 +47,11 @@ public final class AppConstants
 	//Titles for dialogs
 	public static final String KEY_EXECUTION_DIALOG = "ExecutionDialog";
 	public static final String KEY_BUTTON_EXECUTE = "ExecuteButton";
+	public static final String KEY_PANEL_PROC_PARAMETERS = "PanelStoredProcParamList";
+	public static final String KEY_COLUMN_SP_PARAM_TYPE = "ColumnStoredProcParamType";
+	public static final String KEY_COLUMN_SP_PARAM_NAME = "ColumnStoredProcParamName";
+	public static final String KEY_COLUMN_SP_PARAM_NULL = "ColumnStoredProcParamNull";
+	public static final String KEY_COLUMN_SP_PARAM_VALUE = "ColumnStoredProcParamValue";
 
 	//Names
 	public static final String MESS_LOGGING_PROPERTIES_FILE_NAME = "sp_master_logging.conf";
