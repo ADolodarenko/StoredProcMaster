@@ -15,6 +15,8 @@ public final class AppConstants
 	public static final String CLASS_NAME_STOREDPROCLISTTABLE = "StoredProcListTable";
 	public static final String CLASS_NAME_STOREDPROCSTATUS = "StoredProcStatus";
 	public static final String CLASS_NAME_OPERATIONALSETTINGS = "OperationalSettings";
+	public static final String CLASS_NAME_STOREDPROCPARAMSTABLEMODEL = "StoredProcParamsTableModel";
+	public static final String CLASS_NAME_STOREDPROCPARAMSTABLE = "StoredProcParamsTable";
 
 	//Actions
 	public static final String KEY_ACTION_CONNECTDB = "ActionConnectDb";

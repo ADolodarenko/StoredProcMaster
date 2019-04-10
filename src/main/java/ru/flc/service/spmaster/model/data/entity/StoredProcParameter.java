@@ -6,9 +6,10 @@ public class StoredProcParameter
 {
 	public static String[] getTitleKeys()
 	{
-		return new String[] { AppConstants.KEY_COLUMN_SP_STATUS,
-				AppConstants.KEY_COLUMN_SP_DESCRIPT,
-				AppConstants.KEY_COLUMN_SP_NAME};
+		return new String[] { AppConstants.KEY_COLUMN_SP_PARAM_TYPE,
+				AppConstants.KEY_COLUMN_SP_PARAM_NAME,
+				AppConstants.KEY_COLUMN_SP_PARAM_NULL,
+				AppConstants.KEY_COLUMN_SP_PARAM_VALUE};
 	}
 
 	private StoredProcParamType type;

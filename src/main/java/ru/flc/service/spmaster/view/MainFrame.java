@@ -29,7 +29,6 @@ import ru.flc.service.spmaster.view.thirdparty.TextLineNumber;
 import ru.flc.service.spmaster.view.util.ViewComponents;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
@@ -205,6 +204,7 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	public void showStoredProcList(List<StoredProc> storedProcList)
 	{
 		procListTableModel.addAllRows(storedProcList);
+		procListTableModel.fireTableDataChanged();
 
 		titleAdjuster.resetComponents();
 		procListTableModel.fireTableDataChanged();

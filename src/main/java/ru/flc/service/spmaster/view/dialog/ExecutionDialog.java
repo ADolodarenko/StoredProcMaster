@@ -1,25 +1,23 @@
 package ru.flc.service.spmaster.view.dialog;
 
-import org.dav.service.settings.parameter.Parameter;
 import org.dav.service.util.Constants;
 import org.dav.service.util.ResourceManager;
 import org.dav.service.view.Title;
 import org.dav.service.view.TitleAdjuster;
 import org.dav.service.view.UsableGBC;
 import org.dav.service.view.dialog.SettingsDialogInvoker;
-import org.dav.service.view.table.SettingsTableModel;
 import org.dav.service.view.table.editor.TableCellEditorFactory;
 import org.dav.service.view.table.renderer.TableCellRendererFactory;
 import ru.flc.service.spmaster.model.data.entity.StoredProc;
 import ru.flc.service.spmaster.model.data.entity.StoredProcParameter;
 import ru.flc.service.spmaster.util.AppConstants;
 import ru.flc.service.spmaster.view.table.StoredProcParamsTable;
+import ru.flc.service.spmaster.view.table.StoredProcParamsTableModel;
 import ru.flc.service.spmaster.view.util.ViewComponents;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.util.LinkedList;
 import java.util.List;
 
 public class ExecutionDialog extends JDialog
@@ -33,9 +31,9 @@ public class ExecutionDialog extends JDialog
 	private TitleAdjuster titleAdjuster;
 
 	private StoredProc storedProc;
-	private List<Parameter> parameterList;
+	private List<StoredProcParameter> parameterList;
 
-	private SettingsTableModel tableModel;
+	private StoredProcParamsTableModel tableModel;
 	private StoredProcParamsTable table;
 	private JPanel settingsPanel;
 
@@ -63,7 +61,7 @@ public class ExecutionDialog extends JDialog
 	public void tune(StoredProc storedProc, List<StoredProcParameter> storedProcParameters)
 	{
 		this.storedProc = storedProc;
-		this.parameterList = getParameters(storedProcParameters);
+		this.parameterList = storedProcParameters;
 	}
 
 	@Override
@@ -79,11 +77,12 @@ public class ExecutionDialog extends JDialog
 				procedureLabel.setText(storedProc.getName());
 
 			tableModel.clear();
+			tableModel.fireTableDataChanged();
 
 			if (parameterList != null && (!parameterList.isEmpty()))
 			{
 				tableModel.addAllRows(parameterList);
-				tableModel.fireTableStructureChanged();
+				tableModel.fireTableDataChanged();
 
 				table.setFillsViewportHeight(false);
 
@@ -146,11 +145,11 @@ public class ExecutionDialog extends JDialog
 
 	private JPanel initSettingsPanel()
 	{
-		tableModel = new SettingsTableModel(resourceManager, Parameter.getTitleKeys(), null);
+		tableModel = new StoredProcParamsTableModel(resourceManager, StoredProcParameter.getTitleKeys(), null);
 
 		table = new StoredProcParamsTable(tableModel,
 				new TableCellEditorFactory(resourceManager),
-				new TableCellRendererFactory(resourceManager));
+				new TableCellRendererFactory(resourceManager), 1.3F);
 
 		JScrollPane tablePane = new JScrollPane(table);
 
@@ -189,25 +188,6 @@ public class ExecutionDialog extends JDialog
 		cancelButton.setMaximumSize(BUTTON_MAX_SIZE);
 		cancelButton.setIcon(resourceManager.getImageIcon(Constants.ICON_NAME_CANCEL));
 		cancelButton.addActionListener(event -> exit());
-	}
-
-	private List<Parameter> getParameters(List<StoredProcParameter> storedProcParameters)
-	{
-		if (storedProcParameters == null)
-			return null;
-
-		List<Parameter> parameters = new LinkedList<>();
-
-		for (StoredProcParameter parameter : storedProcParameters)
-		{
-			String name = parameter.getName();
-			Class<?> valueClass = parameter.getValueClass();
-			Object value = parameter.getValue();
-
-			parameters.add(new Parameter(new Title(resourceManager, name), value, valueClass));
-		}
-
-		return parameters;
 	}
 
 	private void execute()
