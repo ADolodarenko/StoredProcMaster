@@ -135,14 +135,19 @@ public class AseDataSource implements DataSource
 			Class<?> valueClass = DatabaseTypes.getJavaClass(databaseTypeId);
 
 			if (valueClass == null)
-				throw new Exception();
+				throw new Exception(AppConstants.EXCPT_SP_PARAM_CLASS_EMPTY);
 
 			Object initialValue = DefaultValues.getValue(valueClass);
 
-			if (initialValue == null)
-				throw new Exception();
+			//Maybe I get something wrong here?
+			int nullableSign = record.getInt(AppConstants.MESS_SP_PARAM_COL_NAME_NULLABLE);
+			boolean nullableValue = nullableSign == DatabaseMetaData.procedureNullable;
 
-			parameter = new StoredProcParameter(parameterType, false, parameterName, valueClass, initialValue, false);
+			if (initialValue == null)
+				throw new Exception(AppConstants.EXCPT_SP_PARAM_INIT_VALUE_EMPTY);
+
+			parameter = new StoredProcParameter(parameterType, nullableValue,
+					parameterName, valueClass, initialValue, nullableValue);
 		}
 
 		return parameter;

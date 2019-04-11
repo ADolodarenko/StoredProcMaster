@@ -9,6 +9,8 @@ public final class AppConstants
 	public static final String EXCPT_CONTROLLER_EMPTY = "Controller is empty.";
 	public static final String EXCPT_SP_LIST_TABLE_EMPTY = "The table that lists stored procedures is empty.";
 	public static final String EXCPT_ARRAY_EMPTY = "The array is empty.";
+	public static final String EXCPT_SP_PARAM_CLASS_EMPTY = "The class of a stored procedure parameter is empty.";
+	public static final String EXCPT_SP_PARAM_INIT_VALUE_EMPTY = "The initial value of a stored procedure parameter is empty.";
 
 	//Class names
 	public static final String CLASS_NAME_STOREDPROCLISTTABLEMODEL = "StoredProcListTableModel";
@@ -71,6 +73,7 @@ public final class AppConstants
 	public static final String MESS_SP_PARAM_COL_NAME_COLUMN_TYPE = "COLUMN_TYPE";
 	public static final String MESS_SP_PARAM_COL_NAME_COLUMN_NAME = "COLUMN_NAME";
 	public static final String MESS_SP_PARAM_COL_NAME_DATA_TYPE = "DATA_TYPE";
+	public static final String MESS_SP_PARAM_COL_NAME_NULLABLE = "NULLABLE";
 
 	//Images
 	public static final String ICON_NAME_ABOUT = "hedgehogs.png";

@@ -1,5 +1,6 @@
 package ru.flc.service.spmaster.model.data.entity;
 
+import java.sql.DatabaseMetaData;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,9 +15,9 @@ public class StoredProcParamTypesMap
 	{
 		typesMap = new HashMap<>();
 
-		typesMap.put(1, StoredProcParamType.IN);
-		typesMap.put(2, StoredProcParamType.IN_OUT);
-		typesMap.put(4, StoredProcParamType.OUT);
+		typesMap.put(DatabaseMetaData.procedureColumnIn, StoredProcParamType.IN);  //1
+		typesMap.put(DatabaseMetaData.procedureColumnInOut, StoredProcParamType.IN_OUT);  //2
+		typesMap.put(DatabaseMetaData.procedureColumnOut, StoredProcParamType.OUT);  //4
 	}
 
 	public static StoredProcParamType getType(int typeId)
