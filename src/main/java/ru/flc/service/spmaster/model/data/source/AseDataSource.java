@@ -79,13 +79,34 @@ public class AseDataSource implements DataSource
 	private static void transferResultToParamsList(ResultSet resultSet, List<StoredProcParameter> parametersList) throws Exception
 	{
 		if (resultSet != null && parametersList != null)
+		{
+			ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+			int columnsQuantity = resultSetMetaData.getColumnCount();
+
+			for (int i = 1; i <= columnsQuantity; i++)
+			{
+				System.out.print(resultSetMetaData.getColumnName(i));
+				System.out.print("\t");
+			}
+
+			System.out.println();
+
 			while (resultSet.next())
 			{
+				for (int i = 1; i <= columnsQuantity; i++)
+				{
+					System.out.print(resultSet.getString(i));
+					System.out.print("\t");
+				}
+
+				System.out.println();
+
 				StoredProcParameter parameter = getParameterFromRow(resultSet);
 
 				if (parameter != null)
 					parametersList.add(parameter);
 			}
+		}
 	}
 
 	private static StoredProcStatus getProcStatusById(int statusId)
@@ -139,15 +160,12 @@ public class AseDataSource implements DataSource
 
 			Object initialValue = DefaultValues.getValue(valueClass);
 
-			//Maybe I get something wrong here?
-			int nullableSign = record.getInt(AppConstants.MESS_SP_PARAM_COL_NAME_NULLABLE);
-			boolean nullableValue = nullableSign == DatabaseMetaData.procedureNullable;
+			boolean nullableValue = false;
 
 			if (initialValue == null)
 				throw new Exception(AppConstants.EXCPT_SP_PARAM_INIT_VALUE_EMPTY);
 
-			parameter = new StoredProcParameter(parameterType, nullableValue,
-					parameterName, valueClass, initialValue, nullableValue);
+			parameter = new StoredProcParameter(parameterType, parameterName, valueClass, initialValue, nullableValue);
 		}
 
 		return parameter;

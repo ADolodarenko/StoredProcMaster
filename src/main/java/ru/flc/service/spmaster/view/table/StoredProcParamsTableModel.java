@@ -96,16 +96,10 @@ public class StoredProcParamsTableModel extends AbstractTableModel
 
 		StoredProcParameter row = data.get(rowIndex);
 
-		if (row != null)
-			switch (columnIndex)
-			{
-				case 2:
-					return row.isNullable();
-				case 3:
-					return !row.isNullValue();   //I'm not sure if it'll work here. Will the new value of isNullValue() be set in time?
-			}
+		if (row != null && columnIndex == 3)
+			return !row.isNullValue();   //I'm not sure if it'll work here. Will the new value of isNullValue() be set in time?
 
-		return false;
+		return true;
 	}
 
 	@Override

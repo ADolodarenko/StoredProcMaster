@@ -13,17 +13,15 @@ public class StoredProcParameter
 	}
 
 	private StoredProcParamType type;
-	private boolean nullable;
 	private String name;
 	private Class<?> valueClass;
 	private Object value;
 	private boolean nullValue;
 
-	public StoredProcParameter(StoredProcParamType type, boolean nullable,
+	public StoredProcParameter(StoredProcParamType type,
 							   String name, Class<?> valueClass, Object value, boolean nullValue)
 	{
 		this.type = type;
-		this.nullable = nullable;
 		this.name = name;
 		this.valueClass = valueClass;
 		this.value = value;
@@ -33,11 +31,6 @@ public class StoredProcParameter
 	public StoredProcParamType getType()
 	{
 		return type;
-	}
-
-	public boolean isNullable()
-	{
-		return nullable;
 	}
 
 	public String getName()

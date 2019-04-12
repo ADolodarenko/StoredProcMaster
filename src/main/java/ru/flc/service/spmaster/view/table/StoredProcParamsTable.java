@@ -14,7 +14,7 @@ import java.util.Enumeration;
 
 public class StoredProcParamsTable extends JTable
 {
-	private static final int COLUMN_TYPE_WIDTH = 30;
+	private static final int COLUMN_TYPE_WIDTH = 50;
 	private static final int COLUMN_NULL_WIDTH = 30;
 
 	private static void setColumnWidth(TableColumn column, int width)
