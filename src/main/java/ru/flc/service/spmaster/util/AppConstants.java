@@ -13,6 +13,7 @@ public final class AppConstants
 	public static final String EXCPT_SP_PARAM_INIT_VALUE_EMPTY = "The initial value of a stored procedure parameter is empty.";
 
 	//Class names
+	public static final String CLASS_NAME_BOOLEAN = "Boolean";
 	public static final String CLASS_NAME_STOREDPROCLISTTABLEMODEL = "StoredProcListTableModel";
 	public static final String CLASS_NAME_STOREDPROCLISTTABLE = "StoredProcListTable";
 	public static final String CLASS_NAME_STOREDPROCSTATUS = "StoredProcStatus";
@@ -73,7 +74,8 @@ public final class AppConstants
 	public static final String MESS_SP_PARAM_COL_NAME_COLUMN_TYPE = "COLUMN_TYPE";
 	public static final String MESS_SP_PARAM_COL_NAME_COLUMN_NAME = "COLUMN_NAME";
 	public static final String MESS_SP_PARAM_COL_NAME_DATA_TYPE = "DATA_TYPE";
-	public static final String MESS_SP_PARAM_COL_NAME_NULLABLE = "NULLABLE";
+	public static final String MESS_SP_PARAM_COL_NAME_PRECISION = "PRECISION";
+	public static final String MESS_SP_PARAM_COL_NAME_SCALE = "SCALE";
 
 	//Images
 	public static final String ICON_NAME_ABOUT = "hedgehogs.png";

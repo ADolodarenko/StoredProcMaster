@@ -80,6 +80,7 @@ public class AseDataSource implements DataSource
 	{
 		if (resultSet != null && parametersList != null)
 		{
+			/*
 			ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
 			int columnsQuantity = resultSetMetaData.getColumnCount();
 
@@ -90,9 +91,11 @@ public class AseDataSource implements DataSource
 			}
 
 			System.out.println();
+			*/
 
 			while (resultSet.next())
 			{
+				/*
 				for (int i = 1; i <= columnsQuantity; i++)
 				{
 					System.out.print(resultSet.getString(i));
@@ -100,6 +103,7 @@ public class AseDataSource implements DataSource
 				}
 
 				System.out.println();
+				*/
 
 				StoredProcParameter parameter = getParameterFromRow(resultSet);
 
@@ -165,7 +169,11 @@ public class AseDataSource implements DataSource
 			if (initialValue == null)
 				throw new Exception(AppConstants.EXCPT_SP_PARAM_INIT_VALUE_EMPTY);
 
-			parameter = new StoredProcParameter(parameterType, parameterName, valueClass, initialValue, nullableValue);
+			int precision = record.getInt(AppConstants.MESS_SP_PARAM_COL_NAME_PRECISION);
+			short scale = record.getShort(AppConstants.MESS_SP_PARAM_COL_NAME_SCALE);
+
+			parameter = new StoredProcParameter(parameterType, parameterName, valueClass,
+					initialValue, nullableValue, precision, scale);
 		}
 
 		return parameter;

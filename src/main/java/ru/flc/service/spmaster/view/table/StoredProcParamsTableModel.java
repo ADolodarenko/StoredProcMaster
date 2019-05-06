@@ -4,6 +4,7 @@ import org.dav.service.util.Constants;
 import org.dav.service.util.ResourceManager;
 import org.dav.service.view.Title;
 import ru.flc.service.spmaster.model.data.entity.StoredProcParameter;
+import ru.flc.service.spmaster.util.AppConstants;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
@@ -97,7 +98,7 @@ public class StoredProcParamsTableModel extends AbstractTableModel
 		StoredProcParameter row = data.get(rowIndex);
 
 		if (row != null && columnIndex == 3)
-			return !row.isNullValue();   //I'm not sure if it'll work here. Will the new value of isNullValue() be set in time?
+			return !row.isNullValue();
 
 		return true;
 	}
@@ -105,18 +106,20 @@ public class StoredProcParamsTableModel extends AbstractTableModel
 	@Override
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex)
 	{
-		if (isCellEditable(rowIndex, columnIndex))
-			if (rowIndex < getRowCount())
-			{
-				StoredProcParameter row = data.get(rowIndex);
+		//JTable.editCellAt ensures that rowIndex and columnIndex pertain to appropriate ranges, so I don't need to do that.
 
-				try
-				{
-					row.setValue(aValue);
-				}
-				catch (IllegalArgumentException e)
-				{}
+		StoredProcParameter row = data.get(rowIndex);
+
+		if (columnIndex == 2 && aValue != null &&
+				aValue.getClass().getSimpleName().equals(AppConstants.CLASS_NAME_BOOLEAN))
+			row.setNullValue((Boolean) aValue);
+		else if (columnIndex == 3)
+			try
+			{
+				row.setValue(aValue);
 			}
+			catch (IllegalArgumentException e)
+			{}
 	}
 
 	@Override

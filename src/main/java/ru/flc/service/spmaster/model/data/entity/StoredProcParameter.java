@@ -17,15 +17,20 @@ public class StoredProcParameter
 	private Class<?> valueClass;
 	private Object value;
 	private boolean nullValue;
+	private int precision;
+	private short scale;
 
 	public StoredProcParameter(StoredProcParamType type,
-							   String name, Class<?> valueClass, Object value, boolean nullValue)
+							   String name, Class<?> valueClass, Object value,
+							   boolean nullValue, int precision, short scale)
 	{
 		this.type = type;
 		this.name = name;
 		this.valueClass = valueClass;
 		this.value = value;
 		this.nullValue = nullValue;
+		this.precision = precision;
+		this.scale = scale;
 	}
 
 	public StoredProcParamType getType()
@@ -56,5 +61,20 @@ public class StoredProcParameter
 	public boolean isNullValue()
 	{
 		return nullValue;
+	}
+
+	public void setNullValue(boolean nullValue)
+	{
+		this.nullValue = nullValue;
+	}
+
+	public int getPrecision()
+	{
+		return precision;
+	}
+
+	public short getScale()
+	{
+		return scale;
 	}
 }
