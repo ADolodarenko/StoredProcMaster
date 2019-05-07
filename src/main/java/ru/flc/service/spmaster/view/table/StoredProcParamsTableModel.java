@@ -111,7 +111,7 @@ public class StoredProcParamsTableModel extends AbstractTableModel
 		StoredProcParameter row = data.get(rowIndex);
 
 		if (columnIndex == 2 && aValue != null &&
-				aValue.getClass().getSimpleName().equals(AppConstants.CLASS_NAME_BOOLEAN))
+				aValue.getClass().getSimpleName().equals(Constants.CLASS_NAME_BOOLEAN))
 			row.setNullValue((Boolean) aValue);
 		else if (columnIndex == 3)
 			try

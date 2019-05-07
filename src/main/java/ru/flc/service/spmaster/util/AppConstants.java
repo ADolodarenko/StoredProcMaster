@@ -13,7 +13,6 @@ public final class AppConstants
 	public static final String EXCPT_SP_PARAM_INIT_VALUE_EMPTY = "The initial value of a stored procedure parameter is empty.";
 
 	//Class names
-	public static final String CLASS_NAME_BOOLEAN = "Boolean";
 	public static final String CLASS_NAME_STOREDPROCLISTTABLEMODEL = "StoredProcListTableModel";
 	public static final String CLASS_NAME_STOREDPROCLISTTABLE = "StoredProcListTable";
 	public static final String CLASS_NAME_STOREDPROCSTATUS = "StoredProcStatus";
