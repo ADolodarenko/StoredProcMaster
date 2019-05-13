@@ -1,11 +1,11 @@
 package ru.flc.service.spmaster.view.table;
 
 import org.dav.service.util.Constants;
-import org.dav.service.view.table.editor.TableCellEditorFactory;
 import org.dav.service.view.table.renderer.TableCellRendererFactory;
 import org.dav.service.view.table.renderer.TableHeaderRenderer;
 import ru.flc.service.spmaster.model.data.entity.StoredProcParameter;
 import ru.flc.service.spmaster.util.AppConstants;
+import ru.flc.service.spmaster.view.table.editor.TableCellEditorFactory;
 
 import javax.swing.*;
 import javax.swing.table.*;
@@ -91,10 +91,8 @@ public class StoredProcParamsTable extends JTable
 
 			if (rowData != null)
 			{
-				Class<?> dataClass = rowData.getValueClass();
-				boolean confirmationRequired = false;
-
-				TableCellEditor editor = editorFactory.getEditor(dataClass, confirmationRequired);
+				TableCellEditor editor = editorFactory.getEditor(rowData.getValueClass(),
+						rowData.getPrecision(), rowData.getScale(), false);
 
 				if (editor != null)
 					return editor;

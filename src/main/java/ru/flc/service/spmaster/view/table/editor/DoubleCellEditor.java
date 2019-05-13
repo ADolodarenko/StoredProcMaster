@@ -7,15 +7,15 @@ import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 import java.awt.*;
 
-public class IntegerCellEditor extends AbstractCellEditor implements TableCellEditor
+public class DoubleCellEditor extends AbstractCellEditor implements TableCellEditor
 {
 	private JSpinner editor;
 
 	private boolean confirmationRequired;
 	private Object oldValue;
 
-	public IntegerCellEditor(boolean confirmationRequired,
-							 int initialValue, int minimum, int maximum, int stepSize)
+	public DoubleCellEditor(boolean confirmationRequired,
+							double initialValue, double minimum, double maximum, double stepSize)
 	{
 		SpinnerNumberModel model = new SpinnerNumberModel(initialValue, minimum, maximum, stepSize);
 
@@ -30,13 +30,13 @@ public class IntegerCellEditor extends AbstractCellEditor implements TableCellEd
 		if (confirmationRequired)
 			oldValue = value;
 
-		editor.setValue(0);
+		editor.setValue(0.0);
 
 		if (value != null)
 		{
 			String valueClassName = value.getClass().getSimpleName();
 
-			if (Constants.CLASS_NAME_INTEGER.equals(valueClassName))
+			if (Constants.CLASS_NAME_DOUBLE.equals(valueClassName))
 				editor.setValue(value);
 		}
 

@@ -6,13 +6,13 @@ import org.dav.service.view.Title;
 import org.dav.service.view.TitleAdjuster;
 import org.dav.service.view.UsableGBC;
 import org.dav.service.view.dialog.SettingsDialogInvoker;
-import org.dav.service.view.table.editor.TableCellEditorFactory;
 import org.dav.service.view.table.renderer.TableCellRendererFactory;
 import ru.flc.service.spmaster.model.data.entity.StoredProc;
 import ru.flc.service.spmaster.model.data.entity.StoredProcParameter;
 import ru.flc.service.spmaster.util.AppConstants;
 import ru.flc.service.spmaster.view.table.StoredProcParamsTable;
 import ru.flc.service.spmaster.view.table.StoredProcParamsTableModel;
+import ru.flc.service.spmaster.view.table.editor.TableCellEditorFactory;
 import ru.flc.service.spmaster.view.util.ViewComponents;
 
 import javax.swing.*;
@@ -148,7 +148,7 @@ public class ExecutionDialog extends JDialog
 		tableModel = new StoredProcParamsTableModel(resourceManager, StoredProcParameter.getTitleKeys(), null);
 
 		table = new StoredProcParamsTable(tableModel,
-				new TableCellEditorFactory(resourceManager),
+				new TableCellEditorFactory(),
 				new TableCellRendererFactory(resourceManager), 1.3F);
 
 		JScrollPane tablePane = new JScrollPane(table);
