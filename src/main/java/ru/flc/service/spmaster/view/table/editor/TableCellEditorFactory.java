@@ -1,8 +1,10 @@
 package ru.flc.service.spmaster.view.table.editor;
 
 import org.dav.service.util.Constants;
+import ru.flc.service.spmaster.util.AppConstants;
 
 import javax.swing.table.TableCellEditor;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,6 +48,19 @@ public class TableCellEditorFactory
 			case Constants.CLASS_NAME_DOUBLE:
 				editor = new DoubleCellEditor(confirmationRequired,
 						0.0, Double.MIN_VALUE, Double.MAX_VALUE, 0.01);
+				break;
+			case AppConstants.CLASS_NAME_BIGDECIMAL:
+				BigDecimal minValue = new BigDecimal(-Double.MAX_VALUE);
+				minValue.setScale(editorKey.getScale());
+
+				BigDecimal maxValue = new BigDecimal(Double.MAX_VALUE);
+				maxValue.setScale(editorKey.getScale());
+
+				BigDecimal currentValue = new BigDecimal(0.0);
+				currentValue.setScale(editorKey.getScale());
+
+				editor = new BigDecimalCellEditor(confirmationRequired,
+						currentValue, minValue, maxValue, new BigDecimal(1));
 				break;
 			case Constants.CLASS_NAME_STRING:
 				editor = new StringCellEditor(confirmationRequired);
