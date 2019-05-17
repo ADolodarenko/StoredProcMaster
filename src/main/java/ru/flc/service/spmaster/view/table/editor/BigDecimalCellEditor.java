@@ -10,6 +10,7 @@ import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
@@ -21,7 +22,7 @@ public class BigDecimalCellEditor extends AbstractCellEditor implements TableCel
 	{
 		StringBuilder builder = new StringBuilder();
 
-		for (int i = 0; i < precision; i++)
+		for (int i = 0; i < precision - scale; i++)
 			builder.append('#');
 		builder.append('.');
 
@@ -31,19 +32,41 @@ public class BigDecimalCellEditor extends AbstractCellEditor implements TableCel
 		return builder.toString();
 	}
 
+	private static BigDecimal getUtmostDecimal(int precision, short scale, boolean negative)
+	{
+		StringBuilder builder = new StringBuilder();
+
+		if (negative)
+			builder.append('-');
+
+		for (int i = 0; i < precision; i++)
+			builder.append('9');
+
+		return new BigDecimal(new BigInteger(builder.toString()), scale);
+	}
+
 	private JSpinner editor;
 
 	private boolean confirmationRequired;
 	private Object oldValue;
 	private BigDecimal zeroValue;
 
+	private int precision;
+	private short scale;
+
 	public BigDecimalCellEditor(boolean confirmationRequired,
 								BigDecimal initialValue, BigDecimal minimum, BigDecimal maximum, BigDecimal stepSize,
 								int precision, short scale)
 	{
-		SpinnerBigDecimalModel model = new SpinnerBigDecimalModel(initialValue, minimum, maximum, stepSize);
+		this.precision = precision;
+		this.scale = scale;
 
-		zeroValue = new BigDecimal(0.0).setScale(scale, RoundingMode.HALF_UP);
+		BigDecimal minValue = (minimum != null) ? minimum : getUtmostDecimal(precision, scale, true);
+		BigDecimal maxValue = (maximum != null) ? maximum : getUtmostDecimal(precision, scale, false);
+
+		SpinnerBigDecimalModel model = new SpinnerBigDecimalModel(initialValue, minValue, maxValue, stepSize);
+
+		zeroValue = new BigDecimal(new BigInteger("0"), this.scale);
 
 		editor = new JSpinner(model);
 
@@ -87,6 +110,9 @@ public class BigDecimalCellEditor extends AbstractCellEditor implements TableCel
 	public Object getCellEditorValue()
 	{
 		Object newValue = editor.getValue();
+
+		if (newValue != null)
+			newValue = ((BigDecimal) newValue).setScale(this.scale, RoundingMode.HALF_UP);
 
 		if (confirmationRequired && !newValue.equals(oldValue))
 			newValue = ViewUtils.confirmedValue(oldValue, newValue);

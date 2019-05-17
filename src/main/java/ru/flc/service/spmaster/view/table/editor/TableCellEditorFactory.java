@@ -53,17 +53,11 @@ public class TableCellEditorFactory
 				int precision = editorKey.getPrecision();
 				short scale = editorKey.getScale();
 
-				BigDecimal minValue = new BigDecimal(-Double.MAX_VALUE);
-				minValue.setScale(scale);
-
-				BigDecimal maxValue = new BigDecimal(Double.MAX_VALUE);
-				maxValue.setScale(scale);
-
 				BigDecimal currentValue = new BigDecimal(0.0);
 				currentValue.setScale(scale);
 
 				editor = new BigDecimalCellEditor(confirmationRequired,
-						currentValue, minValue, maxValue, new BigDecimal(1),
+						currentValue, null, null, new BigDecimal(1),
 						precision, scale);
 				break;
 			case Constants.CLASS_NAME_STRING:
