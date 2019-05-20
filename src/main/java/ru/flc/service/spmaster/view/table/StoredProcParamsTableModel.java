@@ -4,7 +4,6 @@ import org.dav.service.util.Constants;
 import org.dav.service.util.ResourceManager;
 import org.dav.service.view.Title;
 import ru.flc.service.spmaster.model.data.entity.StoredProcParameter;
-import ru.flc.service.spmaster.util.AppConstants;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
@@ -79,9 +78,12 @@ public class StoredProcParamsTableModel extends AbstractTableModel
 						value = row.getName();
 						break;
 					case 2:
-						value = row.isNullValue();
+						value = row.getValueTypeName();
 						break;
 					case 3:
+						value = row.isNullValue();
+						break;
+					case 4:
 						value = row.getValue();
 				}
 		}
@@ -92,12 +94,12 @@ public class StoredProcParamsTableModel extends AbstractTableModel
 	@Override
 	public boolean isCellEditable(int rowIndex, int columnIndex)
 	{
-		if (columnIndex < 2)
+		if (columnIndex < 3)
 			return false;
 
 		StoredProcParameter row = data.get(rowIndex);
 
-		if (row != null && columnIndex == 3)
+		if (row != null && columnIndex == 4)
 			return !row.isNullValue();
 
 		return true;
@@ -110,10 +112,10 @@ public class StoredProcParamsTableModel extends AbstractTableModel
 
 		StoredProcParameter row = data.get(rowIndex);
 
-		if (columnIndex == 2 && aValue != null &&
+		if (columnIndex == 3 && aValue != null &&
 				aValue.getClass().getSimpleName().equals(Constants.CLASS_NAME_BOOLEAN))
 			row.setNullValue((Boolean) aValue);
-		else if (columnIndex == 3)
+		else if (columnIndex == 4)
 			try
 			{
 				row.setValue(aValue);

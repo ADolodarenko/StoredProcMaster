@@ -80,8 +80,7 @@ public class AseDataSource implements DataSource
 	{
 		if (resultSet != null && parametersList != null)
 		{
-			/*
-			ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+			/*ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
 			int columnsQuantity = resultSetMetaData.getColumnCount();
 
 			for (int i = 1; i <= columnsQuantity; i++)
@@ -90,21 +89,18 @@ public class AseDataSource implements DataSource
 				System.out.print("\t");
 			}
 
-			System.out.println();
-			*/
+			System.out.println();*/
 
 			while (resultSet.next())
 			{
-				/*
-				for (int i = 1; i <= columnsQuantity; i++)
+				/*for (int i = 1; i <= columnsQuantity; i++)
 				{
 					System.out.print(resultSet.getString(i));
 					System.out.print("\t");
 				}
 
 				System.out.println();
-				*/
-
+*/
 				StoredProcParameter parameter = getParameterFromRow(resultSet);
 
 				if (parameter != null)
@@ -171,12 +167,36 @@ public class AseDataSource implements DataSource
 
 			int precision = record.getInt(AppConstants.MESS_SP_PARAM_COL_NAME_PRECISION);
 			short scale = record.getShort(AppConstants.MESS_SP_PARAM_COL_NAME_SCALE);
+			String typeName = buildTypeName(record.getString(AppConstants.MESS_SP_PARAM_COL_NAME_TYPE_NAME),
+					precision, scale);
 
 			parameter = new StoredProcParameter(parameterType, parameterName, valueClass,
-					initialValue, nullableValue, precision, scale);
+					initialValue, nullableValue, precision, scale, typeName);
 		}
 
 		return parameter;
+	}
+
+	private static String buildTypeName(String rawTypeName, int precision, short scale)
+	{
+		if (AppConstants.MESS_SP_PARAM_COL_VALUE_NUMERIC.equalsIgnoreCase(rawTypeName))
+		{
+			StringBuilder builder = new StringBuilder(rawTypeName);
+			builder.append('(');
+			builder.append(precision);
+
+			if (scale > 0)
+			{
+				builder.append(", ");
+				builder.append(scale);
+			}
+
+			builder.append(')');
+
+			return builder.toString();
+		}
+		else
+			return rawTypeName;
 	}
 
 	private String url;

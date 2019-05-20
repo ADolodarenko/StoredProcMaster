@@ -15,6 +15,7 @@ import java.util.Enumeration;
 public class StoredProcParamsTable extends JTable
 {
 	private static final int COLUMN_TYPE_WIDTH = 50;
+	private static final int COLUMN_VALUETYPE_WIDTH = 100;
 	private static final int COLUMN_NULL_WIDTH = 30;
 
 	private static void setColumnWidth(TableColumn column, int width)
@@ -85,7 +86,7 @@ public class StoredProcParamsTable extends JTable
 	{
 		int modelColumnIndex = convertColumnIndexToModel(column);
 
-		if (modelColumnIndex == 3)
+		if (modelColumnIndex == 4)
 		{
 			StoredProcParameter rowData = getParameter(row);
 
@@ -109,7 +110,7 @@ public class StoredProcParamsTable extends JTable
 	{
 		int modelColumnIndex = convertColumnIndexToModel(column);
 
-		if (modelColumnIndex == 2)
+		if (modelColumnIndex == 3)
 			return Boolean.class;
 
 		return super.getColumnClass(column);
@@ -143,6 +144,10 @@ public class StoredProcParamsTable extends JTable
 					column.setCellRenderer(baseHeaderRenderer);
 					break;
 				case 2:
+					setColumnWidth(column, COLUMN_VALUETYPE_WIDTH);
+					column.setCellRenderer(baseHeaderRenderer);
+					break;
+				case 3:
 					setColumnWidth(column, COLUMN_NULL_WIDTH);
 					break;
 			}

@@ -11,6 +11,7 @@ public class StoredProcParameter
 	{
 		return new String[] { AppConstants.KEY_COLUMN_SP_PARAM_TYPE,
 				AppConstants.KEY_COLUMN_SP_PARAM_NAME,
+				AppConstants.KEY_COLUMN_SP_PARAM_VALUETYPE,
 				AppConstants.KEY_COLUMN_SP_PARAM_NULL,
 				AppConstants.KEY_COLUMN_SP_PARAM_VALUE};
 	}
@@ -22,10 +23,12 @@ public class StoredProcParameter
 	private boolean nullValue;
 	private int precision;
 	private short scale;
+	private String valueTypeName;
 
 	public StoredProcParameter(StoredProcParamType type,
 							   String name, Class<?> valueClass, Object value,
-							   boolean nullValue, int precision, short scale)
+							   boolean nullValue, int precision, short scale,
+							   String valueTypeName)
 	{
 		this.type = type;
 		this.name = name;
@@ -34,6 +37,7 @@ public class StoredProcParameter
 		this.nullValue = nullValue;
 		this.precision = precision;
 		this.scale = scale;
+		this.valueTypeName = valueTypeName;
 	}
 
 	public StoredProcParamType getType()
@@ -123,5 +127,10 @@ public class StoredProcParameter
 	public short getScale()
 	{
 		return scale;
+	}
+
+	public String getValueTypeName()
+	{
+		return valueTypeName;
 	}
 }

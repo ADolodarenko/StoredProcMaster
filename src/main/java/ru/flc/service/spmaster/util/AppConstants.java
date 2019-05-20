@@ -59,6 +59,7 @@ public final class AppConstants
 	public static final String KEY_PANEL_PROC_PARAMETERS = "PanelStoredProcParamList";
 	public static final String KEY_COLUMN_SP_PARAM_TYPE = "ColumnStoredProcParamType";
 	public static final String KEY_COLUMN_SP_PARAM_NAME = "ColumnStoredProcParamName";
+	public static final String KEY_COLUMN_SP_PARAM_VALUETYPE = "ColumnStoredProcParamValueType";
 	public static final String KEY_COLUMN_SP_PARAM_NULL = "ColumnStoredProcParamNull";
 	public static final String KEY_COLUMN_SP_PARAM_VALUE = "ColumnStoredProcParamValue";
 
@@ -78,8 +79,10 @@ public final class AppConstants
 	public static final String MESS_SP_PARAM_COL_NAME_COLUMN_TYPE = "COLUMN_TYPE";
 	public static final String MESS_SP_PARAM_COL_NAME_COLUMN_NAME = "COLUMN_NAME";
 	public static final String MESS_SP_PARAM_COL_NAME_DATA_TYPE = "DATA_TYPE";
+	public static final String MESS_SP_PARAM_COL_NAME_TYPE_NAME = "TYPE_NAME";
 	public static final String MESS_SP_PARAM_COL_NAME_PRECISION = "PRECISION";
 	public static final String MESS_SP_PARAM_COL_NAME_SCALE = "SCALE";
+	public static final String MESS_SP_PARAM_COL_VALUE_NUMERIC = "NUMERIC";
 
 	//Images
 	public static final String ICON_NAME_ABOUT = "hedgehogs.png";
