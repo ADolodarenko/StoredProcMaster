@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 
 import org.scijava.ui.swing.widget.SpinnerBigDecimalModel;
 
@@ -79,6 +80,8 @@ public class BigDecimalCellEditor extends AbstractCellEditor implements TableCel
 
 			DefaultFormatter formatter = new NumberFormatter(new DecimalFormat(getFormatPattern(precision, scale)));
 			formatter.setValueClass(editorField.getValue().getClass());
+
+			formatter.setCommitsOnValidEdit(true);
 
 			DefaultFormatterFactory factory = new DefaultFormatterFactory(formatter, formatter, formatter);
 			editorField.setFormatterFactory(factory);

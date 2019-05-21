@@ -9,9 +9,9 @@ import ru.flc.service.spmaster.model.DefaultValues;
 import ru.flc.service.spmaster.model.data.entity.*;
 import ru.flc.service.spmaster.model.settings.OperationalSettings;
 import ru.flc.service.spmaster.util.AppConstants;
-import ru.flc.service.spmaster.util.AppUtils;
 
 import java.sql.*;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -22,7 +22,14 @@ public class AseDataSource implements DataSource
 		return SingletonHelper.INSTANCE;
 	}
 
+	private static String[] preciseTypeNames = {AppConstants.MESS_SP_PARAM_COL_VALUE_NUMERIC,
+			AppConstants.MESS_SP_PARAM_COL_VALUE_DECIMAL,
+			AppConstants.MESS_SP_PARAM_COL_VALUE_VARCHAR};
 
+	static
+	{
+		Arrays.sort(preciseTypeNames);
+	}
 
 	private static String buildDatabaseUrl(DatabaseSettings settings)
 	{
@@ -99,8 +106,8 @@ public class AseDataSource implements DataSource
 					System.out.print("\t");
 				}
 
-				System.out.println();
-*/
+				System.out.println();*/
+
 				StoredProcParameter parameter = getParameterFromRow(resultSet);
 
 				if (parameter != null)
@@ -179,7 +186,7 @@ public class AseDataSource implements DataSource
 
 	private static String buildTypeName(String rawTypeName, int precision, short scale)
 	{
-		if (AppConstants.MESS_SP_PARAM_COL_VALUE_NUMERIC.equalsIgnoreCase(rawTypeName))
+		if (typeNameIsPrecise(rawTypeName))
 		{
 			StringBuilder builder = new StringBuilder(rawTypeName);
 			builder.append('(');
@@ -197,6 +204,11 @@ public class AseDataSource implements DataSource
 		}
 		else
 			return rawTypeName;
+	}
+
+	private static boolean typeNameIsPrecise(String rawTypeName)
+	{
+		return Arrays.binarySearch(preciseTypeNames, rawTypeName.toUpperCase()) > 0;
 	}
 
 	private String url;

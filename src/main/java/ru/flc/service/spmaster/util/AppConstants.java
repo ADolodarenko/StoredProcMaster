@@ -83,6 +83,8 @@ public final class AppConstants
 	public static final String MESS_SP_PARAM_COL_NAME_PRECISION = "PRECISION";
 	public static final String MESS_SP_PARAM_COL_NAME_SCALE = "SCALE";
 	public static final String MESS_SP_PARAM_COL_VALUE_NUMERIC = "NUMERIC";
+	public static final String MESS_SP_PARAM_COL_VALUE_DECIMAL = "DECIMAL";
+	public static final String MESS_SP_PARAM_COL_VALUE_VARCHAR = "VARCHAR";
 
 	//Images
 	public static final String ICON_NAME_ABOUT = "hedgehogs.png";

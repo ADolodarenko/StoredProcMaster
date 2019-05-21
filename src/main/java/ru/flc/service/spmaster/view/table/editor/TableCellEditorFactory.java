@@ -17,7 +17,7 @@ public class TableCellEditorFactory
 		editors = new HashMap<>();
 	}
 
-	public TableCellEditor getEditor(Class<?> dataClass, int precision, short scale,  boolean confirmationRequired)
+	public TableCellEditor getEditor(Class<?> dataClass, int precision, short scale, boolean confirmationRequired)
 	{
 		TableCellEditorKey key = new TableCellEditorKey(dataClass, precision, scale, confirmationRequired);
 
@@ -45,9 +45,17 @@ public class TableCellEditorFactory
 				editor = new IntegerCellEditor(confirmationRequired,
 						0, Integer.MIN_VALUE, Integer.MAX_VALUE, 1);
 				break;
+			case AppConstants.CLASS_NAME_LONG:
+				editor = new LongCellEditor(confirmationRequired,
+						0, Long.MIN_VALUE, Long.MAX_VALUE, 1);
+				break;
+			case AppConstants.CLASS_NAME_FLOAT:
+				editor = new FloatCellEditor(confirmationRequired,
+						0.0F, -Float.MAX_VALUE, Float.MAX_VALUE, 0.01F);
+				break;
 			case Constants.CLASS_NAME_DOUBLE:
 				editor = new DoubleCellEditor(confirmationRequired,
-						0.0, Double.MIN_VALUE, Double.MAX_VALUE, 0.01);
+						0.0, -Double.MAX_VALUE, Double.MAX_VALUE, 0.01);
 				break;
 			case AppConstants.CLASS_NAME_BIGDECIMAL:
 				int precision = editorKey.getPrecision();
