@@ -16,6 +16,7 @@ public final class AppConstants
 	public static final String CLASS_NAME_LONG = "Long";
 	public static final String CLASS_NAME_FLOAT = "Float";
 	public static final String CLASS_NAME_BIGDECIMAL = "BigDecimal";
+	public static final String CLASS_NAME_TIMESTAMP = "Timestamp";
 	public static final String CLASS_NAME_NUMBEREDITOR = "NumberEditor";
 	public static final String CLASS_NAME_JFORMATTEDTEXTFIELD = "JFormattedTextField";
 	public static final String CLASS_NAME_STOREDPROCLISTTABLEMODEL = "StoredProcListTableModel";

@@ -68,6 +68,9 @@ public class TableCellEditorFactory
 						currentValue, null, null, new BigDecimal(1),
 						precision, scale);
 				break;
+			case AppConstants.CLASS_NAME_TIMESTAMP:
+				editor = new TimestampCellEditor();
+				break;
 			case Constants.CLASS_NAME_STRING:
 				editor = new StringCellEditor(confirmationRequired);
 				break;
