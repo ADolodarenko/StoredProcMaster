@@ -86,6 +86,8 @@ public class ExecutionDialog extends JDialog
 
 				table.setFillsViewportHeight(false);
 
+				table.resizeColumns();
+
 				settingsPanel.setVisible(true);
 			}
 			else

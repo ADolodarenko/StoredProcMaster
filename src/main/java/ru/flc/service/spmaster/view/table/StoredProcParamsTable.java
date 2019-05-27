@@ -45,6 +45,8 @@ public class StoredProcParamsTable extends JTable
 		this.editorFactory = editorFactory;
 		this.rendererFactory = rendererFactory;
 
+		setAutoResizeMode(AUTO_RESIZE_OFF);
+
 		setHeaderAppearance();
 		setColumnAppearance();
 		setSelectionStrategy();
@@ -116,6 +118,26 @@ public class StoredProcParamsTable extends JTable
 		return super.getColumnClass(column);
 	}
 
+	public void resizeColumns()
+	{
+		TableColumnModel dataColumnModel = getColumnModel();
+		TableColumnModel headerColumnModel = getTableHeader().getColumnModel();
+
+		for (int colNum = 0; colNum < getColumnCount(); colNum++)
+		{
+			int width = headerColumnModel.getColumn(colNum).getWidth() + 1;
+
+			for (int rowNum = 0; rowNum < getRowCount(); rowNum++)
+			{
+				TableCellRenderer renderer = getCellRenderer(rowNum, colNum);
+				Component comp = prepareRenderer(renderer, rowNum, colNum);
+				width = Math.max(comp.getPreferredSize().width + 1 , width);
+			}
+
+			dataColumnModel.getColumn(colNum).setPreferredWidth(width);
+		}
+	}
+
 	private void setHeaderAppearance()
 	{
 		JTableHeader header = getTableHeader();
@@ -137,18 +159,18 @@ public class StoredProcParamsTable extends JTable
 			switch (column.getModelIndex())
 			{
 				case 0:
-					setColumnWidth(column, COLUMN_TYPE_WIDTH);
+					//setColumnWidth(column, COLUMN_TYPE_WIDTH);
 					column.setCellRenderer(baseHeaderRenderer);
 					break;
 				case 1:
 					column.setCellRenderer(baseHeaderRenderer);
 					break;
 				case 2:
-					setColumnWidth(column, COLUMN_VALUETYPE_WIDTH);
+					//setColumnWidth(column, COLUMN_VALUETYPE_WIDTH);
 					column.setCellRenderer(baseHeaderRenderer);
 					break;
 				case 3:
-					setColumnWidth(column, COLUMN_NULL_WIDTH);
+					//setColumnWidth(column, COLUMN_NULL_WIDTH);
 					break;
 			}
 		}
