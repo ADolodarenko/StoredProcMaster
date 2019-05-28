@@ -14,6 +14,7 @@ import ru.flc.service.spmaster.view.table.StoredProcParamsTable;
 import ru.flc.service.spmaster.view.table.StoredProcParamsTableModel;
 import ru.flc.service.spmaster.view.table.editor.TableCellEditorFactory;
 import ru.flc.service.spmaster.view.util.ViewComponents;
+import ru.flc.service.spmaster.view.thirdparty.TableColumnAdjuster;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -35,6 +36,7 @@ public class ExecutionDialog extends JDialog
 
 	private StoredProcParamsTableModel tableModel;
 	private StoredProcParamsTable table;
+	private TableColumnAdjuster columnAdjuster;
 	private JPanel settingsPanel;
 
 	private JLabel imageLabel; //102, 70
@@ -86,7 +88,7 @@ public class ExecutionDialog extends JDialog
 
 				table.setFillsViewportHeight(false);
 
-				table.resizeColumns();
+				columnAdjuster.adjustColumns();  //table.resizeColumns();
 
 				settingsPanel.setVisible(true);
 			}
@@ -152,6 +154,8 @@ public class ExecutionDialog extends JDialog
 		table = new StoredProcParamsTable(tableModel,
 				new TableCellEditorFactory(),
 				new TableCellRendererFactory(resourceManager), 1.3F);
+
+		columnAdjuster = new TableColumnAdjuster(table, 0);
 
 		JScrollPane tablePane = new JScrollPane(table);
 

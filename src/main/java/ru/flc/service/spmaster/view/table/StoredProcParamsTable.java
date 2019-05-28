@@ -154,7 +154,7 @@ public class StoredProcParamsTable extends JTable
 		{
 			TableColumn column = columns.nextElement();
 
-			column.setResizable(false);
+			//column.setResizable(false);  !!!!
 
 			switch (column.getModelIndex())
 			{
