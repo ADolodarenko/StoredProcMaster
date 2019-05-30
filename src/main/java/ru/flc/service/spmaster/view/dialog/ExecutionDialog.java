@@ -86,9 +86,9 @@ public class ExecutionDialog extends JDialog
 				tableModel.addAllRows(parameterList);
 				tableModel.fireTableDataChanged();
 
-				table.setFillsViewportHeight(false);
-
+				table.getTableHeader().setResizingAllowed(true);
 				columnAdjuster.adjustColumns();  //table.resizeColumns();
+				table.getTableHeader().setResizingAllowed(false);
 
 				settingsPanel.setVisible(true);
 			}
@@ -154,8 +154,9 @@ public class ExecutionDialog extends JDialog
 		table = new StoredProcParamsTable(tableModel,
 				new TableCellEditorFactory(),
 				new TableCellRendererFactory(resourceManager), 1.3F);
+		table.setFillsViewportHeight(false);
 
-		columnAdjuster = new TableColumnAdjuster(table, 0);
+		columnAdjuster = new TableColumnAdjuster(table);
 
 		JScrollPane tablePane = new JScrollPane(table);
 
