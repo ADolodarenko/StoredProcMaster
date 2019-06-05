@@ -14,10 +14,6 @@ import java.util.Enumeration;
 
 public class StoredProcParamsTable extends JTable
 {
-	private static final int COLUMN_TYPE_WIDTH = 50;
-	private static final int COLUMN_VALUETYPE_WIDTH = 100;
-	private static final int COLUMN_NULL_WIDTH = 30;
-
 	private static void setColumnWidth(TableColumn column, int width)
 	{
 		column.setMinWidth(width);
@@ -199,5 +195,15 @@ public class StoredProcParamsTable extends JTable
 		}
 
 		return null;
+	}
+
+	public void resizeLastColumn(int viewWidth)
+	{
+		TableColumn lastColumn = getColumnModel().getColumn(getColumnCount() - 1);
+		int tableWidth = getWidth() - lastColumn.getWidth();
+		int diffWidth = viewWidth - tableWidth;
+
+		if (diffWidth > 0)
+			lastColumn.setPreferredWidth(diffWidth);
 	}
 }

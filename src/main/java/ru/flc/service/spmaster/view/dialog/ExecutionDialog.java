@@ -37,6 +37,7 @@ public class ExecutionDialog extends JDialog
 	private StoredProcParamsTableModel tableModel;
 	private StoredProcParamsTable table;
 	private TableColumnAdjuster columnAdjuster;
+	private JScrollPane tablePane;
 	private JPanel settingsPanel;
 
 	private JLabel imageLabel; //102, 70
@@ -76,7 +77,7 @@ public class ExecutionDialog extends JDialog
 			if (storedProc == null)
 				procedureLabel.setText("");
 			else
-				procedureLabel.setText(storedProc.getName());
+				procedureLabel.setText(storedProc.getName() + " ");
 
 			tableModel.clear();
 			tableModel.fireTableDataChanged();
@@ -87,7 +88,7 @@ public class ExecutionDialog extends JDialog
 				tableModel.fireTableDataChanged();
 
 				table.getTableHeader().setResizingAllowed(true);
-				columnAdjuster.adjustColumns();  //table.resizeColumns();
+				columnAdjuster.adjustColumns();
 				table.getTableHeader().setResizingAllowed(false);
 
 				settingsPanel.setVisible(true);
@@ -156,9 +157,9 @@ public class ExecutionDialog extends JDialog
 				new TableCellRendererFactory(resourceManager), 1.3F);
 		table.setFillsViewportHeight(false);
 
-		columnAdjuster = new TableColumnAdjuster(table);
+		columnAdjuster = new TableColumnAdjuster(table, 6, 200);
 
-		JScrollPane tablePane = new JScrollPane(table);
+		tablePane = new JScrollPane(table);
 
 		JPanel panel = ViewComponents.getTitledPanelWithBorderLayout(resourceManager, titleAdjuster,
 				tablePane, BorderLayout.CENTER, BorderFactory.createEtchedBorder(),

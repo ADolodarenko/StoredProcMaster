@@ -24,6 +24,7 @@ import ru.flc.service.spmaster.view.dialog.AboutDialog;
 import ru.flc.service.spmaster.view.dialog.ExecutionDialog;
 import ru.flc.service.spmaster.view.table.StoredProcListTable;
 import ru.flc.service.spmaster.view.table.StoredProcListTableModel;
+import ru.flc.service.spmaster.view.table.listener.StoredProcListMouseListener;
 import ru.flc.service.spmaster.view.table.listener.StoredProcListSelectionListener;
 import ru.flc.service.spmaster.view.thirdparty.TextLineNumber;
 import ru.flc.service.spmaster.view.util.ViewComponents;
@@ -331,6 +332,7 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 		procListTableModel = new StoredProcListTableModel(resourceManager, StoredProc.getTitleKeys(), null);
 		procListTable = new StoredProcListTable(procListTableModel, resourceManager);
 		procListTable.getSelectionModel().addListSelectionListener(new StoredProcListSelectionListener(procListTable, controller));
+		procListTable.addMouseListener(new StoredProcListMouseListener(actionsManager));
 
 		procListPane = new JScrollPane(procListTable);
 

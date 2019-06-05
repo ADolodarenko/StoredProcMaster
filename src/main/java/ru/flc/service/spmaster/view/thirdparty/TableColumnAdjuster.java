@@ -26,6 +26,7 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 {
 	private JTable table;
 	private int spacing;
+	private int lastColumnMinimumWidth;
 	private boolean isColumnHeaderIncluded;
 	private boolean isColumnDataIncluded;
 	private boolean isOnlyAdjustLarger;
@@ -37,16 +38,18 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 	 */
 	public TableColumnAdjuster(JTable table)
 	{
-		this(table, 6);
+		this(table, 6, 0);
 	}
 
 	/*
 	 *  Specify the table and spacing
 	 */
-	public TableColumnAdjuster(JTable table, int spacing)
+	public TableColumnAdjuster(JTable table, int spacing, int lastColumnMinimumWidth)
 	{
 		this.table = table;
 		this.spacing = spacing;
+		this.lastColumnMinimumWidth = lastColumnMinimumWidth;
+
 		setColumnHeaderIncluded( true );
 		setColumnDataIncluded( true );
 		setOnlyAdjustLarger( false );
@@ -151,6 +154,9 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 		if (! tableColumn.getResizable()) return;
 
 		width += spacing;
+
+		if (column == table.getColumnCount() - 1)
+			width = Math.max(width, lastColumnMinimumWidth);
 
 		//  Don't shrink the column width
 
