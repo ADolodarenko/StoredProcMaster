@@ -19,6 +19,7 @@ import ru.flc.service.spmaster.view.thirdparty.TableColumnAdjuster;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.util.List;
 
 public class ExecutionDialog extends JDialog
@@ -27,6 +28,7 @@ public class ExecutionDialog extends JDialog
 
 	private Frame owner;
 	private SettingsDialogInvoker invoker;
+	private AbstractAction execAction;
 
 	private ResourceManager resourceManager;
 	private TitleAdjuster titleAdjuster;
@@ -46,7 +48,8 @@ public class ExecutionDialog extends JDialog
 	private JButton executeButton;
 	private JButton cancelButton;
 
-	public ExecutionDialog(Frame owner, SettingsDialogInvoker invoker, ResourceManager resourceManager)
+	public ExecutionDialog(Frame owner, SettingsDialogInvoker invoker,
+						   ResourceManager resourceManager, AbstractAction execAction)
 	{
 		super(owner, "", true);
 
@@ -55,16 +58,11 @@ public class ExecutionDialog extends JDialog
 
 		this.resourceManager = resourceManager;
 		this.titleAdjuster = new TitleAdjuster();
+		this.execAction = execAction;
 
 		initComponents();
 
 		setResizable(false);
-	}
-
-	public void tune(StoredProc storedProc, List<StoredProcParameter> storedProcParameters)
-	{
-		this.storedProc = storedProc;
-		this.parameterList = storedProcParameters;
 	}
 
 	@Override
@@ -104,6 +102,22 @@ public class ExecutionDialog extends JDialog
 		}
 
 		super.setVisible(b);
+	}
+
+	public void tune(StoredProc storedProc, List<StoredProcParameter> storedProcParameters)
+	{
+		this.storedProc = storedProc;
+		this.parameterList = storedProcParameters;
+	}
+
+	public StoredProc getStoredProc()
+	{
+		return storedProc;
+	}
+
+	public List<StoredProcParameter> getParameterList()
+	{
+		return parameterList;
 	}
 
 	private void initComponents()
@@ -203,6 +217,9 @@ public class ExecutionDialog extends JDialog
 		stopTableEditing();
 
 		imageLabel.setIcon(resourceManager.getImageIcon(AppConstants.ICON_NAME_EXECUTING));
+
+		if (execAction != null)
+			execAction.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
 	}
 
 	private void exit()

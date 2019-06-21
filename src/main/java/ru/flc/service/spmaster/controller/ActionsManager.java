@@ -13,6 +13,7 @@ public class ActionsManager
 	private AbstractAction connectDbAction;
 	private AbstractAction disconnectDbAction;
 	private AbstractAction refreshSpListAction;
+	private AbstractAction showSpInfoAction;
 	private AbstractAction execSpAction;
 	private AbstractAction showSettingsAction;
 	private AbstractAction showHelpAction;
@@ -52,6 +53,14 @@ public class ActionsManager
 			public void actionPerformed(ActionEvent e)
 			{
 				controller.refreshStoredProcedureList();
+			}
+		};
+
+		showSpInfoAction = new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				controller.showStoredProcedureInfo();
 			}
 		};
 
@@ -99,6 +108,11 @@ public class ActionsManager
 				new Title(resourceManager, AppConstants.KEY_ACTION_REFRESHSP_DESCR).getText(),
 				AppConstants.ICON_NAME_REFRESH);
 
+		resetAction(showSpInfoAction,
+				new Title(resourceManager, AppConstants.KEY_ACTION_EXECSP).getText(),
+				new Title(resourceManager, AppConstants.KEY_ACTION_EXECSP_DESCR).getText(),
+				AppConstants.ICON_NAME_EXECUTE);
+
 		resetAction(execSpAction,
 				new Title(resourceManager, AppConstants.KEY_ACTION_EXECSP).getText(),
 				new Title(resourceManager, AppConstants.KEY_ACTION_EXECSP_DESCR).getText(),
@@ -128,6 +142,11 @@ public class ActionsManager
 	public AbstractAction getRefreshSpListAction()
 	{
 		return refreshSpListAction;
+	}
+
+	public AbstractAction getShowSpInfoAction()
+	{
+		return showSpInfoAction;
 	}
 
 	public AbstractAction getExecSpAction()

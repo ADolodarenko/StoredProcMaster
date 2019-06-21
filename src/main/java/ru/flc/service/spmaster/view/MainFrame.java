@@ -40,10 +40,12 @@ import java.awt.event.WindowEvent;
 import java.util.List;
 import java.util.logging.Logger;
 
+/**
+ * This class represents the View part of the application (according to MVC pattern) and its main window.
+ */
 public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 {
 	private static final Logger LOGGER = Logger.getLogger(MainFrame.class.getName());
-
 
 	private Controller controller;
 	private ResourceManager resourceManager;
@@ -232,7 +234,8 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 		{
 			try
 			{
-				executionDialog = new ExecutionDialog(this, this, resourceManager);
+				executionDialog = new ExecutionDialog(this, this,
+						resourceManager, actionsManager.getExecSpAction());
 				executionDialog.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 			}
 			catch (Exception e)
@@ -251,16 +254,24 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	@Override
 	public StoredProc getCurrentStoredProc()
 	{
-		ListSelectionModel selectionModel = procListTable.getSelectionModel();
+		StoredProc storedProc = null;
 
-		if ( !selectionModel.isSelectionEmpty() )
+		if (executionDialog != null && executionDialog.isActive())
+			storedProc = executionDialog.getStoredProc();
+
+		if (storedProc == null)
 		{
-			int selectionIndex = selectionModel.getMinSelectionIndex();
+			ListSelectionModel selectionModel = procListTable.getSelectionModel();
 
-			return procListTable.getStoredProc(selectionIndex);
+			if (!selectionModel.isSelectionEmpty())
+			{
+				int selectionIndex = selectionModel.getMinSelectionIndex();
+
+				storedProc = procListTable.getStoredProc(selectionIndex);
+			}
 		}
-		else
-			return null;
+
+		return storedProc;
 	}
 
 	@Override
@@ -319,7 +330,7 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 		toolBar.addSeparator();
 		toolBar.add(actionsManager.getRefreshSpListAction());
 		toolBar.addSeparator();
-		toolBar.add(actionsManager.getExecSpAction());
+		toolBar.add(actionsManager.getShowSpInfoAction());
 		toolBar.addSeparator();
 		toolBar.add(actionsManager.getShowSettingsAction());
 		toolBar.add(actionsManager.getShowHelpAction());
@@ -490,7 +501,7 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 			@Override
 			public void windowClosing(WindowEvent e)
 			{
-				//cancelProcesses();
+				controller.cancelProcesses();
 				controller.updateViewBounds();
 				controller.saveAllSettings();
 			}

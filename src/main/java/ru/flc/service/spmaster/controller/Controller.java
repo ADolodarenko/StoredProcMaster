@@ -114,7 +114,7 @@ public class Controller
 			}
 	}
 
-	public void execStoredProcedure()
+	public void showStoredProcedureInfo()
 	{
 		if (checkDataModel() && checkView())
 		{
@@ -133,6 +133,33 @@ public class Controller
 				view.showException(e);
 			}
 		}
+	}
+
+	public void execStoredProcedure()
+	{
+		if (checkDataModel() && checkView())
+		{
+			try
+			{
+				StoredProc storedProc = view.getCurrentStoredProc();
+
+				if (storedProc != null)
+				{
+					//List<StoredProcParameter> storedProcParams = view.getStoredProcParams(storedProc);
+
+				}
+			}
+			catch (Exception e)
+			{
+				view.showException(e);
+			}
+		}
+	}
+
+	public void cancelProcesses()
+	{
+		//cancel all that is in work
+		disconnectFromDatabase();
 	}
 
 	public void showSettings()

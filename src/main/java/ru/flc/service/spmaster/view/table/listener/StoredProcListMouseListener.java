@@ -19,7 +19,7 @@ public class StoredProcListMouseListener extends MouseAdapter
 	public void mouseClicked(MouseEvent e)
 	{
 		if (e.getClickCount() == 2 && actionsManager != null)
-			actionsManager.getExecSpAction().actionPerformed(new ActionEvent(e.getSource(),
+			actionsManager.getShowSpInfoAction().actionPerformed(new ActionEvent(e.getSource(),
 					ActionEvent.ACTION_PERFORMED, null));
 	}
 }
