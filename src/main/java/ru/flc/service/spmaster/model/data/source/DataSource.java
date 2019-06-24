@@ -9,5 +9,5 @@ public interface DataSource extends Source
 {
 	List<StoredProc> getStoredProcList() throws Exception;
 	List<String> getStoredProcText(StoredProc storedProc) throws Exception;
-	List<StoredProcParameter> getStoredProcParams(StoredProc storedProc) throws Exception;
+	void attachStoredProcParams(StoredProc storedProc) throws Exception;
 }

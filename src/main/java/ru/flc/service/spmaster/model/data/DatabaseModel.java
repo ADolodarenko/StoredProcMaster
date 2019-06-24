@@ -45,11 +45,11 @@ public class DatabaseModel implements DataModel
 	}
 
 	@Override
-	public List<StoredProcParameter> getStoredProcParams(StoredProc storedProc) throws Exception
+	public void attachStoredProcParams(StoredProc storedProc) throws Exception
 	{
 		if (storedProcDao != null)
-			return storedProcDao.getStoredProcParams(storedProc);
+			storedProcDao.attachStoredProcParams(storedProc);
 		else
-			return null;
+			storedProc.setParameters(null);
 	}
 }

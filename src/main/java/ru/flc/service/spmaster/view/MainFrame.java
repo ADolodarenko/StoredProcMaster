@@ -16,7 +16,6 @@ import org.dav.service.view.table.LogEventWriter;
 import ru.flc.service.spmaster.controller.ActionsManager;
 import ru.flc.service.spmaster.controller.Controller;
 import ru.flc.service.spmaster.model.data.entity.StoredProc;
-import ru.flc.service.spmaster.model.data.entity.StoredProcParameter;
 import ru.flc.service.spmaster.model.settings.ViewConstraints;
 import ru.flc.service.spmaster.util.AppConstants;
 import ru.flc.service.spmaster.util.AppStatus;
@@ -200,7 +199,10 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	@Override
 	public void adjustToAppStatus()
 	{
-		actionsManager.adjustActionsToAppState();
+		actionsManager.adjustToAppStatus();
+
+		if (executionDialog != null && executionDialog.isActive())
+			executionDialog.adjustToAppStatus(controller.checkAppStatuses(AppStatus.RUNNING));
 	}
 
 	@Override
@@ -228,14 +230,14 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	}
 
 	@Override
-	public void showStoredProcInfo(StoredProc storedProc, List<StoredProcParameter> storedProcParams)
+	public void showStoredProcInfo(StoredProc storedProc)
 	{
 		if (executionDialog == null)
 		{
 			try
 			{
 				executionDialog = new ExecutionDialog(this, this,
-						resourceManager, actionsManager.getExecSpAction());
+						resourceManager, actionsManager.getExecSpAction(), actionsManager.getCancelSpAction());
 				executionDialog.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 			}
 			catch (Exception e)
@@ -246,7 +248,7 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 
 		if (executionDialog != null)
 		{
-			executionDialog.tune(storedProc, storedProcParams);
+			executionDialog.tune(storedProc);
 			executionDialog.setVisible(true);
 		}
 	}

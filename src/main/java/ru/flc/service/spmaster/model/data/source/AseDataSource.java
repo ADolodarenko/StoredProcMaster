@@ -367,14 +367,14 @@ public class AseDataSource implements DataSource
 	}
 
 	@Override
-	public List<StoredProcParameter> getStoredProcParams(StoredProc storedProc) throws Exception
+	public void attachStoredProcParams(StoredProc storedProc) throws Exception
 	{
 		List<StoredProcParameter> resultList = new LinkedList<>();
 
 		ResultSet resultSet = metaData.getProcedureColumns(dbName, null, storedProc.getName(), null);
 		transferResultToParamsList(resultSet, resultList);
 
-		return resultList;
+		storedProc.setParameters(resultList);
 	}
 
 	private static class SingletonHelper

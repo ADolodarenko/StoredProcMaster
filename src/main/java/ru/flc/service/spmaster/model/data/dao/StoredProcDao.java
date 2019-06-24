@@ -41,9 +41,9 @@ public class StoredProcDao implements AccessObject
 		return source.getStoredProcText(storedProc);
 	}
 
-	public List<StoredProcParameter> getStoredProcParams(StoredProc storedProc) throws Exception
+	public void attachStoredProcParams(StoredProc storedProc) throws Exception
 	{
-		return source.getStoredProcParams(storedProc);
+		source.attachStoredProcParams(storedProc);
 	}
 
 	public void execStoredProc(StoredProc proc) throws Exception

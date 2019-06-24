@@ -124,8 +124,8 @@ public class Controller
 
 				if (storedProc != null)
 				{
-					List<StoredProcParameter> storedProcParams = dataModel.getStoredProcParams(storedProc);
-					view.showStoredProcInfo(storedProc, storedProcParams);
+					dataModel.attachStoredProcParams(storedProc);
+					view.showStoredProcInfo(storedProc);
 				}
 			}
 			catch (Exception e)
@@ -145,8 +145,31 @@ public class Controller
 
 				if (storedProc != null)
 				{
-					//List<StoredProcParameter> storedProcParams = view.getStoredProcParams(storedProc);
+					//TODO: exec stored proc here.
 
+					changeAppStatus(AppStatus.RUNNING);
+				}
+			}
+			catch (Exception e)
+			{
+				view.showException(e);
+			}
+		}
+	}
+
+	public void cancelStoredProcedure()
+	{
+		if (checkDataModel() && checkView())
+		{
+			try
+			{
+				StoredProc storedProc = view.getCurrentStoredProc();
+
+				if (storedProc != null)
+				{
+					//TODO: Cancel stored proc here.
+
+					changeAppStatus(AppStatus.CONNECTED);
 				}
 			}
 			catch (Exception e)
@@ -158,7 +181,8 @@ public class Controller
 
 	public void cancelProcesses()
 	{
-		//cancel all that is in work
+		//TODO: Cancel all that is in work.
+
 		disconnectFromDatabase();
 	}
 

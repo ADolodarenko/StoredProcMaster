@@ -2,6 +2,8 @@ package ru.flc.service.spmaster.model.data.entity;
 
 import ru.flc.service.spmaster.util.AppConstants;
 
+import java.util.List;
+
 /**
  * This class represents one stored procedure.
  */
@@ -19,6 +21,7 @@ public class StoredProc
 	private String description;
 	private StoredProcStatus status;
 	private User occupant;
+	private List<StoredProcParameter> parameters;
 
 	public StoredProc(int id, String name, String description,
 					  StoredProcStatus status, User occupant)
@@ -58,5 +61,15 @@ public class StoredProc
 	public User getOccupant()
 	{
 		return occupant;
+	}
+
+	public List<StoredProcParameter> getParameters()
+	{
+		return parameters;
+	}
+
+	public void setParameters(List<StoredProcParameter> parameters)
+	{
+		this.parameters = parameters;
 	}
 }

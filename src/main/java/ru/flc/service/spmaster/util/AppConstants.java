@@ -35,6 +35,8 @@ public final class AppConstants
 	public static final String KEY_ACTION_REFRESHSP_DESCR = "ActionRefreshSpListDescr";
 	public static final String KEY_ACTION_EXECSP = "ActionExecuteSp";
 	public static final String KEY_ACTION_EXECSP_DESCR = "ActionExecuteSpDescr";
+	public static final String KEY_ACTION_CANCELSP = "ActionCancelSp";
+	public static final String KEY_ACTION_CANCELSP_DESCR = "ActionCancelSpDescr";
 	public static final String KEY_ACTION_SHOW_SETTINGS = "ActionShowSettings";
 	public static final String KEY_ACTION_SHOW_SETTINGS_DESCR = "ActionShowSettingsDescr";
 	public static final String KEY_ACTION_SHOW_HELP = "ActionShowHelp";

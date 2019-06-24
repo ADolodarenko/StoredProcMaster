@@ -20,6 +20,7 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
 public class ExecutionDialog extends JDialog
@@ -29,6 +30,7 @@ public class ExecutionDialog extends JDialog
 	private Frame owner;
 	private SettingsDialogInvoker invoker;
 	private AbstractAction execAction;
+	private AbstractAction cancelAction;
 
 	private ResourceManager resourceManager;
 	private TitleAdjuster titleAdjuster;
@@ -48,8 +50,10 @@ public class ExecutionDialog extends JDialog
 	private JButton executeButton;
 	private JButton cancelButton;
 
+	private CancelButtonListener cancelButtonListener;
+
 	public ExecutionDialog(Frame owner, SettingsDialogInvoker invoker,
-						   ResourceManager resourceManager, AbstractAction execAction)
+						   ResourceManager resourceManager, AbstractAction execAction, AbstractAction cancelAction)
 	{
 		super(owner, "", true);
 
@@ -59,6 +63,7 @@ public class ExecutionDialog extends JDialog
 		this.resourceManager = resourceManager;
 		this.titleAdjuster = new TitleAdjuster();
 		this.execAction = execAction;
+		this.cancelAction = cancelAction;
 
 		initComponents();
 
@@ -104,10 +109,10 @@ public class ExecutionDialog extends JDialog
 		super.setVisible(b);
 	}
 
-	public void tune(StoredProc storedProc, List<StoredProcParameter> storedProcParameters)
+	public void tune(StoredProc storedProc)
 	{
 		this.storedProc = storedProc;
-		this.parameterList = storedProcParameters;
+		this.parameterList = storedProc.getParameters();
 	}
 
 	public StoredProc getStoredProc()
@@ -115,9 +120,14 @@ public class ExecutionDialog extends JDialog
 		return storedProc;
 	}
 
-	public List<StoredProcParameter> getParameterList()
+	public void adjustToAppStatus(boolean isRunning)
 	{
-		return parameterList;
+		cancelButtonListener.setSpRunning(isRunning);
+
+		setControlsEnabled( !isRunning );
+
+		String statusIconName = isRunning ? AppConstants.ICON_NAME_EXECUTING : AppConstants.ICON_NAME_STORED_PROCEDURE;
+		imageLabel.setIcon(resourceManager.getImageIcon(statusIconName));
 	}
 
 	private void initComponents()
@@ -204,22 +214,27 @@ public class ExecutionDialog extends JDialog
 		executeButton.setIcon(resourceManager.getImageIcon(AppConstants.ICON_NAME_EXECUTE));
 		executeButton.addActionListener(event -> execute());
 
+		cancelButtonListener = new CancelButtonListener(false);
 		cancelButton = new JButton();
 		titleAdjuster.registerComponent(cancelButton, new Title(resourceManager, Constants.KEY_BUTTON_CANCEL));
 		cancelButton.setPreferredSize(BUTTON_MAX_SIZE);
 		cancelButton.setMaximumSize(BUTTON_MAX_SIZE);
 		cancelButton.setIcon(resourceManager.getImageIcon(Constants.ICON_NAME_CANCEL));
-		cancelButton.addActionListener(event -> exit());
+		cancelButton.addActionListener(cancelButtonListener);
 	}
 
 	private void execute()
 	{
 		stopTableEditing();
 
-		imageLabel.setIcon(resourceManager.getImageIcon(AppConstants.ICON_NAME_EXECUTING));
-
 		if (execAction != null)
 			execAction.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
+	}
+
+	private void cancel()
+	{
+		if (cancelAction != null)
+			cancelAction.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
 	}
 
 	private void exit()
@@ -232,9 +247,41 @@ public class ExecutionDialog extends JDialog
 			invoker.setFocus();
 	}
 
+	private void setControlsEnabled(boolean enabled)
+	{
+		if (settingsPanel.isVisible())
+			table.setEnabled(enabled);
+
+		executeButton.setEnabled(enabled);
+	}
+
 	private void stopTableEditing()
 	{
 		if (table != null && table.isEditing())
 			table.getCellEditor().stopCellEditing();
+	}
+
+	private class CancelButtonListener implements ActionListener
+	{
+		private boolean isSpRunning;
+
+		public CancelButtonListener(boolean isSpRunning)
+		{
+			this.isSpRunning = isSpRunning;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e)
+		{
+			if (isSpRunning)
+				cancel();
+			else
+				exit();
+		}
+
+		public void setSpRunning(boolean isSpRunning)
+		{
+			this.isSpRunning = isSpRunning;
+		}
 	}
 }

@@ -22,6 +22,6 @@ public interface View
 	void adjustToAppStatus();
 	void showStoredProcList(List<StoredProc> storedProcList);
 	void showStoredProcText(List<String> storedProcTextLines);
-	void showStoredProcInfo(StoredProc storedProc, List<StoredProcParameter> storedProcParams);
+	void showStoredProcInfo(StoredProc storedProc);
 	StoredProc getCurrentStoredProc();
 }

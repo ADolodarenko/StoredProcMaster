@@ -1,5 +1,6 @@
 package ru.flc.service.spmaster.controller;
 
+import org.dav.service.util.Constants;
 import org.dav.service.util.ResourceManager;
 import org.dav.service.view.Title;
 import ru.flc.service.spmaster.util.AppConstants;
@@ -15,6 +16,7 @@ public class ActionsManager
 	private AbstractAction refreshSpListAction;
 	private AbstractAction showSpInfoAction;
 	private AbstractAction execSpAction;
+	private AbstractAction cancelSpAction;
 	private AbstractAction showSettingsAction;
 	private AbstractAction showHelpAction;
 
@@ -72,6 +74,14 @@ public class ActionsManager
 			}
 		};
 
+		cancelSpAction = new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				controller.cancelStoredProcedure();
+			}
+		};
+
 		showSettingsAction = new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e)
@@ -118,6 +128,11 @@ public class ActionsManager
 				new Title(resourceManager, AppConstants.KEY_ACTION_EXECSP_DESCR).getText(),
 				AppConstants.ICON_NAME_EXECUTE);
 
+		resetAction(cancelSpAction,
+				new Title(resourceManager, AppConstants.KEY_ACTION_CANCELSP).getText(),
+				new Title(resourceManager, AppConstants.KEY_ACTION_CANCELSP_DESCR).getText(),
+				Constants.ICON_NAME_CANCEL);
+
 		resetAction(showSettingsAction,
 				new Title(resourceManager, AppConstants.KEY_ACTION_SHOW_SETTINGS).getText(),
 				new Title(resourceManager, AppConstants.KEY_ACTION_SHOW_SETTINGS_DESCR).getText(),
@@ -154,6 +169,11 @@ public class ActionsManager
 		return execSpAction;
 	}
 
+	public AbstractAction getCancelSpAction()
+	{
+		return cancelSpAction;
+	}
+
 	public AbstractAction getShowSettingsAction()
 	{
 		return showSettingsAction;
@@ -174,7 +194,7 @@ public class ActionsManager
 		action.putValue(Action.SMALL_ICON, resourceManager.getImageIcon(actionIconName));
 	}
 
-	public void adjustActionsToAppState()
+	public void adjustToAppStatus()
 	{
 		connectDbAction.setEnabled(controller.checkAppStatuses(AppStatus.DISCONNECTED));
 		disconnectDbAction.setEnabled(controller.checkAppStatuses(AppStatus.CONNECTED));
