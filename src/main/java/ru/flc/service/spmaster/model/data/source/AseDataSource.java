@@ -98,6 +98,8 @@ public class AseDataSource implements DataSource
 
 			System.out.println();*/
 
+			int index = 1;
+
 			while (resultSet.next())
 			{
 				/*for (int i = 1; i <= columnsQuantity; i++)
@@ -108,10 +110,14 @@ public class AseDataSource implements DataSource
 
 				System.out.println();*/
 
-				StoredProcParameter parameter = getParameterFromRow(resultSet);
+				StoredProcParameter parameter = getParameterFromRow(resultSet, index);
 
 				if (parameter != null)
+				{
 					parametersList.add(parameter);
+
+					index++;
+				}
 			}
 		}
 	}
@@ -148,7 +154,7 @@ public class AseDataSource implements DataSource
 		return occupant;
 	}
 
-	private static StoredProcParameter getParameterFromRow(ResultSet record) throws Exception
+	private static StoredProcParameter getParameterFromRow(ResultSet record, int index) throws Exception
 	{
 		StoredProcParameter parameter = null;
 
@@ -167,18 +173,18 @@ public class AseDataSource implements DataSource
 
 			Object initialValue = DefaultValues.getValue(valueClass);
 
-			boolean nullableValue = false;
-
 			if (initialValue == null)
 				throw new Exception(AppConstants.EXCPT_SP_PARAM_INIT_VALUE_EMPTY);
 
+			boolean nullableValue = false;
 			int precision = record.getInt(AppConstants.MESS_SP_PARAM_COL_NAME_PRECISION);
 			short scale = record.getShort(AppConstants.MESS_SP_PARAM_COL_NAME_SCALE);
 			String typeName = buildTypeName(record.getString(AppConstants.MESS_SP_PARAM_COL_NAME_TYPE_NAME),
 					precision, scale);
+			//int ordinalPosition = record.getInt(AppConstants.MESS_SP_PARAM_COL_NAME_ORDINAL_POSITION);
 
 			parameter = new StoredProcParameter(parameterType, parameterName, valueClass,
-					initialValue, nullableValue, precision, scale, typeName);
+					initialValue, nullableValue, precision, scale, typeName, index);
 		}
 
 		return parameter;

@@ -5,20 +5,25 @@ import org.dav.service.settings.TransmissiveSettings;
 import org.dav.service.util.ResourceManager;
 import ru.flc.service.spmaster.model.data.DataModel;
 import ru.flc.service.spmaster.model.data.entity.StoredProc;
-import ru.flc.service.spmaster.model.data.entity.StoredProcParameter;
 import ru.flc.service.spmaster.model.settings.OperationalSettings;
 import ru.flc.service.spmaster.model.settings.SettingsModel;
 import ru.flc.service.spmaster.util.AppStatus;
 import ru.flc.service.spmaster.view.View;
 
+import javax.swing.*;
+import java.beans.PropertyChangeEvent;
 import java.util.List;
 
 public class Controller
 {
+	private static final String WORKER_PROPERTY_NAME_STATE = "state";
+
 	private DataModel dataModel;
 	private SettingsModel settingsModel;
 	private View view;
 	private AppStatus appStatus;
+
+	private StoredProcExecuter spExecuter;
 
 	public void setDataModel(DataModel dataModel)
 	{
@@ -145,9 +150,10 @@ public class Controller
 
 				if (storedProc != null)
 				{
-					//TODO: exec stored proc here.
-
-					changeAppStatus(AppStatus.RUNNING);
+					spExecuter = new StoredProcExecuter(storedProc, dataModel, view);
+					spExecuter.getPropertyChangeSupport().addPropertyChangeListener(WORKER_PROPERTY_NAME_STATE,
+							evt -> doForWorkerEvent(spExecuter, evt));
+					spExecuter.execute();
 				}
 			}
 			catch (Exception e)
@@ -163,14 +169,8 @@ public class Controller
 		{
 			try
 			{
-				StoredProc storedProc = view.getCurrentStoredProc();
-
-				if (storedProc != null)
-				{
-					//TODO: Cancel stored proc here.
-
-					changeAppStatus(AppStatus.CONNECTED);
-				}
+				if (spExecuter != null && !spExecuter.isDone() && !spExecuter.isCancelled())
+					spExecuter.cancel(false);
 			}
 			catch (Exception e)
 			{
@@ -181,7 +181,7 @@ public class Controller
 
 	public void cancelProcesses()
 	{
-		//TODO: Cancel all that is in work.
+		cancelStoredProcedure();
 
 		disconnectFromDatabase();
 	}
@@ -256,6 +256,28 @@ public class Controller
 	private boolean checkView()
 	{
 		return view != null;
+	}
+
+	private void doForWorkerEvent(SwingWorker worker, PropertyChangeEvent event)
+	{
+		if (WORKER_PROPERTY_NAME_STATE.equals(event.getPropertyName()))
+		{
+			Object newValue = event.getNewValue();
+
+			if (newValue instanceof SwingWorker.StateValue)
+			{
+				SwingWorker.StateValue stateValue = (SwingWorker.StateValue) newValue;
+
+				switch (stateValue)
+				{
+					case STARTED:
+						changeAppStatus(AppStatus.RUNNING);
+						break;
+					case DONE:
+						changeAppStatus(AppStatus.CONNECTED);
+				}
+			}
+		}
 	}
 
 	public void changeAppStatus(AppStatus newAppStatus)

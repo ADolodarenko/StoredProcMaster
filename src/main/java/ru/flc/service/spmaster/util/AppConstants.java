@@ -85,6 +85,7 @@ public final class AppConstants
 	public static final String MESS_SP_PARAM_COL_NAME_TYPE_NAME = "TYPE_NAME";
 	public static final String MESS_SP_PARAM_COL_NAME_PRECISION = "PRECISION";
 	public static final String MESS_SP_PARAM_COL_NAME_SCALE = "SCALE";
+	public static final String MESS_SP_PARAM_COL_NAME_ORDINAL_POSITION = "ORDINAL_POSITION";
 	public static final String MESS_SP_PARAM_COL_VALUE_NUMERIC = "NUMERIC";
 	public static final String MESS_SP_PARAM_COL_VALUE_DECIMAL = "DECIMAL";
 	public static final String MESS_SP_PARAM_COL_VALUE_VARCHAR = "VARCHAR";

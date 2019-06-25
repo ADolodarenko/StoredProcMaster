@@ -24,11 +24,12 @@ public class StoredProcParameter
 	private int precision;
 	private short scale;
 	private String valueTypeName;
+	private int ordinalPosition;
 
 	public StoredProcParameter(StoredProcParamType type,
 							   String name, Class<?> valueClass, Object value,
 							   boolean nullValue, int precision, short scale,
-							   String valueTypeName)
+							   String valueTypeName, int ordinalPosition)
 	{
 		this.type = type;
 		this.name = name;
@@ -38,6 +39,7 @@ public class StoredProcParameter
 		this.precision = precision;
 		this.scale = scale;
 		this.valueTypeName = valueTypeName;
+		this.ordinalPosition = ordinalPosition;
 	}
 
 	public StoredProcParamType getType()
@@ -132,5 +134,10 @@ public class StoredProcParameter
 	public String getValueTypeName()
 	{
 		return valueTypeName;
+	}
+
+	public int getOrdinalPosition()
+	{
+		return ordinalPosition;
 	}
 }
