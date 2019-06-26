@@ -3,8 +3,8 @@ package ru.flc.service.spmaster.model.data;
 import org.dav.service.settings.Settings;
 import ru.flc.service.spmaster.model.data.dao.AccessObjectFactory;
 import ru.flc.service.spmaster.model.data.dao.StoredProcDao;
+import ru.flc.service.spmaster.model.data.entity.DataTable;
 import ru.flc.service.spmaster.model.data.entity.StoredProc;
-import ru.flc.service.spmaster.model.data.entity.StoredProcParameter;
 
 import java.util.List;
 
@@ -51,5 +51,13 @@ public class DatabaseModel implements DataModel
 			storedProcDao.attachStoredProcParams(storedProc);
 		else
 			storedProc.setParameters(null);
+	}
+
+	@Override
+	public void executeStoredProc(StoredProc storedProc, List<DataTable> resultTables, List<String> outputMessages)
+			throws Exception
+	{
+		if (storedProcDao != null)
+			storedProcDao.executeStoredProc(storedProc, resultTables, outputMessages);
 	}
 }

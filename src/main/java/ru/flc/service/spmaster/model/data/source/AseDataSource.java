@@ -11,6 +11,7 @@ import ru.flc.service.spmaster.model.settings.OperationalSettings;
 import ru.flc.service.spmaster.util.AppConstants;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -217,6 +218,97 @@ public class AseDataSource implements DataSource
 		return Arrays.binarySearch(preciseTypeNames, rawTypeName.toUpperCase()) > 0;
 	}
 
+	private static void checkParameters(StoredProc storedProc, List<DataTable> resultTables, List<String> outputMessages)
+	{
+		if (storedProc == null)
+			throw new IllegalArgumentException(AppConstants.EXCPT_SP_EMPTY);
+
+		if (resultTables == null)
+			throw new IllegalArgumentException(AppConstants.EXCPT_SP_RESULT_TABLES_EMPTY);
+
+		if (outputMessages == null)
+			throw new IllegalArgumentException(AppConstants.EXCPT_SP_OUTPUT_MESSAGES_EMPTY);
+	}
+
+	private static void executeStatement(PreparedStatement statement,
+										 List<DataTable> resultTables, List<String> outputMessages) throws SQLException
+	{
+		boolean done = false;
+		boolean isResultSet = statement.execute();
+
+		while (!done)
+		{
+			if (isResultSet)
+				resultTables.add(getDataTable(statement.getResultSet()));
+			else
+			{
+				int updateCount = statement.getUpdateCount();
+
+				if (updateCount >= 0)
+					outputMessages.add(String.format(Constants.MESS_ROWS_AFFECTED, updateCount));
+				else
+					done = true;
+			}
+
+			if (!done)
+				isResultSet = statement.getMoreResults();
+		}
+
+		SQLWarning warning = statement.getWarnings();
+
+		while (warning != null)
+		{
+			outputMessages.add(warning.getMessage());
+
+			warning = warning.getNextWarning();
+		}
+	}
+
+	private static DataTable getDataTable(ResultSet resultSet) throws SQLException
+	{
+		ResultSetMetaData metaData = resultSet.getMetaData();
+		int columnCount = metaData.getColumnCount();
+
+		List<DataElement> headers = new ArrayList<>();
+		for (int i = 1; i <= columnCount; i++)
+			headers.add(new DataElement(metaData.getColumnLabel(i), String.class));
+
+		List<List<DataElement>> rows = new ArrayList<>();
+		while (resultSet.next())
+		{
+			List<DataElement> row = new ArrayList<>();
+			for (int i = 1; i <= columnCount; i++)
+				row.add(new DataElement(resultSet.getObject(i),
+						DatabaseTypes.getJavaClass(metaData.getColumnType(i))));
+
+			rows.add(row);
+		}
+
+		return new DataTable(headers, rows);
+	}
+
+	private static String getStoredProcCallString(StoredProc storedProc)
+	{
+		StringBuilder builder = new StringBuilder();
+		builder.append("{call ");
+		builder.append(storedProc.getName());
+		builder.append(" (");
+
+		List<StoredProcParameter> parameters = storedProc.getParameters();
+		if (parameters != null && !parameters.isEmpty())
+		{
+			for (int i = 0; i < parameters.size(); i++)
+				builder.append("?, ");
+
+			builder.delete(builder.length() - 2, 2);
+		}
+
+		builder.append(")}");
+
+		return builder.toString();
+	}
+
+
 	private String url;
 	private String dbName;
 	private String user;
@@ -381,6 +473,43 @@ public class AseDataSource implements DataSource
 		transferResultToParamsList(resultSet, resultList);
 
 		storedProc.setParameters(resultList);
+	}
+
+	@Override
+	public void executeStoredProc(StoredProc storedProc, List<DataTable> resultTables, List<String> outputMessages) throws Exception
+	{
+		checkParameters(storedProc, resultTables, outputMessages);
+
+		if (supportStoredProcedures)
+		{
+			connection.setAutoCommit(true);
+
+			try (PreparedStatement statement = prepareSpStatement(storedProc))
+			{
+				executeStatement(statement, resultTables, outputMessages);
+			}
+			catch (SQLException e)
+			{
+				throw e;
+			}
+			finally
+			{
+				connection.setAutoCommit(false);
+			}
+		}
+		else
+			throw new Exception(Constants.EXCPT_DATABASE_WITHOUT_SP_SUPPORT);
+	}
+
+	private PreparedStatement prepareSpStatement(StoredProc storedProc) throws SQLException
+	{
+		String callString = getStoredProcCallString(storedProc);
+
+		CallableStatement spStatement = connection.prepareCall(callString);
+
+
+		//TODO: Prepare the stored procedure statement
+		return spStatement;
 	}
 
 	private static class SingletonHelper

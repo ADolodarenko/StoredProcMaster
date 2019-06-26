@@ -15,6 +15,7 @@ import org.dav.service.view.table.LogEventTableModel;
 import org.dav.service.view.table.LogEventWriter;
 import ru.flc.service.spmaster.controller.ActionsManager;
 import ru.flc.service.spmaster.controller.Controller;
+import ru.flc.service.spmaster.model.data.entity.DataTable;
 import ru.flc.service.spmaster.model.data.entity.StoredProc;
 import ru.flc.service.spmaster.model.settings.ViewConstraints;
 import ru.flc.service.spmaster.util.AppConstants;
@@ -274,6 +275,12 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 		}
 
 		return storedProc;
+	}
+
+	@Override
+	public void showStoredProcOutput(List<DataTable> resultTables, List<String> outputMessages)
+	{
+
 	}
 
 	@Override
