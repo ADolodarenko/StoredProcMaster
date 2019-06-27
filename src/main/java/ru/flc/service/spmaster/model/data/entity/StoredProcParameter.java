@@ -18,6 +18,7 @@ public class StoredProcParameter
 
 	private StoredProcParamType type;
 	private String name;
+	private int sqlType;
 	private Class<?> valueClass;
 	private Object value;
 	private boolean nullValue;
@@ -27,12 +28,13 @@ public class StoredProcParameter
 	private int ordinalPosition;
 
 	public StoredProcParameter(StoredProcParamType type,
-							   String name, Class<?> valueClass, Object value,
+							   String name, int sqlType, Class<?> valueClass, Object value,
 							   boolean nullValue, int precision, short scale,
 							   String valueTypeName, int ordinalPosition)
 	{
 		this.type = type;
 		this.name = name;
+		this.sqlType = sqlType;
 		this.valueClass = valueClass;
 		this.value = value;
 		this.nullValue = nullValue;
@@ -50,6 +52,11 @@ public class StoredProcParameter
 	public String getName()
 	{
 		return name;
+	}
+
+	public int getSqlType()
+	{
+		return sqlType;
 	}
 
 	public Class<?> getValueClass()

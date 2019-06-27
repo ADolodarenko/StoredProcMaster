@@ -17,6 +17,11 @@ go
 create index idx_spm_proc_info_db on spm_proc_info(database_id)
 create index idx_spm_proc_info_proc on spm_proc_info(proc_id)
 go
+alter table spm_proc_info
+add proc_name varchar(40) default '' not null
+go
+create index idx_spm_proc_info_name on spm_proc_info(proc_name)
+go
 
 --Права на ХП
 if (object_id('spm_login_proc') is not null) drop table spm_login_proc
@@ -48,6 +53,26 @@ status_id int not null,
 status_name varchar(255) not null,
 constraint pk_spm_proc_status primary key clustered (status_id))
 go
+
+
+update spm_proc_info
+set proc_name = so.name
+from spm_proc_info i, FLC_RU..sysobjects so
+where i.database_id = 5
+  and i.proc_id = so.id
+  and so.type = 'P'
+--(2406 rows affected)
+
+select * from spm_proc_info where proc_name = ''
+
+update spm_proc_info
+set proc_name = proc_description
+where database_id = 5
+  and proc_name = ''
+go
+
+
+
 
 /*
 insert spm_proc_status (status_id, status_name) select status_id, status_name from FLC_RU..spm_proc_status
@@ -299,3 +324,44 @@ begin
 	
 end
 go
+
+
+--Обновление служебных таблиц
+if (object_id('spm_update_proc_refs') is not null) drop proc spm_update_proc_refs
+go
+create proc spm_update_proc_refs(@db_name varchar(255), @proc_name varchar(255))
+as
+begin
+	
+	select @db_id = dbid from master..sysdatabases where name = @db_name
+	
+	if (@db_id is null)
+	begin
+		
+		print 'Couldn''t find database ''%1!''', @db_name
+		
+		return
+		
+	end
+	
+	set @cmd_text = 'select @proc_id = inf.proc_id ' + 
+					'from ' + @db_name + '..sysobjects obj, spm_proc_info inf ' +
+					'where obj.type = ''P'' ' + 
+					'and obj.name = @proc_name ' + 
+					'and obj.uid = 1 ' + 
+					'and obj.id = inf.proc_id ' + 
+					'and inf.database_id = @db_id'
+					
+	exec(@cmd_text)
+		
+	if (@proc_id is null)
+	begin
+	
+		print 'Couldn''t find procedure ''%1!'' in database ''%2!''', @proc_name, @db_name
+		
+		return
+		
+	end
+
+
+end

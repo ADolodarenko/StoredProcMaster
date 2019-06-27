@@ -184,7 +184,7 @@ public class AseDataSource implements DataSource
 					precision, scale);
 			//int ordinalPosition = record.getInt(AppConstants.MESS_SP_PARAM_COL_NAME_ORDINAL_POSITION);
 
-			parameter = new StoredProcParameter(parameterType, parameterName, valueClass,
+			parameter = new StoredProcParameter(parameterType, parameterName, databaseTypeId, valueClass,
 					initialValue, nullableValue, precision, scale, typeName, index);
 		}
 
@@ -300,7 +300,7 @@ public class AseDataSource implements DataSource
 			for (int i = 0; i < parameters.size(); i++)
 				builder.append("?, ");
 
-			builder.delete(builder.length() - 2, 2);
+			builder.delete(builder.length() - 2, builder.length());
 		}
 
 		builder.append(")}");
@@ -506,10 +506,28 @@ public class AseDataSource implements DataSource
 		String callString = getStoredProcCallString(storedProc);
 
 		CallableStatement spStatement = connection.prepareCall(callString);
+		setParameters(storedProc, spStatement);
 
-
-		//TODO: Prepare the stored procedure statement
 		return spStatement;
+	}
+
+	public void setParameters(StoredProc storedProc, CallableStatement statement) throws SQLException
+	{
+		List<StoredProcParameter> parameters = storedProc.getParameters();
+		if (parameters != null && !parameters.isEmpty())
+		{
+			for (StoredProcParameter parameter : parameters)
+			{
+				if (parameter.isNullValue())
+					statement.setNull(parameter.getName(), parameter.getSqlType());
+				else
+					statement.setObject(parameter.getName(), parameter.getValue());
+
+				if (parameter.getType() == StoredProcParamType.OUT ||
+					parameter.getType() == StoredProcParamType.IN_OUT)
+					statement.registerOutParameter(parameter.getName(), parameter.getSqlType());
+			}
+		}
 	}
 
 	private static class SingletonHelper
