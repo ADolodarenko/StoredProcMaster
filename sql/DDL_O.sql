@@ -72,7 +72,8 @@ where database_id = 5
 go
 
 
-
+insert spm_proc_status (status_id, status_name)
+select 3, 'Dead'
 
 /*
 insert spm_proc_status (status_id, status_name) select status_id, status_name from FLC_RU..spm_proc_status
@@ -152,14 +153,18 @@ begin
 					
 	create index XX001 on #pl(proc_id)
 	
-	set @cmd_text = 'insert #pl (proc_id, proc_name, proc_description, proc_status_id) ' + 
-					'select inf.proc_id, obj.name, inf.proc_description, 1 ' + 
-					'from spm_login_proc crs, ' + @db_name + '..sysobjects obj, spm_proc_info inf ' + 
-					'where crs.login_id = @login_id ' + 
-					'and crs.database_id = @db_id ' + 
-					'and crs.proc_id = obj.id ' + 
+	insert #pl (proc_id, proc_name, proc_description, proc_status_id)
+	select inf.proc_id, inf.proc_name, inf.proc_description, 3
+	from spm_login_proc crs, spm_proc_info inf
+	where crs.login_id = @login_id
+	  and crs.database_id = @db_id
+	  and crs.proc_id = inf.proc_id
+	
+	set @cmd_text = 'update #pl ' + 
+					'set proc_status_id = 1 ' + 
+					'from ' + @db_name + '..sysobjects obj ' + 
+					'where #pl.proc_id = obj.id ' + 
 					'and obj.type = ''P'' ' + 
-					'and obj.id = inf.proc_id ' + 
 					'and obj.uid = 1'
 					
 	exec (@cmd_text)

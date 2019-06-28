@@ -66,7 +66,7 @@ public class StoredProcListTable extends JTable
 	private void initiateStatusIcons()
 	{
 		this.statusIcons = new HashMap<>();
-		this.statusIcons.put(StoredProcStatus.UNKNOWN, resourceManager.getImageIcon(AppConstants.ICON_NAME_PROC_UNKNOWN));
+		this.statusIcons.put(StoredProcStatus.DEAD, resourceManager.getImageIcon(AppConstants.ICON_NAME_PROC_DEAD));
 		this.statusIcons.put(StoredProcStatus.AVAILABLE, resourceManager.getImageIcon(AppConstants.ICON_NAME_PROC_AVAILABLE));
 		this.statusIcons.put(StoredProcStatus.OCCUPIED, resourceManager.getImageIcon(AppConstants.ICON_NAME_PROC_OCCUPIED));
 	}

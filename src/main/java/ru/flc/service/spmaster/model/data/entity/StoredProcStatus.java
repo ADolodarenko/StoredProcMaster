@@ -7,5 +7,5 @@ public enum StoredProcStatus
 {
 	AVAILABLE,
 	OCCUPIED,
-	UNKNOWN
+	DEAD
 }

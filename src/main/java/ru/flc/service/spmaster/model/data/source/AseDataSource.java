@@ -132,7 +132,7 @@ public class AseDataSource implements DataSource
 			case 2:
 				return StoredProcStatus.OCCUPIED;
 			default:
-				return StoredProcStatus.UNKNOWN;
+				return StoredProcStatus.DEAD;
 		}
 	}
 

@@ -5,6 +5,7 @@ import org.dav.service.settings.TransmissiveSettings;
 import org.dav.service.util.ResourceManager;
 import ru.flc.service.spmaster.model.data.DataModel;
 import ru.flc.service.spmaster.model.data.entity.StoredProc;
+import ru.flc.service.spmaster.model.data.entity.StoredProcStatus;
 import ru.flc.service.spmaster.model.settings.OperationalSettings;
 import ru.flc.service.spmaster.model.settings.SettingsModel;
 import ru.flc.service.spmaster.util.AppStatus;
@@ -108,7 +109,7 @@ public class Controller
 			{
 				List<String> storedProcTextLines = null;
 
-				if (storedProc != null)
+				if (storedProc != null && storedProc.getStatus() != StoredProcStatus.DEAD)
 					storedProcTextLines = dataModel.getStoredProcText(storedProc);
 
 				view.showStoredProcText(storedProcTextLines);
@@ -127,7 +128,7 @@ public class Controller
 			{
 				StoredProc storedProc = view.getCurrentStoredProc();
 
-				if (storedProc != null)
+				if (storedProc != null && storedProc.getStatus() != StoredProcStatus.DEAD)
 				{
 					dataModel.attachStoredProcParams(storedProc);
 					view.showStoredProcInfo(storedProc);
