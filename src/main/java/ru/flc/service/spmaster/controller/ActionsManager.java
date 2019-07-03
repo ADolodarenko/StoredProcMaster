@@ -199,7 +199,7 @@ public class ActionsManager
 		connectDbAction.setEnabled(controller.checkAppStatuses(AppStatus.DISCONNECTED));
 		disconnectDbAction.setEnabled(controller.checkAppStatuses(AppStatus.CONNECTED));
 		refreshSpListAction.setEnabled(controller.checkAppStatuses(AppStatus.CONNECTED));
-		execSpAction.setEnabled(controller.checkAppStatuses(AppStatus.CONNECTED));
+		showSpInfoAction.setEnabled(controller.checkAppStatuses(AppStatus.CONNECTED));
 		showSettingsAction.setEnabled(controller.checkAppStatuses(AppStatus.DISCONNECTED));
 	}
 }

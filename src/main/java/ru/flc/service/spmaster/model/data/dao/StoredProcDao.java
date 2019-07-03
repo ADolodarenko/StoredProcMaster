@@ -1,9 +1,9 @@
 package ru.flc.service.spmaster.model.data.dao;
 
 import org.dav.service.util.Constants;
+import ru.flc.service.spmaster.controller.Executor;
 import ru.flc.service.spmaster.model.data.entity.DataTable;
 import ru.flc.service.spmaster.model.data.entity.StoredProc;
-import ru.flc.service.spmaster.model.data.entity.StoredProcParameter;
 import ru.flc.service.spmaster.model.data.source.DataSource;
 
 import java.util.List;
@@ -47,8 +47,8 @@ public class StoredProcDao implements AccessObject
 		source.attachStoredProcParams(storedProc);
 	}
 
-	public void executeStoredProc(StoredProc storedProc, List<DataTable> resultTables, List<String> outputMessages) throws Exception
+	public void executeStoredProc(StoredProc storedProc, List<DataTable> resultTables, Executor executor) throws Exception
 	{
-		source.executeStoredProc(storedProc, resultTables, outputMessages);
+		source.executeStoredProc(storedProc, resultTables, executor);
 	}
 }

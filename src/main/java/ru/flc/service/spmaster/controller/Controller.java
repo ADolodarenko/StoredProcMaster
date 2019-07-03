@@ -24,7 +24,7 @@ public class Controller
 	private View view;
 	private AppStatus appStatus;
 
-	private StoredProcExecuter spExecuter;
+	private StoredProcExecutor spExecutor;
 
 	public void setDataModel(DataModel dataModel)
 	{
@@ -151,10 +151,10 @@ public class Controller
 
 				if (storedProc != null)
 				{
-					spExecuter = new StoredProcExecuter(storedProc, dataModel, view);
-					spExecuter.getPropertyChangeSupport().addPropertyChangeListener(WORKER_PROPERTY_NAME_STATE,
-							evt -> doForWorkerEvent(spExecuter, evt));
-					spExecuter.execute();
+					spExecutor = new StoredProcExecutor(storedProc, dataModel, view);
+					spExecutor.getPropertyChangeSupport().addPropertyChangeListener(WORKER_PROPERTY_NAME_STATE,
+							evt -> doForWorkerEvent(evt));
+					spExecutor.execute();
 				}
 			}
 			catch (Exception e)
@@ -170,8 +170,8 @@ public class Controller
 		{
 			try
 			{
-				if (spExecuter != null && !spExecuter.isDone() && !spExecuter.isCancelled())
-					spExecuter.cancel(false);
+				if (spExecutor != null && !spExecutor.isDone() && !spExecutor.isCancelled())
+					spExecutor.cancel(false);
 			}
 			catch (Exception e)
 			{
@@ -259,7 +259,7 @@ public class Controller
 		return view != null;
 	}
 
-	private void doForWorkerEvent(SwingWorker worker, PropertyChangeEvent event)
+	private void doForWorkerEvent(PropertyChangeEvent event)
 	{
 		if (WORKER_PROPERTY_NAME_STATE.equals(event.getPropertyName()))
 		{

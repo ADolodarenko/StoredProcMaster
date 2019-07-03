@@ -7,19 +7,17 @@ import ru.flc.service.spmaster.view.View;
 
 import javax.swing.*;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
-public class StoredProcExecuter extends SwingWorker<Void, Void>
+public class StoredProcExecutor extends SwingWorker<Void, String> implements Executor
 {
 	private StoredProc storedProc;
 	private DataModel model;
 	private View view;
 
 	private List<DataTable> resultTables;
-	private List<String> outputMessages;
 
-	public StoredProcExecuter(StoredProc storedProc, DataModel model, View view)
+	public StoredProcExecutor(StoredProc storedProc, DataModel model, View view)
 	{
 		this.storedProc = storedProc;
 		this.model = model;
@@ -32,18 +30,37 @@ public class StoredProcExecuter extends SwingWorker<Void, Void>
 		if ( !isCancelled() )
 		{
 			resultTables = new ArrayList<>();
-			outputMessages = new LinkedList<>();
 
-			model.executeStoredProc(storedProc, resultTables, outputMessages);
+			try
+			{
+				model.executeStoredProc(storedProc, resultTables, this);
+			}
+			catch (Exception e)
+			{
+				view.addToLog(e);
+			}
 		}
 
 		return null;
 	}
 
 	@Override
+	protected void process(List<String> chunks)
+	{
+		for (String message : chunks)
+			view.addToLog(message);
+	}
+
+	@Override
 	protected void done()
 	{
 		if ( !isCancelled() )
-			view.showStoredProcOutput(resultTables, outputMessages);
+			view.showStoredProcOutput(resultTables);
+	}
+
+	@Override
+	public void publishMessages(String... messages)
+	{
+		publish(messages);
 	}
 }

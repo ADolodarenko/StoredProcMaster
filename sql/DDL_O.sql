@@ -334,39 +334,95 @@ go
 --Обновление служебных таблиц
 if (object_id('spm_update_proc_refs') is not null) drop proc spm_update_proc_refs
 go
-create proc spm_update_proc_refs(@db_name varchar(255), @proc_name varchar(255))
+create proc spm_update_proc_refs
 as
+declare @db_id int, @db_name varchar(255), @cmd_text varchar(2048)
 begin
+
+	select database_id, proc_name, proc_id as old_proc_id, convert(int, null) as new_proc_id
+	into #inf
+	from spm_proc_info
 	
-	select @db_id = dbid from master..sysdatabases where name = @db_name
-	
-	if (@db_id is null)
+	if (@@rowcount > 0)
 	begin
+
+		declare db_cur cursor for
+		select #inf.database_id, sd.name as database_name
+		from #inf, master..sysdatabases sd
+		where #inf.database_id = sd.dbid
+		group by #inf.database_id, sd.name
+	
+		open db_cur
+	
+		set @db_id = null, @db_name = null, @cmd_text = null
+		fetch db_cur into @db_id, @db_name
+	
+		while (@@sqlstatus = 0)
+		begin
+			
+			set @cmd_text = 'update #inf ' + 
+							'set new_proc_id = so.id ' + 
+							'from ' + @db_name + '..sysobjects so ' + 
+							'where #inf.database_id = @db_id ' + 
+							'and #inf.proc_name = so.name ' + 
+							'and so.type = ''P'' ' + 
+							'and so.uid = 1'
+						
+			exec (@cmd_text)
+			
+			--
+			set @db_id = null, @db_name = null, @cmd_text = null
+			fetch db_cur into @db_id, @db_name
+			
+		end
+	
+		close db_cur
+		deallocate cursor db_cur
 		
-		print 'Couldn''t find database ''%1!''', @db_name
+		delete #inf where new_proc_id is null or new_proc_id = old_proc_id
 		
-		return
+		--Отладка
+		select * from #inf
 		
+		if exists (select 1 from #inf)
+		begin
+			
+			--Backup связки
+			select lp.login_id, lp.database_id, lp.proc_id
+			into #lp
+			from #inf, spm_login_proc lp
+			where #inf.database_id = lp.database_id
+			  and #inf.old_proc_id = lp.proc_id
+			  
+			begin tran
+			  
+			    --Удаление связки
+				delete spm_login_proc
+				from #inf, spm_login_proc lp
+				where #inf.database_id = lp.database_id
+				  and #inf.old_proc_id = lp.proc_id
+				  
+				--Обновление заголовков
+				update spm_proc_info
+				set proc_id = #inf.new_proc_id
+				from spm_proc_info spi, #inf
+				where spi.database_id = #inf.database_id
+				  and spi.proc_id = #inf.old_proc_id
+				
+				--Вставка обновленной связки
+				insert spm_login_proc(login_id, database_id, proc_id)
+				select #lp.login_id, #lp.database_id, #inf.new_proc_id
+				from #lp, #inf
+				where #lp.database_id = #inf.database_id
+				  and #lp.proc_id = #inf.old_proc_id
+				  
+			commit
+		  
+		end
+	
 	end
 	
-	set @cmd_text = 'select @proc_id = inf.proc_id ' + 
-					'from ' + @db_name + '..sysobjects obj, spm_proc_info inf ' +
-					'where obj.type = ''P'' ' + 
-					'and obj.name = @proc_name ' + 
-					'and obj.uid = 1 ' + 
-					'and obj.id = inf.proc_id ' + 
-					'and inf.database_id = @db_id'
-					
-	exec(@cmd_text)
-		
-	if (@proc_id is null)
-	begin
-	
-		print 'Couldn''t find procedure ''%1!'' in database ''%2!''', @proc_name, @db_name
-		
-		return
-		
-	end
-
-
 end
+
+
+spm_update_proc_refs

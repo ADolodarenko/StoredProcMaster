@@ -5,6 +5,7 @@ import org.dav.service.settings.DatabaseSettings;
 import org.dav.service.settings.Settings;
 import org.dav.service.settings.type.Password;
 import org.dav.service.util.Constants;
+import ru.flc.service.spmaster.controller.Executor;
 import ru.flc.service.spmaster.model.DefaultValues;
 import ru.flc.service.spmaster.model.data.entity.*;
 import ru.flc.service.spmaster.model.settings.OperationalSettings;
@@ -218,7 +219,7 @@ public class AseDataSource implements DataSource
 		return Arrays.binarySearch(preciseTypeNames, rawTypeName.toUpperCase()) > 0;
 	}
 
-	private static void checkParameters(StoredProc storedProc, List<DataTable> resultTables, List<String> outputMessages)
+	private static void checkParameters(StoredProc storedProc, List<DataTable> resultTables, Executor executor)
 	{
 		if (storedProc == null)
 			throw new IllegalArgumentException(AppConstants.EXCPT_SP_EMPTY);
@@ -226,39 +227,45 @@ public class AseDataSource implements DataSource
 		if (resultTables == null)
 			throw new IllegalArgumentException(AppConstants.EXCPT_SP_RESULT_TABLES_EMPTY);
 
-		if (outputMessages == null)
-			throw new IllegalArgumentException(AppConstants.EXCPT_SP_OUTPUT_MESSAGES_EMPTY);
+		if (executor == null)
+			throw new IllegalArgumentException(AppConstants.EXCPT_SP_EXECUTOR_EMPTY);
 	}
 
 	private static void executeStatement(PreparedStatement statement,
-										 List<DataTable> resultTables, List<String> outputMessages) throws SQLException
+										 List<DataTable> resultTables, Executor procExecutor) throws SQLException
 	{
 		boolean done = false;
-		boolean isResultSet = statement.execute();
+		PreparedStatementExecutor executor = new PreparedStatementExecutor(statement);
 
-		while (!done)
+		executor.execute();
+
+		while (!done && !procExecutor.isCancelled())
 		{
-			if (isResultSet)
-				resultTables.add(getDataTable(statement.getResultSet()));
+			SQLException exception = executor.getException();
+
+			if (exception != null)
+				procExecutor.publishMessages(exception.toString());
+			else if (executor.isResultSet())
+				resultTables.add(getDataTable(executor.getResultSet()));
 			else
 			{
-				int updateCount = statement.getUpdateCount();
+				int updateCount = executor.getUpdateCount();
 
 				if (updateCount >= 0)
-					outputMessages.add(String.format(Constants.MESS_ROWS_AFFECTED, updateCount));
+					procExecutor.publishMessages(String.format(Constants.MESS_ROWS_AFFECTED, updateCount));
 				else
 					done = true;
 			}
 
-			if (!done)
-				isResultSet = statement.getMoreResults();
+			if (!done && !procExecutor.isCancelled())
+				executor.execute();
 		}
 
 		SQLWarning warning = statement.getWarnings();
 
 		while (warning != null)
 		{
-			outputMessages.add(warning.getMessage());
+			procExecutor.publishMessages(warning.getMessage());
 
 			warning = warning.getNextWarning();
 		}
@@ -476,9 +483,9 @@ public class AseDataSource implements DataSource
 	}
 
 	@Override
-	public void executeStoredProc(StoredProc storedProc, List<DataTable> resultTables, List<String> outputMessages) throws Exception
+	public void executeStoredProc(StoredProc storedProc, List<DataTable> resultTables, Executor executor) throws Exception
 	{
-		checkParameters(storedProc, resultTables, outputMessages);
+		checkParameters(storedProc, resultTables, executor);
 
 		if (supportStoredProcedures)
 		{
@@ -486,7 +493,7 @@ public class AseDataSource implements DataSource
 
 			try (PreparedStatement statement = prepareSpStatement(storedProc))
 			{
-				executeStatement(statement, resultTables, outputMessages);
+				executeStatement(statement, resultTables, executor);
 			}
 			catch (SQLException e)
 			{

@@ -13,7 +13,8 @@ public final class AppConstants
 	public static final String EXCPT_SP_PARAM_INIT_VALUE_EMPTY = "The initial value of a stored procedure parameter is empty.";
 	public static final String EXCPT_SP_EMPTY = "The stored procedure is empty.";
 	public static final String EXCPT_SP_RESULT_TABLES_EMPTY = "The list that is meant for stored procedure results is empty.";
-	public static final String EXCPT_SP_OUTPUT_MESSAGES_EMPTY = "The list that is meant for stored procedure output is empty.";
+	public static final String EXCPT_SP_EXECUTOR_EMPTY = "The stored procedure executor is empty.";
+	public static final String EXCPT_SP_RESULT_TABLE_EMPTY = "The stored procedure result is empty.";
 
 	//Class names
 	public static final String CLASS_NAME_LONG = "Long";

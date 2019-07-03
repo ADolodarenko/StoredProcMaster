@@ -3,6 +3,7 @@ package ru.flc.service.spmaster.view;
 import org.dav.service.settings.DatabaseSettings;
 import org.dav.service.settings.TransmissiveSettings;
 import org.dav.service.settings.ViewSettings;
+import org.dav.service.util.Constants;
 import org.dav.service.util.ResourceManager;
 import org.dav.service.view.Title;
 import org.dav.service.view.TitleAdjuster;
@@ -24,6 +25,8 @@ import ru.flc.service.spmaster.view.dialog.AboutDialog;
 import ru.flc.service.spmaster.view.dialog.ExecutionDialog;
 import ru.flc.service.spmaster.view.table.StoredProcListTable;
 import ru.flc.service.spmaster.view.table.StoredProcListTableModel;
+import ru.flc.service.spmaster.view.table.StoredProcResultTable;
+import ru.flc.service.spmaster.view.table.StoredProcResultTableModel;
 import ru.flc.service.spmaster.view.table.listener.StoredProcListMouseListener;
 import ru.flc.service.spmaster.view.table.listener.StoredProcListSelectionListener;
 import ru.flc.service.spmaster.view.thirdparty.TextLineNumber;
@@ -65,9 +68,9 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	private JScrollPane procTextPane;
 	private JPanel procTextPanel;
 
-	private JTable procResultTable;
-	private JScrollPane procResultPane;
-	private JPanel procResultPanel;
+	private JTabbedPane procResultsTabs;
+	private JScrollPane procResultsScroll;
+	private JPanel procResultsPanel;
 
 	private LogEventTableModel logTableModel;
 	private LogEventTable logTable;
@@ -173,6 +176,9 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 		procListTableModel.fireTableDataChanged();
 
 		procTextArea.setText("");
+
+		if (procResultsTabs.getTabCount() > 0)
+			procResultsTabs.removeAll();
 	}
 
 	@Override
@@ -202,7 +208,7 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	{
 		actionsManager.adjustToAppStatus();
 
-		if (executionDialog != null && executionDialog.isActive())
+		if (executionDialog != null && executionDialog.isVisible())
 			executionDialog.adjustToAppStatus(controller.checkAppStatuses(AppStatus.RUNNING));
 	}
 
@@ -278,9 +284,39 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	}
 
 	@Override
-	public void showStoredProcOutput(List<DataTable> resultTables, List<String> outputMessages)
+	public void showStoredProcOutput(List<DataTable> resultTables)
 	{
+		if (procResultsTabs.getTabCount() > 0)
+			procResultsTabs.removeAll();
 
+		int index = 1;
+
+		for (DataTable dataTable : resultTables)
+		{
+			StoredProcResultTableModel model = new StoredProcResultTableModel(dataTable);
+			StoredProcResultTable table = new StoredProcResultTable(model, 1.3f);
+
+			JScrollPane scrollPane = new JScrollPane(table);
+			scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+			scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+			procResultsTabs.addTab("Result " + (index++), scrollPane);
+		}
+	}
+
+	@Override
+	public void addToLog(Object value)
+	{
+		if (value != null)
+		{
+			Class<?> valueClass = value.getClass();
+			String valueClassName = valueClass.getSimpleName();
+
+			if (Constants.CLASS_NAME_STRING.equals(valueClassName))
+				LogEventWriter.writeMessage((String) value, logTableModel);
+			else if (Exception.class.isAssignableFrom(valueClass))
+				log((Exception) value);
+		}
 	}
 
 	@Override
@@ -385,14 +421,14 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 
 	private void initProcResultPanel()
 	{
-		procResultTable = new JTable();
+		procResultsTabs = new JTabbedPane();
 
-		procResultPane = new JScrollPane(procResultTable);
-		procResultPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		procResultPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		/*procResultsScroll = new JScrollPane(procResultsTabs);
+		procResultsScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		procResultsScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);*/
 
-		procResultPanel = ViewComponents.getTitledPanelWithBorderLayout(resourceManager, titleAdjuster,
-				procResultPane, BorderLayout.CENTER, BorderFactory.createEmptyBorder(),
+		procResultsPanel = ViewComponents.getTitledPanelWithBorderLayout(resourceManager, titleAdjuster,
+				procResultsTabs, BorderLayout.CENTER, BorderFactory.createEmptyBorder(),
 				AppConstants.KEY_PANEL_PROC_RESULT,	TitledBorder.TOP, TitledBorder.CENTER);
 	}
 
@@ -415,7 +451,7 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 
 	private void initSplitPanels()
 	{
-		oneProcPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, procTextPanel, procResultPanel);
+		oneProcPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, procTextPanel, procResultsPanel);
 		operationalPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, procListPanel, oneProcPane);
 		generalPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, operationalPane, logPanel);
 
@@ -444,7 +480,7 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	{
 		resetPanelMinimumSize(procListPanel);
 		resetPanelMinimumSize(procTextPanel);
-		resetPanelMinimumSize(procResultPanel);
+		resetPanelMinimumSize(procResultsPanel);
 		resetPanelMinimumSize(logPanel);
 	}
 
@@ -465,7 +501,7 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 			return new Dimension(getWidth()/4, getHeight()/4);
 		else if (panel == procTextPanel)
 			return new Dimension(getWidth()/4, getHeight()/8);
-		else if (panel == procResultPanel)
+		else if (panel == procResultsPanel)
 			return new Dimension(getWidth()/4, getHeight()/8);
 		else if (panel == logPanel)
 			return new Dimension(getWidth(), getHeight()/4);
