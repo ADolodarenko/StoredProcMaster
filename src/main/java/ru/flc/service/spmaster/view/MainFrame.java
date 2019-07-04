@@ -69,8 +69,8 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	private JPanel procTextPanel;
 
 	private JTabbedPane procResultsTabs;
-	private JScrollPane procResultsScroll;
 	private JPanel procResultsPanel;
+	private Icon resultTabIcon;
 
 	private LogEventTableModel logTableModel;
 	private LogEventTable logTable;
@@ -300,7 +300,7 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 			scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 			scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
-			procResultsTabs.addTab("Result " + (index++), scrollPane);
+			procResultsTabs.addTab("Result " + (index++), resultTabIcon, scrollPane);
 		}
 	}
 
@@ -422,6 +422,8 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	private void initProcResultPanel()
 	{
 		procResultsTabs = new JTabbedPane();
+
+		resultTabIcon = resourceManager.getImageIcon(AppConstants.ICON_NAME_DATA_TABLE);
 
 		/*procResultsScroll = new JScrollPane(procResultsTabs);
 		procResultsScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);

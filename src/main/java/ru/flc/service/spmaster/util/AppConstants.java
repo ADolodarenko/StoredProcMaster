@@ -108,6 +108,7 @@ public final class AppConstants
 	public static final String ICON_NAME_PROC_DEAD = "proc_unknown.png";
 	public static final String ICON_NAME_PROC_AVAILABLE = "proc_available.png";
 	public static final String ICON_NAME_PROC_OCCUPIED = "proc_occupied.png";
+	public static final String ICON_NAME_DATA_TABLE = "table01.png";
 
 	private AppConstants(){}
 }
