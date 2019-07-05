@@ -7,9 +7,9 @@ import javax.swing.table.TableCellRenderer;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TableCellRendererFactory
+public class SpListTableCellRendererFactory
 {
-	private static Map<TableCellRendererType, TableCellRenderer> renderers = new HashMap<>();
+	private static Map<SpListTableCellRendererType, TableCellRenderer> renderers = new HashMap<>();
 	private static Map<StoredProcStatus, ImageIcon> statusIcons;
 
 	public static void setStatusIcons(Map<StoredProcStatus, ImageIcon> pStatusIcons)
@@ -17,7 +17,7 @@ public class TableCellRendererFactory
 		statusIcons = pStatusIcons;
 	}
 
-	public static TableCellRenderer getRenderer(TableCellRendererType rendererType, boolean keepTheText)
+	public static TableCellRenderer getRenderer(SpListTableCellRendererType rendererType, boolean keepTheText)
 	{
 		TableCellRenderer renderer;
 
@@ -29,7 +29,7 @@ public class TableCellRendererFactory
 		return renderer;
 	}
 
-	private static TableCellRenderer createRenderer(TableCellRendererType rendererType, boolean keepTheText)
+	private static TableCellRenderer createRenderer(SpListTableCellRendererType rendererType, boolean keepTheText)
 	{
 		TableCellRenderer renderer = null;
 

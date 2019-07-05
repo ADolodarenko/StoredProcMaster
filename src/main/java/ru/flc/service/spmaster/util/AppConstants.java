@@ -29,6 +29,7 @@ public final class AppConstants
 	public static final String CLASS_NAME_OPERATIONALSETTINGS = "OperationalSettings";
 	public static final String CLASS_NAME_STOREDPROCPARAMSTABLEMODEL = "StoredProcParamsTableModel";
 	public static final String CLASS_NAME_STOREDPROCPARAMSTABLE = "StoredProcParamsTable";
+	public static final String CLASS_NAME_STOREDPROCRESULTTABLEMODEL = "StoredProcResultTableModel";
 
 	//Actions
 	public static final String KEY_ACTION_CONNECTDB = "ActionConnectDb";
@@ -93,6 +94,9 @@ public final class AppConstants
 	public static final String MESS_SP_PARAM_COL_VALUE_NUMERIC = "NUMERIC";
 	public static final String MESS_SP_PARAM_COL_VALUE_DECIMAL = "DECIMAL";
 	public static final String MESS_SP_PARAM_COL_VALUE_VARCHAR = "VARCHAR";
+
+	//Patterns
+	public static final String PATTERN_DATETIME = "dd.MM.yyyy HH:mm:ss";
 
 	//Images
 	public static final String ICON_NAME_ABOUT = "hedgehogs.png";

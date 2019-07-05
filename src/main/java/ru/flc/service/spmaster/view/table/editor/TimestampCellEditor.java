@@ -19,7 +19,7 @@ public class TimestampCellEditor extends AbstractCellEditor implements TableCell
 	public TimestampCellEditor()
 	{
 		editor = new JSpinner( new SpinnerDateModel() );
-		JSpinner.DateEditor dateTimeEditor = new JSpinner.DateEditor(editor, "dd.MM.yyyy HH:mm:ss");
+		JSpinner.DateEditor dateTimeEditor = new JSpinner.DateEditor(editor, AppConstants.PATTERN_DATETIME);
 		editor.setEditor(dateTimeEditor);
 
 		this.confirmationRequired = confirmationRequired;

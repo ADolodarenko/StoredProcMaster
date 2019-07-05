@@ -5,8 +5,8 @@ import org.dav.service.util.ResourceManager;
 import ru.flc.service.spmaster.model.data.entity.StoredProc;
 import ru.flc.service.spmaster.model.data.entity.StoredProcStatus;
 import ru.flc.service.spmaster.util.AppConstants;
-import ru.flc.service.spmaster.view.table.renderer.TableCellRendererFactory;
-import ru.flc.service.spmaster.view.table.renderer.TableCellRendererType;
+import ru.flc.service.spmaster.view.table.renderer.SpListTableCellRendererFactory;
+import ru.flc.service.spmaster.view.table.renderer.SpListTableCellRendererType;
 
 import javax.swing.*;
 import javax.swing.table.JTableHeader;
@@ -79,7 +79,7 @@ public class StoredProcListTable extends JTable
 
 	private void setColumnAppearance()
 	{
-		TableCellRendererFactory.setStatusIcons(statusIcons);
+		SpListTableCellRendererFactory.setStatusIcons(statusIcons);
 
 		Enumeration<TableColumn> columns = getColumnModel().getColumns();
 
@@ -88,11 +88,11 @@ public class StoredProcListTable extends JTable
 			TableColumn column = columns.nextElement();
 			int columnModelIndex = column.getModelIndex();
 
-			TableCellRendererType[] rendererTypes = TableCellRendererType.values();
+			SpListTableCellRendererType[] rendererTypes = SpListTableCellRendererType.values();
 
 			if (columnModelIndex < rendererTypes.length)
 			{
-				TableCellRenderer renderer = TableCellRendererFactory.getRenderer(rendererTypes[columnModelIndex],
+				TableCellRenderer renderer = SpListTableCellRendererFactory.getRenderer(rendererTypes[columnModelIndex],
 						false);
 
 				if (renderer != null)

@@ -61,7 +61,7 @@ public class StoredProcParamsTable extends JTable
 	{
 		int modelColumnIndex = convertColumnIndexToModel(column);
 
-		if (modelColumnIndex == 3)
+		if (modelColumnIndex == 4)
 		{
 			StoredProcParameter rowData = getParameter(row);
 

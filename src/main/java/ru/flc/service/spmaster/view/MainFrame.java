@@ -29,6 +29,7 @@ import ru.flc.service.spmaster.view.table.StoredProcResultTable;
 import ru.flc.service.spmaster.view.table.StoredProcResultTableModel;
 import ru.flc.service.spmaster.view.table.listener.StoredProcListMouseListener;
 import ru.flc.service.spmaster.view.table.listener.StoredProcListSelectionListener;
+import ru.flc.service.spmaster.view.table.renderer.ArbitraryTableCellRendererFactory;
 import ru.flc.service.spmaster.view.thirdparty.TextLineNumber;
 import ru.flc.service.spmaster.view.util.ViewComponents;
 
@@ -294,7 +295,8 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 		for (DataTable dataTable : resultTables)
 		{
 			StoredProcResultTableModel model = new StoredProcResultTableModel(dataTable);
-			StoredProcResultTable table = new StoredProcResultTable(model, 1.3f);
+			StoredProcResultTable table = new StoredProcResultTable(model,
+					new ArbitraryTableCellRendererFactory(resourceManager), 1.3f);
 
 			JScrollPane scrollPane = new JScrollPane(table);
 			scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);

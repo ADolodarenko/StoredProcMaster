@@ -42,9 +42,10 @@ public class StoredProcResultTableModel extends AbstractTableModel
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex)
 	{
-		if (headers != null && headers.size() > columnIndex
-			&& rows != null && rows.size() > rowIndex)
-			return rows.get(rowIndex).get(columnIndex).getValue();
+		DataElement element = getDataElementAt(rowIndex, columnIndex);
+
+		if (element != null)
+			return element.getValue();
 		else
 			return null;
 	}
@@ -60,6 +61,15 @@ public class StoredProcResultTableModel extends AbstractTableModel
 	{
 		if (headers != null && headers.size() > column)
 			return headers.get(column).getValue().toString();
+		else
+			return null;
+	}
+
+	public DataElement getDataElementAt(int rowIndex, int columnIndex)
+	{
+		if (headers != null && headers.size() > columnIndex
+				&& rows != null && rows.size() > rowIndex)
+			return rows.get(rowIndex).get(columnIndex);
 		else
 			return null;
 	}

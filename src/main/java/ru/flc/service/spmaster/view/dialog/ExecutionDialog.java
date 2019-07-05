@@ -13,6 +13,7 @@ import ru.flc.service.spmaster.util.AppConstants;
 import ru.flc.service.spmaster.view.table.StoredProcParamsTable;
 import ru.flc.service.spmaster.view.table.StoredProcParamsTableModel;
 import ru.flc.service.spmaster.view.table.editor.TableCellEditorFactory;
+import ru.flc.service.spmaster.view.table.renderer.ArbitraryTableCellRendererFactory;
 import ru.flc.service.spmaster.view.util.ViewComponents;
 import ru.flc.service.spmaster.view.thirdparty.TableColumnAdjuster;
 
@@ -178,7 +179,7 @@ public class ExecutionDialog extends JDialog
 
 		table = new StoredProcParamsTable(tableModel,
 				new TableCellEditorFactory(),
-				new TableCellRendererFactory(resourceManager), 1.3F);
+				new ArbitraryTableCellRendererFactory(resourceManager), 1.3F);
 		table.setFillsViewportHeight(false);
 
 		columnAdjuster = new TableColumnAdjuster(table, 6, 200);

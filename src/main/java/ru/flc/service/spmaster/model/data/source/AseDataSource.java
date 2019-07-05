@@ -260,7 +260,10 @@ public class AseDataSource implements DataSource
 			if (!done && !procExecutor.isCancelled())
 				executor.execute();
 		}
+	}
 
+	private static void processWarnings(PreparedStatement statement, Executor procExecutor) throws SQLException
+	{
 		SQLWarning warning = statement.getWarnings();
 
 		while (warning != null)
@@ -269,6 +272,11 @@ public class AseDataSource implements DataSource
 
 			warning = warning.getNextWarning();
 		}
+	}
+
+	private static void processOutputParameters(StoredProc storedProc, PreparedStatement statement, Executor executor)
+	{
+		//TODO: Process IN_OUT and OUT parameters here. Publish them through the Executor. statement.getString(2, Types.VARCHAR) for example.
 	}
 
 	private static DataTable getDataTable(ResultSet resultSet) throws SQLException
@@ -494,6 +502,9 @@ public class AseDataSource implements DataSource
 			try (PreparedStatement statement = prepareSpStatement(storedProc))
 			{
 				executeStatement(statement, resultTables, executor);
+
+				processWarnings(statement, executor);
+				processOutputParameters(storedProc, statement, executor);
 			}
 			catch (SQLException e)
 			{
