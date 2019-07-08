@@ -60,6 +60,7 @@ public final class AppConstants
 	public static final String KEY_COLUMN_SP_STATUS = "ColumnStoredProcStatus";
 	public static final String KEY_COLUMN_SP_DESCRIPT = "ColumnStoredProcDescript";
 	public static final String KEY_COLUMN_SP_NAME = "ColumnStoredProcName";
+	public static final String KEY_TAB_RESULT_OUTPUT_PARAMS = "TabResultOutputParams";
 
 	//Titles for dialogs
 	public static final String KEY_EXECUTION_DIALOG = "ExecutionDialog";

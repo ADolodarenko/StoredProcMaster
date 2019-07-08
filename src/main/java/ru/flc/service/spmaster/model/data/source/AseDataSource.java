@@ -320,7 +320,8 @@ public class AseDataSource implements DataSource
 		}
 	}
 
-	private static void processOutputParameters(StoredProc storedProc, CallableStatement statement, Executor executor)
+	private static void processOutputParameters(StoredProc storedProc, CallableStatement statement,
+	                                            List<DataTable> resultTables, Executor executor)
 			throws SQLException
 	{
 		StringBuilder builder = new StringBuilder();
@@ -330,6 +331,10 @@ public class AseDataSource implements DataSource
 		List<StoredProcParameter> parameters = storedProc.getParameters();
 
 		if (parameters != null)
+		{
+			List<DataElement> headers = new ArrayList<>();
+			List<DataElement> oneRow = new ArrayList<>();
+
 			for (StoredProcParameter parameter : parameters)
 			{
 				StoredProcParamType paramType = parameter.getType();
@@ -341,6 +346,9 @@ public class AseDataSource implements DataSource
 					builder.append(AppConstants.MESS_EXECUTOR_OUTPUT);
 
 					paramValue = statement.getObject(paramName);
+
+					headers.add(new DataElement(paramName, String.class));
+					oneRow.add(new DataElement(paramValue, parameter.getValueClass()));
 				}
 				else
 					paramValue = parameter.getValue();
@@ -350,6 +358,15 @@ public class AseDataSource implements DataSource
 				builder.append(AppUtils.getQuotedStringValue(paramValue));
 				builder.append(", ");
 			}
+
+			if ( !oneRow.isEmpty() )
+			{
+				List<List<DataElement>> rows = new ArrayList<>();
+				rows.add(oneRow);
+
+				resultTables.add(new DataTable(AppConstants.KEY_TAB_RESULT_OUTPUT_PARAMS, headers, rows));
+			}
+		}
 
 		builder.delete(builder.length() - 2, builder.length());
 		builder.append(AppConstants.MESS_EXECUTOR_SP_ENDED);
@@ -581,7 +598,7 @@ public class AseDataSource implements DataSource
 				executeStatement(statement, resultTables, executor);
 
 				processWarnings(statement, executor);
-				processOutputParameters(storedProc, statement, executor);
+				processOutputParameters(storedProc, statement, resultTables, executor);
 			}
 			catch (SQLException e)
 			{
