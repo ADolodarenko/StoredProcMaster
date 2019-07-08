@@ -1,9 +1,12 @@
 package ru.flc.service.spmaster.util;
 
 import java.util.Arrays;
+import java.util.Date;
 
 public class AppUtils
 {
+	private static Class<?>[] quotedStringValueClasses = { String.class, Date.class };
+
 	public static boolean arrayContainsElement(int[] array, int element)
 	{
 		if (array == null)
@@ -22,6 +25,22 @@ public class AppUtils
 		Arrays.sort(array);
 
 		return Arrays.binarySearch(array, element) >= -1;
+	}
+
+	public static String getQuotedStringValue(Object value)
+	{
+		if (value != null)
+		{
+			Class<?> valueClass = value.getClass();
+
+			for (Class<?> cl : quotedStringValueClasses)
+				if (cl.isAssignableFrom(valueClass))
+					return "'" + value + "'";
+
+			return value.toString();
+		}
+		else
+			return null;
 	}
 
 	private AppUtils(){}

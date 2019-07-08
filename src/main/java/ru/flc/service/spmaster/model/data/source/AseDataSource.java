@@ -10,6 +10,7 @@ import ru.flc.service.spmaster.model.DefaultValues;
 import ru.flc.service.spmaster.model.data.entity.*;
 import ru.flc.service.spmaster.model.settings.OperationalSettings;
 import ru.flc.service.spmaster.util.AppConstants;
+import ru.flc.service.spmaster.util.AppUtils;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -231,6 +232,51 @@ public class AseDataSource implements DataSource
 			throw new IllegalArgumentException(AppConstants.EXCPT_SP_EXECUTOR_EMPTY);
 	}
 
+	public static void setParameters(StoredProc storedProc, CallableStatement statement, Executor executor) throws SQLException
+	{
+		StringBuilder builder = new StringBuilder();
+		builder.append(storedProc.getName());
+		builder.append(": ");
+
+		List<StoredProcParameter> parameters = storedProc.getParameters();
+
+		if (parameters != null)
+			for (StoredProcParameter parameter : parameters)
+			{
+				String paramName = parameter.getName();
+
+				builder.append(paramName);
+				builder.append(" = ");
+
+				if (parameter.isNullValue())
+				{
+					statement.setNull(paramName, parameter.getSqlType());
+
+					builder.append(AppConstants.MESS_EXECUTOR_NULL);
+				}
+				else
+				{
+					Object paramValue = parameter.getValue();
+
+					statement.setObject(parameter.getName(), paramValue,
+							parameter.getSqlType(), parameter.getScale());
+
+					builder.append(AppUtils.getQuotedStringValue(paramValue));
+				}
+
+				if (parameter.getType() == StoredProcParamType.OUT ||
+						parameter.getType() == StoredProcParamType.IN_OUT)
+					statement.registerOutParameter(parameter.getName(), parameter.getSqlType(), parameter.getScale());
+
+				builder.append(", ");
+			}
+
+		builder.delete(builder.length() - 2, builder.length());
+		builder.append(AppConstants.MESS_EXECUTOR_SP_STARTED);
+
+		executor.publishMessages(builder.toString());
+	}
+
 	private static void executeStatement(PreparedStatement statement,
 										 List<DataTable> resultTables, Executor procExecutor) throws SQLException
 	{
@@ -274,9 +320,40 @@ public class AseDataSource implements DataSource
 		}
 	}
 
-	private static void processOutputParameters(StoredProc storedProc, PreparedStatement statement, Executor executor)
+	private static void processOutputParameters(StoredProc storedProc, CallableStatement statement, Executor executor)
+			throws SQLException
 	{
-		//TODO: Process IN_OUT and OUT parameters here. Publish them through the Executor. statement.getString(2, Types.VARCHAR) for example.
+		StringBuilder builder = new StringBuilder();
+		builder.append(storedProc.getName());
+		builder.append(": ");
+
+		List<StoredProcParameter> parameters = storedProc.getParameters();
+
+		if (parameters != null)
+			for (StoredProcParameter parameter : parameters)
+			{
+				StoredProcParamType paramType = parameter.getType();
+				String paramName = parameter.getName();
+				Object paramValue;
+
+				if (paramType == StoredProcParamType.OUT || paramType == StoredProcParamType.IN_OUT)
+				{
+					builder.append(AppConstants.MESS_EXECUTOR_OUTPUT);
+
+					paramValue = statement.getObject(paramName);
+				}
+				else
+					paramValue = parameter.getValue();
+
+				builder.append(paramName);
+				builder.append(" = ");
+				builder.append(AppUtils.getQuotedStringValue(paramValue));
+				builder.append(", ");
+			}
+
+		builder.delete(builder.length() - 2, builder.length());
+		builder.append(AppConstants.MESS_EXECUTOR_SP_ENDED);
+		executor.publishMessages(builder.toString());
 	}
 
 	private static DataTable getDataTable(ResultSet resultSet) throws SQLException
@@ -299,7 +376,7 @@ public class AseDataSource implements DataSource
 			rows.add(row);
 		}
 
-		return new DataTable(headers, rows);
+		return new DataTable(resultSet.getCursorName(), headers, rows);
 	}
 
 	private static String getStoredProcCallString(StoredProc storedProc)
@@ -499,7 +576,7 @@ public class AseDataSource implements DataSource
 		{
 			connection.setAutoCommit(true);
 
-			try (PreparedStatement statement = prepareSpStatement(storedProc))
+			try (CallableStatement statement = prepareSpStatement(storedProc, executor))
 			{
 				executeStatement(statement, resultTables, executor);
 
@@ -519,33 +596,14 @@ public class AseDataSource implements DataSource
 			throw new Exception(Constants.EXCPT_DATABASE_WITHOUT_SP_SUPPORT);
 	}
 
-	private PreparedStatement prepareSpStatement(StoredProc storedProc) throws SQLException
+	private CallableStatement prepareSpStatement(StoredProc storedProc, Executor executor) throws SQLException
 	{
 		String callString = getStoredProcCallString(storedProc);
 
 		CallableStatement spStatement = connection.prepareCall(callString);
-		setParameters(storedProc, spStatement);
+		setParameters(storedProc, spStatement, executor);
 
 		return spStatement;
-	}
-
-	public void setParameters(StoredProc storedProc, CallableStatement statement) throws SQLException
-	{
-		List<StoredProcParameter> parameters = storedProc.getParameters();
-		if (parameters != null && !parameters.isEmpty())
-		{
-			for (StoredProcParameter parameter : parameters)
-			{
-				if (parameter.isNullValue())
-					statement.setNull(parameter.getName(), parameter.getSqlType());
-				else
-					statement.setObject(parameter.getName(), parameter.getValue());
-
-				if (parameter.getType() == StoredProcParamType.OUT ||
-					parameter.getType() == StoredProcParamType.IN_OUT)
-					statement.registerOutParameter(parameter.getName(), parameter.getSqlType());
-			}
-		}
 	}
 
 	private static class SingletonHelper

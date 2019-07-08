@@ -95,6 +95,12 @@ public final class AppConstants
 	public static final String MESS_SP_PARAM_COL_VALUE_DECIMAL = "DECIMAL";
 	public static final String MESS_SP_PARAM_COL_VALUE_VARCHAR = "VARCHAR";
 
+	//Messages
+	public static final String MESS_EXECUTOR_SP_STARTED = " - started.";
+	public static final String MESS_EXECUTOR_SP_ENDED = " - ended.";
+	public static final String MESS_EXECUTOR_NULL = "null";
+	public static final String MESS_EXECUTOR_OUTPUT = "out ";
+
 	//Patterns
 	public static final String PATTERN_DATETIME = "dd.MM.yyyy HH:mm:ss";
 

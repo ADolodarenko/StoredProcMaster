@@ -302,7 +302,11 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 			scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 			scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
-			procResultsTabs.addTab("Result " + (index++), resultTabIcon, scrollPane);
+			String tableName = dataTable.getName();
+			if (tableName == null || tableName.isEmpty())
+				tableName = "Result " + index++;
+
+			procResultsTabs.addTab(tableName, resultTabIcon, scrollPane);
 		}
 	}
 
