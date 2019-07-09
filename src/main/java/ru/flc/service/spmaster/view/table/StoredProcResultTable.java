@@ -6,7 +6,6 @@ import ru.flc.service.spmaster.model.data.entity.DataElement;
 import ru.flc.service.spmaster.util.AppConstants;
 
 import javax.swing.*;
-import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import java.awt.*;
@@ -62,8 +61,8 @@ public class StoredProcResultTable extends JTable
 	private void setSelectionStrategy()
 	{
 		setCellSelectionEnabled(true);
-		getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		getColumnModel().getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		getColumnModel().getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 	}
 
 	private DataElement getDataElement(int row, int column)
