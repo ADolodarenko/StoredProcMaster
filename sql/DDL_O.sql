@@ -78,16 +78,16 @@ select 3, 'Dead'
 /*
 insert spm_proc_status (status_id, status_name) select status_id, status_name from FLC_RU..spm_proc_status
 --
+delete spm_login_proc
 delete spm_proc_info
 
 select * from FLC_RU..sysusers
 
-insert spm_proc_info (database_id, proc_id, proc_description)
-select 5, x.proc_id, x.proc_description
-from FLC_RU..spm_proc_info x, FLC_RU..sysobjects y
-where x.proc_id = y.id
-  and y.type = 'P'
-  and y.uid = 1
+insert spm_proc_info (database_id, proc_id, proc_name, proc_description)
+select 5, x.id, x.name, x.name
+from FLC_RU..sysobjects x
+where x.type = 'P'
+  and x.uid = 1
   
 --(2305 rows affected)
 
@@ -425,4 +425,53 @@ begin
 end
 
 
-spm_update_proc_refs
+--Добавление ХП в общий список
+if (object_id('spm_add_new_proc') is not null) drop proc spm_add_new_proc
+go
+create proc spm_add_new_proc
+as
+declare @db_id int, @db_name varchar(255), @cmd_text varchar(2048)
+begin
+
+	declare db_cur cursor for
+	select dbid, name
+	from master..sysdatabases
+	
+	open db_cur
+	
+	set @db_id = null, @db_name = null, @cmd_text = null
+	fetch db_cur into @db_id, @db_name
+		
+	while (@@sqlstatus = 0)
+	begin
+			
+		set @cmd_text = 'insert spm_proc_info (database_id, proc_id, proc_name, proc_description) ' + 
+						'select @db_id, so.id, so.name, so.name ' + 
+						'from ' + @db_name + '..sysobjects so ' + 
+						'where so.type = ''P'' ' + 
+						'and so.uid = 1 ' +
+						'and not exists (select 1 from spm_proc_info where database_id = @db_id and proc_name = so.name)'
+					
+		exec (@cmd_text)
+			
+		--
+		set @db_id = null, @db_name = null, @cmd_text = null
+		fetch db_cur into @db_id, @db_name
+			
+	end
+	
+	close db_cur
+	deallocate cursor db_cur
+	
+end
+	
+
+delete spm_login_proc
+
+insert spm_login_proc (login_id, database_id, proc_id)
+select z.login_id, 5, z.proc_id
+from FLC_RU..spm_login_proc z, FLC_RU..spm_proc_info x, FLC_RU..sysobjects y
+where z.proc_id = x.proc_id 
+  and x.proc_id = y.id
+  and y.type = 'P' 
+  and y.uid = 1 

@@ -100,7 +100,7 @@ public final class AppConstants
 	public static final String MESS_EXECUTOR_SP_STARTED = " - started.";
 	public static final String MESS_EXECUTOR_SP_ENDED = " - ended.";
 	public static final String MESS_EXECUTOR_NULL = "null";
-	public static final String MESS_EXECUTOR_OUTPUT = "out ";
+	public static final String MESS_EXECUTOR_OUTPUT = "OUT ";
 
 	//Patterns
 	public static final String PATTERN_DATETIME = "dd.MM.yyyy HH:mm:ss";

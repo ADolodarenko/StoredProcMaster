@@ -8,5 +8,6 @@ public enum StoredProcParamType
 {
 	IN,
 	OUT,
-	IN_OUT
+	IN_OUT,
+	RETURN
 }

@@ -147,4 +147,9 @@ public class StoredProcParameter
 	{
 		return ordinalPosition;
 	}
+
+	public void setOrdinalPosition(int ordinalPosition)
+	{
+		this.ordinalPosition = ordinalPosition;
+	}
 }

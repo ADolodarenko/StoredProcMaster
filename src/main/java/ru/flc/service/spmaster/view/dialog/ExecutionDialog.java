@@ -8,6 +8,7 @@ import org.dav.service.view.UsableGBC;
 import org.dav.service.view.dialog.SettingsDialogInvoker;
 import org.dav.service.view.table.renderer.TableCellRendererFactory;
 import ru.flc.service.spmaster.model.data.entity.StoredProc;
+import ru.flc.service.spmaster.model.data.entity.StoredProcParamType;
 import ru.flc.service.spmaster.model.data.entity.StoredProcParameter;
 import ru.flc.service.spmaster.util.AppConstants;
 import ru.flc.service.spmaster.view.table.StoredProcParamsTable;
@@ -22,6 +23,7 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.LinkedList;
 import java.util.List;
 
 public class ExecutionDialog extends JDialog
@@ -113,7 +115,23 @@ public class ExecutionDialog extends JDialog
 	public void tune(StoredProc storedProc)
 	{
 		this.storedProc = storedProc;
-		this.parameterList = storedProc.getParameters();
+		this.parameterList = getValuableParameters(storedProc.getParameters());
+	}
+
+	private List<StoredProcParameter> getValuableParameters(List<StoredProcParameter> allParameters)
+	{
+		if (allParameters != null)
+		{
+			List<StoredProcParameter> parameters = new LinkedList<>();
+
+			for (StoredProcParameter parameter : allParameters)
+				if (parameter.getType() != StoredProcParamType.RETURN)
+					parameters.add(parameter);
+
+			return parameters;
+		}
+		else
+			return null;
 	}
 
 	public StoredProc getStoredProc()

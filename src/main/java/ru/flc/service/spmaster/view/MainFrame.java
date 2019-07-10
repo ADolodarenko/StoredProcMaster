@@ -23,7 +23,9 @@ import ru.flc.service.spmaster.util.AppConstants;
 import ru.flc.service.spmaster.util.AppStatus;
 import ru.flc.service.spmaster.view.dialog.AboutDialog;
 import ru.flc.service.spmaster.view.dialog.ExecutionDialog;
+import ru.flc.service.spmaster.view.field.RoundedTextField;
 import ru.flc.service.spmaster.view.table.*;
+import ru.flc.service.spmaster.view.table.filter.TableFilterListener;
 import ru.flc.service.spmaster.view.table.listener.StoredProcListMouseListener;
 import ru.flc.service.spmaster.view.table.listener.StoredProcListSelectionListener;
 import ru.flc.service.spmaster.view.table.renderer.ArbitraryTableCellRendererFactory;
@@ -31,8 +33,11 @@ import ru.flc.service.spmaster.view.thirdparty.TextLineNumber;
 import ru.flc.service.spmaster.view.util.ViewComponents;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -61,6 +66,7 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	private StoredProcListTable procListTable;
 	private JScrollPane procListPane;
 	private JPanel procListPanel;
+	private JTextField procSearchField;
 
 	private JTextArea procTextArea;
 	private JScrollPane procTextPane;
@@ -177,6 +183,9 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 
 		if (procResultsTabs.getTabCount() > 0)
 			procResultsTabs.removeAll();
+
+		logTableModel.clear();
+		logTableModel.fireTableDataChanged();
 	}
 
 	@Override
@@ -389,15 +398,26 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	private void initProcListPanel()
 	{
 		procListTableModel = new StoredProcListTableModel(resourceManager, StoredProc.getTitleKeys(), null);
+		TableRowSorter<TableModel> rowSorter = new TableRowSorter<>(procListTableModel);
+
 		procListTable = new StoredProcListTable(procListTableModel, resourceManager);
 		procListTable.getSelectionModel().addListSelectionListener(new StoredProcListSelectionListener(procListTable, controller));
 		procListTable.addMouseListener(new StoredProcListMouseListener(actionsManager));
+		procListTable.setRowSorter(rowSorter);
 
 		procListPane = new JScrollPane(procListTable);
 
 		procListPanel = ViewComponents.getTitledPanelWithBorderLayout(resourceManager, titleAdjuster,
 				procListPane, BorderLayout.CENTER, BorderFactory.createEmptyBorder(),
 				AppConstants.KEY_PANEL_PROC_LIST, TitledBorder.TOP, TitledBorder.CENTER);
+
+		procSearchField = new RoundedTextField();
+		procSearchField.getDocument().addDocumentListener(new TableFilterListener(procSearchField, rowSorter));
+
+		JPanel procSearchPanel = new JPanel(new BorderLayout());
+		procSearchPanel.setBorder(new EmptyBorder(10, 0, 10, 0));
+		procSearchPanel.add(procSearchField, BorderLayout.CENTER);
+		procListPanel.add(procSearchPanel, BorderLayout.NORTH);
 	}
 
 	private void initProcTextPanel()

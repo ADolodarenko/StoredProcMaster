@@ -3,6 +3,7 @@ package ru.flc.service.spmaster.view.table;
 import org.dav.service.util.Constants;
 import org.dav.service.util.ResourceManager;
 import org.dav.service.view.Title;
+import ru.flc.service.spmaster.model.data.entity.StoredProcParamType;
 import ru.flc.service.spmaster.model.data.entity.StoredProcParameter;
 
 import javax.swing.table.AbstractTableModel;
@@ -99,8 +100,14 @@ public class StoredProcParamsTableModel extends AbstractTableModel
 
 		StoredProcParameter row = data.get(rowIndex);
 
-		if (row != null && columnIndex == 4)
-			return !row.isNullValue();
+		if (row != null)
+		{
+			if (row.getType() != StoredProcParamType.IN)
+				return false;
+
+			if (columnIndex == 4)
+				return !row.isNullValue();
+		}
 
 		return true;
 	}

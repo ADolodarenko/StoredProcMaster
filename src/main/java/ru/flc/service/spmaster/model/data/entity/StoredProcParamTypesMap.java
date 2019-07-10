@@ -18,6 +18,7 @@ public class StoredProcParamTypesMap
 		typesMap.put(DatabaseMetaData.procedureColumnIn, StoredProcParamType.IN);  //1
 		typesMap.put(DatabaseMetaData.procedureColumnInOut, StoredProcParamType.IN_OUT);  //2
 		typesMap.put(DatabaseMetaData.procedureColumnOut, StoredProcParamType.OUT);  //4
+		typesMap.put(DatabaseMetaData.procedureColumnReturn, StoredProcParamType.RETURN); //5
 	}
 
 	public static StoredProcParamType getType(int typeId)

@@ -90,7 +90,9 @@ public class AseDataSource implements DataSource
 	{
 		if (resultSet != null && parametersList != null)
 		{
-			/*ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+			/* Checkout
+			ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+
 			int columnsQuantity = resultSetMetaData.getColumnCount();
 
 			for (int i = 1; i <= columnsQuantity; i++)
@@ -99,19 +101,22 @@ public class AseDataSource implements DataSource
 				System.out.print("\t");
 			}
 
-			System.out.println();*/
+			System.out.println();
+			*/
 
 			int index = 1;
 
 			while (resultSet.next())
 			{
-				/*for (int i = 1; i <= columnsQuantity; i++)
+				/* Checkout
+				for (int i = 1; i <= columnsQuantity; i++)
 				{
 					System.out.print(resultSet.getString(i));
 					System.out.print("\t");
 				}
 
-				System.out.println();*/
+				System.out.println();
+				*/
 
 				StoredProcParameter parameter = getParameterFromRow(resultSet, index);
 
@@ -180,6 +185,10 @@ public class AseDataSource implements DataSource
 				throw new Exception(AppConstants.EXCPT_SP_PARAM_INIT_VALUE_EMPTY);
 
 			boolean nullableValue = false;
+
+			if (parameterType != StoredProcParamType.IN)
+				nullableValue = true;
+
 			int precision = record.getInt(AppConstants.MESS_SP_PARAM_COL_NAME_PRECISION);
 			short scale = record.getShort(AppConstants.MESS_SP_PARAM_COL_NAME_SCALE);
 			String typeName = buildTypeName(record.getString(AppConstants.MESS_SP_PARAM_COL_NAME_TYPE_NAME),
@@ -220,7 +229,7 @@ public class AseDataSource implements DataSource
 		return Arrays.binarySearch(preciseTypeNames, rawTypeName.toUpperCase()) > 0;
 	}
 
-	private static void checkParameters(StoredProc storedProc, List<DataTable> resultTables, Executor executor)
+	private static void checkExecutionParameters(StoredProc storedProc, List<DataTable> resultTables, Executor executor)
 	{
 		if (storedProc == null)
 			throw new IllegalArgumentException(AppConstants.EXCPT_SP_EMPTY);
@@ -232,7 +241,7 @@ public class AseDataSource implements DataSource
 			throw new IllegalArgumentException(AppConstants.EXCPT_SP_EXECUTOR_EMPTY);
 	}
 
-	public static void setParameters(StoredProc storedProc, CallableStatement statement, Executor executor) throws SQLException
+	public static void setStoredProcParameters(StoredProc storedProc, CallableStatement statement, Executor executor) throws SQLException
 	{
 		StringBuilder builder = new StringBuilder();
 		builder.append(storedProc.getName());
@@ -243,32 +252,43 @@ public class AseDataSource implements DataSource
 		if (parameters != null)
 			for (StoredProcParameter parameter : parameters)
 			{
+				StoredProcParamType paramType = parameter.getType();
+
+				if (paramType != StoredProcParamType.IN)
+				{
+					statement.registerOutParameter(parameter.getName(), parameter.getSqlType(), parameter.getScale());
+
+					if (paramType != StoredProcParamType.RETURN)
+						builder.append(AppConstants.MESS_EXECUTOR_OUTPUT);
+				}
+
 				String paramName = parameter.getName();
 
 				builder.append(paramName);
 				builder.append(" = ");
 
-				if (parameter.isNullValue())
+				if (paramType == StoredProcParamType.IN)
 				{
-					statement.setNull(paramName, parameter.getSqlType());
+					if (parameter.isNullValue())
+					{
+						statement.setNull(paramName, parameter.getSqlType());
+						builder.append(AppConstants.MESS_EXECUTOR_NULL);
+					}
+					else
+					{
+						Object paramValue = parameter.getValue();
 
-					builder.append(AppConstants.MESS_EXECUTOR_NULL);
+						statement.setObject(paramName, paramValue,
+								parameter.getSqlType(), parameter.getScale());
+
+						builder.append(AppUtils.getQuotedStringValue(paramValue));
+					}
 				}
 				else
-				{
-					Object paramValue = parameter.getValue();
-
-					statement.setObject(parameter.getName(), paramValue,
-							parameter.getSqlType(), parameter.getScale());
-
-					builder.append(AppUtils.getQuotedStringValue(paramValue));
-				}
-
-				if (parameter.getType() == StoredProcParamType.OUT ||
-						parameter.getType() == StoredProcParamType.IN_OUT)
-					statement.registerOutParameter(parameter.getName(), parameter.getSqlType(), parameter.getScale());
+					builder.append(AppConstants.MESS_EXECUTOR_NULL);
 
 				builder.append(", ");
+
 			}
 
 		builder.delete(builder.length() - 2, builder.length());
@@ -341,17 +361,18 @@ public class AseDataSource implements DataSource
 				String paramName = parameter.getName();
 				Object paramValue;
 
-				if (paramType == StoredProcParamType.OUT || paramType == StoredProcParamType.IN_OUT)
+				if (paramType == StoredProcParamType.IN)
+					paramValue = parameter.getValue();
+				else
 				{
-					builder.append(AppConstants.MESS_EXECUTOR_OUTPUT);
+					if (paramType != StoredProcParamType.RETURN)
+						builder.append(AppConstants.MESS_EXECUTOR_OUTPUT);
 
 					paramValue = statement.getObject(paramName);
 
 					headers.add(new DataElement(paramName, String.class));
 					oneRow.add(new DataElement(paramValue, parameter.getValueClass()));
 				}
-				else
-					paramValue = parameter.getValue();
 
 				builder.append(paramName);
 				builder.append(" = ");
@@ -399,15 +420,16 @@ public class AseDataSource implements DataSource
 	private static String getStoredProcCallString(StoredProc storedProc)
 	{
 		StringBuilder builder = new StringBuilder();
-		builder.append("{call ");
+		builder.append("{? = call ");
 		builder.append(storedProc.getName());
 		builder.append(" (");
 
 		List<StoredProcParameter> parameters = storedProc.getParameters();
 		if (parameters != null && !parameters.isEmpty())
 		{
-			for (int i = 0; i < parameters.size(); i++)
-				builder.append("?, ");
+			for (StoredProcParameter parameter : parameters)
+				if (parameter.getType() != StoredProcParamType.RETURN)
+					builder.append("?, ");
 
 			builder.delete(builder.length() - 2, builder.length());
 		}
@@ -587,7 +609,7 @@ public class AseDataSource implements DataSource
 	@Override
 	public void executeStoredProc(StoredProc storedProc, List<DataTable> resultTables, Executor executor) throws Exception
 	{
-		checkParameters(storedProc, resultTables, executor);
+		checkExecutionParameters(storedProc, resultTables, executor);
 
 		if (supportStoredProcedures)
 		{
@@ -618,7 +640,7 @@ public class AseDataSource implements DataSource
 		String callString = getStoredProcCallString(storedProc);
 
 		CallableStatement spStatement = connection.prepareCall(callString);
-		setParameters(storedProc, spStatement, executor);
+		setStoredProcParameters(storedProc, spStatement, executor);
 
 		return spStatement;
 	}
