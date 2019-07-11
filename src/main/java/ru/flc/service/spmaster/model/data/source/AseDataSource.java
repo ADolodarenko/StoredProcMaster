@@ -385,7 +385,7 @@ public class AseDataSource implements DataSource
 				List<List<DataElement>> rows = new ArrayList<>();
 				rows.add(oneRow);
 
-				resultTables.add(new DataTable(AppConstants.KEY_TAB_RESULT_OUTPUT_PARAMS, headers, rows));
+				resultTables.add(new DataTable(DataTableType.OUTPUT_PARAMS, headers, rows));
 			}
 		}
 
@@ -414,7 +414,7 @@ public class AseDataSource implements DataSource
 			rows.add(row);
 		}
 
-		return new DataTable(resultSet.getCursorName(), headers, rows);
+		return new DataTable(DataTableType.PLAIN_RESULT, headers, rows);
 	}
 
 	private static String getStoredProcCallString(StoredProc storedProc)

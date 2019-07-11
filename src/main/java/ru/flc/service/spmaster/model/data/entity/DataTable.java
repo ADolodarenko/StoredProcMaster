@@ -4,13 +4,13 @@ import java.util.List;
 
 public class DataTable
 {
-	private String name;
+	private DataTableType type;
 	private List<DataElement> headers;
 	private List<List<DataElement>> rows;
 
-	public DataTable(String name, List<DataElement> headers, List<List<DataElement>> rows)
+	public DataTable(DataTableType type, List<DataElement> headers, List<List<DataElement>> rows)
 	{
-		this.name = name;
+		this.type = type;
 		this.headers = headers;
 		this.rows = rows;
 	}
@@ -25,8 +25,8 @@ public class DataTable
 		return rows;
 	}
 
-	public String getName()
+	public DataTableType getType()
 	{
-		return name;
+		return type;
 	}
 }

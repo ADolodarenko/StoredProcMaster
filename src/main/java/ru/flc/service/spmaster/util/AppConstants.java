@@ -60,7 +60,9 @@ public final class AppConstants
 	public static final String KEY_COLUMN_SP_STATUS = "ColumnStoredProcStatus";
 	public static final String KEY_COLUMN_SP_DESCRIPT = "ColumnStoredProcDescript";
 	public static final String KEY_COLUMN_SP_NAME = "ColumnStoredProcName";
+	public static final String KEY_TAB_RESULT_REGULAR = "TabResultRegular";
 	public static final String KEY_TAB_RESULT_OUTPUT_PARAMS = "TabResultOutputParams";
+	public static final String KEY_TEXTFIELD_SEARCH_HINT = "TextFieldSearchHint";
 
 	//Titles for dialogs
 	public static final String KEY_EXECUTION_DIALOG = "ExecutionDialog";
@@ -120,6 +122,7 @@ public final class AppConstants
 	public static final String ICON_NAME_PROC_AVAILABLE = "proc_available.png";
 	public static final String ICON_NAME_PROC_OCCUPIED = "proc_occupied.png";
 	public static final String ICON_NAME_DATA_TABLE = "table01.png";
+	public static final String ICON_NAME_SEARCH = "search01.png";
 
 	private AppConstants(){}
 }

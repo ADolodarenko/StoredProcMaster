@@ -14,16 +14,18 @@ import org.dav.service.view.table.LogEvent;
 import org.dav.service.view.table.LogEventTable;
 import org.dav.service.view.table.LogEventTableModel;
 import org.dav.service.view.table.LogEventWriter;
+import org.dav.service.view.textfield.IconHintTextField;
 import ru.flc.service.spmaster.controller.ActionsManager;
 import ru.flc.service.spmaster.controller.Controller;
 import ru.flc.service.spmaster.model.data.entity.DataTable;
+import ru.flc.service.spmaster.model.data.entity.DataTableType;
 import ru.flc.service.spmaster.model.data.entity.StoredProc;
 import ru.flc.service.spmaster.model.settings.ViewConstraints;
 import ru.flc.service.spmaster.util.AppConstants;
 import ru.flc.service.spmaster.util.AppStatus;
 import ru.flc.service.spmaster.view.dialog.AboutDialog;
 import ru.flc.service.spmaster.view.dialog.ExecutionDialog;
-import ru.flc.service.spmaster.view.field.RoundedTextField;
+import ru.flc.service.spmaster.view.entity.DataPage;
 import ru.flc.service.spmaster.view.table.*;
 import ru.flc.service.spmaster.view.table.filter.TableFilterListener;
 import ru.flc.service.spmaster.view.table.listener.StoredProcListMouseListener;
@@ -43,6 +45,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -75,6 +78,7 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	private JTabbedPane procResultsTabs;
 	private JPanel procResultsPanel;
 	private Icon resultTabIcon;
+	private List<DataPage> dataPages;
 
 	private LogEventTableModel logTableModel;
 	private LogEventTable logTable;
@@ -181,11 +185,9 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 
 		procTextArea.setText("");
 
-		if (procResultsTabs.getTabCount() > 0)
-			procResultsTabs.removeAll();
+		clearDataPages();
 
-		logTableModel.clear();
-		logTableModel.fireTableDataChanged();
+		clearLog();
 	}
 
 	@Override
@@ -233,6 +235,8 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	public void showStoredProcText(List<String> storedProcTextLines)
 	{
 		procTextArea.setText("");
+		clearDataPages();
+		clearLog();
 
 		if (storedProcTextLines != null && (!storedProcTextLines.isEmpty()))
 		{
@@ -293,8 +297,7 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	@Override
 	public void showStoredProcOutput(List<DataTable> resultTables)
 	{
-		if (procResultsTabs.getTabCount() > 0)
-			procResultsTabs.removeAll();
+		clearDataPages();
 
 		int index = 1;
 
@@ -308,12 +311,15 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 			scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 			scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
-			String tableName = dataTable.getName();
-			if (tableName == null || tableName.isEmpty())
-				tableName = "Result " + index++;
+			procResultsTabs.addTab(null, resultTabIcon, scrollPane);
 
-			procResultsTabs.addTab(tableName, resultTabIcon, scrollPane);
+			if (dataTable.getType() == DataTableType.OUTPUT_PARAMS)
+				dataPages.add(new DataPage(-100, dataTable));
+			else
+				dataPages.add(new DataPage(index++, dataTable));
 		}
+
+		resetProcResultTabs();
 	}
 
 	@Override
@@ -340,7 +346,7 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	@Override
 	public void setFocus()
 	{
-
+		procSearchField.requestFocus();
 	}
 
 	@Override
@@ -411,7 +417,7 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 				procListPane, BorderLayout.CENTER, BorderFactory.createEmptyBorder(),
 				AppConstants.KEY_PANEL_PROC_LIST, TitledBorder.TOP, TitledBorder.CENTER);
 
-		procSearchField = new RoundedTextField();
+		procSearchField = new IconHintTextField(resourceManager.getImageIcon(AppConstants.ICON_NAME_SEARCH));  //RoundedTextField
 		procSearchField.getDocument().addDocumentListener(new TableFilterListener(procSearchField, rowSorter));
 
 		JPanel procSearchPanel = new JPanel(new BorderLayout());
@@ -444,6 +450,7 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 
 	private void initProcResultPanel()
 	{
+		dataPages = new ArrayList<>();
 		procResultsTabs = new JTabbedPane();
 
 		resultTabIcon = resourceManager.getImageIcon(AppConstants.ICON_NAME_DATA_TABLE);
@@ -539,6 +546,35 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 		generalPane.setResizeWeight(1);
 		operationalPane.setResizeWeight(0);
 		oneProcPane.setResizeWeight(0.5);
+	}
+
+	private void resetProcResultTabs()
+	{
+		for (int i = 0; i < procResultsTabs.getTabCount(); i++)
+		{
+			DataPage dataPage = dataPages.get(i);
+
+			if (dataPage.getDataTable().getType() == DataTableType.OUTPUT_PARAMS)
+				procResultsTabs.setTitleAt(i, new Title(resourceManager,
+						AppConstants.KEY_TAB_RESULT_OUTPUT_PARAMS).getText());
+			else
+				procResultsTabs.setTitleAt(i, new Title(resourceManager,
+						AppConstants.KEY_TAB_RESULT_REGULAR, dataPage.getIndex()).getText());
+		}
+	}
+
+	private void clearDataPages()
+	{
+		dataPages.clear();
+
+		if (procResultsTabs.getTabCount() > 0)
+			procResultsTabs.removeAll();
+	}
+
+	private void clearLog()
+	{
+		logTableModel.clear();
+		logTableModel.fireTableDataChanged();
 	}
 
 	private void initFrame()
