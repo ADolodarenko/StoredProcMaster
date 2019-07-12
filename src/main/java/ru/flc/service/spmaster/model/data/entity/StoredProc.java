@@ -72,4 +72,24 @@ public class StoredProc
 	{
 		this.parameters = parameters;
 	}
+
+	public void setStatus(StoredProcStatus status)
+	{
+		this.status = status;
+	}
+
+	public void setId(int id)
+	{
+		this.id = id;
+	}
+
+	public void setDescription(String description)
+	{
+		this.description = description;
+	}
+
+	public void setOccupant(User occupant)
+	{
+		this.occupant = occupant;
+	}
 }

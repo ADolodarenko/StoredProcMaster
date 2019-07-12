@@ -51,4 +51,9 @@ public class StoredProcDao implements AccessObject
 	{
 		source.executeStoredProc(storedProc, resultTables, executor);
 	}
+
+	public void updateStoredProcHeaders(StoredProc storedProc) throws Exception
+	{
+		source.updateStoredProcHeaders(storedProc);
+	}
 }

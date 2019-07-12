@@ -16,4 +16,5 @@ public interface DataModel
 	void attachStoredProcParams(StoredProc storedProc) throws Exception;
 	void executeStoredProc(StoredProc storedProc, List<DataTable> resultTables, Executor executor)
 			throws Exception;
+	void updateStoredProcHeaders(StoredProc storedProc) throws Exception;
 }

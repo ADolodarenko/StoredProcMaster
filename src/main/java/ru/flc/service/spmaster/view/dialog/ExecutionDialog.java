@@ -284,17 +284,6 @@ public class ExecutionDialog extends JDialog
 			table.getCellEditor().stopCellEditing();
 	}
 
-	private void setClosingPolicy()
-	{
-		addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosing(WindowEvent e)
-			{
-				cancelButton.doClick();   //??????????
-			}
-		});
-	}
-
 	private class CancelButtonListener implements ActionListener
 	{
 		private boolean isSpRunning;

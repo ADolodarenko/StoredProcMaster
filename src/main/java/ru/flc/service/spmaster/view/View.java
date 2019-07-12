@@ -16,7 +16,7 @@ public interface View
 	void setPreferredBounds(ViewConstraints settings);
 	void setActualBounds(ViewSettings settings);
 	void showSettings(TransmissiveSettings[] settingsArray);
-	void clearData();
+	void clearAllData();
 	void showConnectionStatus(DatabaseSettings settings);
 	void showException(Exception e);
 	void adjustToAppStatus();
@@ -26,4 +26,5 @@ public interface View
 	StoredProc getCurrentStoredProc();
 	void showStoredProcOutput(List<DataTable> resultTables);
 	void addToLog(Object value);
+	void clearCurrentData();
 }

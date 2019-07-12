@@ -61,4 +61,11 @@ public class DatabaseModel implements DataModel
 		if (storedProcDao != null)
 			storedProcDao.executeStoredProc(storedProc, resultTables, executor);
 	}
+
+	@Override
+	public void updateStoredProcHeaders(StoredProc storedProc) throws Exception
+	{
+		if (storedProcDao != null)
+			storedProcDao.updateStoredProcHeaders(storedProc);
+	}
 }

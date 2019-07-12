@@ -11,6 +11,8 @@ import java.util.List;
 
 public class StoredProcExecutor extends SwingWorker<Void, String> implements Executor
 {
+	private boolean interrupted;
+
 	private StoredProc storedProc;
 	private DataModel model;
 	private View view;
@@ -19,6 +21,8 @@ public class StoredProcExecutor extends SwingWorker<Void, String> implements Exe
 
 	public StoredProcExecutor(StoredProc storedProc, DataModel model, View view)
 	{
+		this.interrupted = false;
+
 		this.storedProc = storedProc;
 		this.model = model;
 		this.view = view;
@@ -27,7 +31,7 @@ public class StoredProcExecutor extends SwingWorker<Void, String> implements Exe
 	@Override
 	protected Void doInBackground() throws Exception
 	{
-		if ( !isCancelled() )
+		if ( !isInterrupted() )
 		{
 			resultTables = new ArrayList<>();
 
@@ -54,7 +58,7 @@ public class StoredProcExecutor extends SwingWorker<Void, String> implements Exe
 	@Override
 	protected void done()
 	{
-		if ( !isCancelled() )
+		if ( !isInterrupted() )
 			view.showStoredProcOutput(resultTables);
 	}
 
@@ -62,5 +66,17 @@ public class StoredProcExecutor extends SwingWorker<Void, String> implements Exe
 	public void publishMessages(String... messages)
 	{
 		publish(messages);
+	}
+
+	@Override
+	public void interrupt()
+	{
+		interrupted = true;
+	}
+
+	@Override
+	public boolean isInterrupted()
+	{
+		return interrupted;
 	}
 }

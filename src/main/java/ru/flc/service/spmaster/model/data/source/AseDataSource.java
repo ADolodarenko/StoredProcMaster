@@ -79,6 +79,21 @@ public class AseDataSource implements DataSource
 			}
 	}
 
+	private void transferStoredProcHeaders(List<StoredProc> sourceList, StoredProc destStoredProc)
+	{
+		if (sourceList == null || sourceList.isEmpty())
+			destStoredProc.setStatus(StoredProcStatus.DEAD);
+		else
+		{
+			StoredProc sourceStoredProc = sourceList.get(0);
+
+			destStoredProc.setId(sourceStoredProc.getId());
+			destStoredProc.setStatus(sourceStoredProc.getStatus());
+			destStoredProc.setDescription(sourceStoredProc.getDescription());
+			destStoredProc.setOccupant(sourceStoredProc.getOccupant());
+		}
+	}
+
 	private static void transferResultToStringList(ResultSet resultSet, List<String> stringList) throws SQLException
 	{
 		if (resultSet != null && stringList != null)
@@ -305,7 +320,7 @@ public class AseDataSource implements DataSource
 
 		executor.execute();
 
-		while (!done && !procExecutor.isCancelled())
+		while (!done && !procExecutor.isInterrupted())
 		{
 			SQLException exception = executor.getException();
 
@@ -323,7 +338,7 @@ public class AseDataSource implements DataSource
 					done = true;
 			}
 
-			if (!done && !procExecutor.isCancelled())
+			if (!done && !procExecutor.isInterrupted())
 				executor.execute();
 		}
 	}
@@ -391,6 +406,16 @@ public class AseDataSource implements DataSource
 
 		builder.delete(builder.length() - 2, builder.length());
 		builder.append(AppConstants.MESS_EXECUTOR_SP_ENDED);
+		executor.publishMessages(builder.toString());
+	}
+
+	private static void showInterruptedStatus(StoredProc storedProc, Executor executor)
+	{
+		StringBuilder builder = new StringBuilder();
+		builder.append(storedProc.getName());
+		builder.append(": ");
+		builder.append(AppConstants.MESS_EXECUTOR_SP_INTERRUPTED);
+
 		executor.publishMessages(builder.toString());
 	}
 
@@ -537,10 +562,11 @@ public class AseDataSource implements DataSource
 			String procedureName = getServiceProcedureName(serviceDbName, storedProcListGetterName);
 
 			try (CallableStatement statement = connection.prepareCall("{call " +
-					procedureName + " (?, ?)}"))
+					procedureName + " (?, ?, ?)}"))
 			{
 				statement.setString(1, user);
 				statement.setString(2, dbName);
+				statement.setNull(3, Types.VARCHAR);
 
 				ResultSet resultSet = statement.executeQuery();
 				transferResultToProcList(resultSet, resultList);
@@ -619,8 +645,49 @@ public class AseDataSource implements DataSource
 			{
 				executeStatement(statement, resultTables, executor);
 
-				processWarnings(statement, executor);
-				processOutputParameters(storedProc, statement, resultTables, executor);
+				if (!executor.isInterrupted())
+				{
+					processWarnings(statement, executor);
+					processOutputParameters(storedProc, statement, resultTables, executor);
+				}
+				else
+					showInterruptedStatus(storedProc, executor);
+			}
+			catch (SQLException e)
+			{
+				throw e;
+			}
+			finally
+			{
+				connection.setAutoCommit(false);
+			}
+		}
+		else
+			throw new Exception(Constants.EXCPT_DATABASE_WITHOUT_SP_SUPPORT);
+	}
+
+	@Override
+	public void updateStoredProcHeaders(StoredProc storedProc) throws Exception
+	{
+		if (supportStoredProcedures)
+		{
+			List<StoredProc> resultList = new LinkedList<>();
+
+			connection.setAutoCommit(true);
+
+			String procedureName = getServiceProcedureName(serviceDbName, storedProcListGetterName);
+
+			try (CallableStatement statement = connection.prepareCall("{call " +
+					procedureName + " (?, ?, ?)}"))
+			{
+				statement.setString(1, user);
+				statement.setString(2, dbName);
+				statement.setString(3, storedProc.getName());
+
+				ResultSet resultSet = statement.executeQuery();
+				transferResultToProcList(resultSet, resultList);
+
+				transferStoredProcHeaders(resultList, storedProc);
 			}
 			catch (SQLException e)
 			{

@@ -108,7 +108,7 @@ where z.proc_id = x.proc_id
 --Загрузка доступных пользователю ХП
 if (object_id('spm_get_available_proc') is not null) drop proc spm_get_available_proc
 go
-create proc spm_get_available_proc(@login_name varchar(255), @db_name varchar(255))
+create proc spm_get_available_proc(@login_name varchar(255), @db_name varchar(255), @proc_name varchar(255))
 as
 declare @login_id int, @db_id smallint, @cmd_text varchar(2048)
 begin
@@ -121,27 +121,27 @@ begin
 
 	--Checking input parameters
 	select @login_id = suid from master..syslogins where name = @login_name
-	
+
 	if (@login_id is null)
 	begin
-		
+
 		print 'Couldn''t find login ''%1!''', @login_name
-		
+
 		return
 		
 	end
-	
+
 	select @db_id = dbid from master..sysdatabases where name = @db_name
-	
+
 	if (@db_id is null)
 	begin
-		
+
 		print 'Couldn''t find database ''%1!''', @db_name
-		
+
 		return
-		
+
 	end
-	
+
 	--Obtain data
 	create table #pl(proc_id int not null,
 					proc_name varchar(255) not null,
@@ -150,28 +150,33 @@ begin
 					occupant_id int null,
 					occupant_login varchar(255) null,
 					occupant_name varchar(255) null)
-					
+
 	create index XX001 on #pl(proc_id)
 	
-	insert #pl (proc_id, proc_name, proc_description, proc_status_id)
-	select inf.proc_id, inf.proc_name, inf.proc_description, 3
-	from spm_login_proc crs, spm_proc_info inf
-	where crs.login_id = @login_id
-	  and crs.database_id = @db_id
-	  and crs.proc_id = inf.proc_id
-	
-	set @cmd_text = 'update #pl ' + 
-					'set proc_status_id = 1 ' + 
-					'from ' + @db_name + '..sysobjects obj ' + 
-					'where #pl.proc_id = obj.id ' + 
-					'and obj.type = ''P'' ' + 
-					'and obj.uid = 1'
+	set @cmd_text = 'insert #pl (proc_id, proc_name, proc_description, proc_status_id) ' + 
+					'select inf.proc_id, inf.proc_name, inf.proc_description, 3 ' + 
+					'from spm_login_proc crs, spm_proc_info inf ' + 
+					'where crs.login_id = @login_id ' + 
+					'and crs.database_id = @db_id ' + 
+					'and crs.proc_id = inf.proc_id'
 					
+	if (@proc_name is not null)
+		set @cmd_text = @cmd_text + ' and inf.proc_name = @proc_name'
+		
 	exec (@cmd_text)
 	
 	if exists (select 1 from #pl)
 	begin
-		
+
+		set @cmd_text = 'update #pl ' + 
+						'set proc_status_id = 1 ' + 
+						'from ' + @db_name + '..sysobjects obj ' + 
+						'where #pl.proc_id = obj.id ' + 
+						'and obj.type = ''P'' ' + 
+						'and obj.uid = 1'
+
+		exec (@cmd_text)
+
 		update #pl
 		set proc_status_id = 2,
 			occupant_id = sp.suid,
@@ -180,16 +185,16 @@ begin
 		from master..sysprocesses sp, FLC_RU..user_list ul
 		where #pl.proc_id = sp.id
 		  and sp.suid *= ul.user_id
-		
+
 	end
-	
-	
+
 	select proc_id, proc_name, proc_description, proc_status_id,
 			occupant_id, occupant_login, occupant_name
 	from #pl
-	
+
 end
-go
+go 
+
 --Выдача/изъятие прав на ХП конкретному логину
 if (object_id('spm_set_proc_for_login') is not null) drop proc spm_set_proc_for_login
 go

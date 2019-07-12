@@ -8,6 +8,7 @@ import ru.flc.service.spmaster.model.data.entity.StoredProc;
 import ru.flc.service.spmaster.model.data.entity.StoredProcStatus;
 import ru.flc.service.spmaster.model.settings.OperationalSettings;
 import ru.flc.service.spmaster.model.settings.SettingsModel;
+import ru.flc.service.spmaster.util.AppConstants;
 import ru.flc.service.spmaster.util.AppStatus;
 import ru.flc.service.spmaster.view.View;
 
@@ -17,8 +18,6 @@ import java.util.List;
 
 public class Controller
 {
-	private static final String WORKER_PROPERTY_NAME_STATE = "state";
-
 	private DataModel dataModel;
 	private SettingsModel settingsModel;
 	private View view;
@@ -79,7 +78,7 @@ public class Controller
 				view.showException(e);
 			}
 
-			view.clearData();
+			view.clearAllData();
 			view.showConnectionStatus(null);
 
 			changeAppStatus(AppStatus.DISCONNECTED);
@@ -91,7 +90,7 @@ public class Controller
 		if (checkDataModel() && checkView() && checkAppStatuses(AppStatus.CONNECTED))
 			try
 			{
-				view.clearData();
+				view.clearAllData();
 
 				List<StoredProc> storedProcList = dataModel.getStoredProcList();
 				view.showStoredProcList(storedProcList);
@@ -102,22 +101,40 @@ public class Controller
 			}
 	}
 
+	public void updateStoredProcedureHeaders(StoredProc storedProc)
+	{
+		if (storedProc != null)
+			if (checkDataModel() && checkView())
+				try
+				{
+					dataModel.updateStoredProcHeaders(storedProc);
+				}
+				catch (Exception e)
+				{
+					view.showException(e);
+				}
+	}
+
 	public void showStoredProcedureText(StoredProc storedProc)
 	{
-		if (checkDataModel() && checkView())
-			try
-			{
-				List<String> storedProcTextLines = null;
+		if (storedProc != null && storedProc.getStatus() != StoredProcStatus.DEAD)
+			if (checkDataModel() && checkView())
+				try
+				{
+					List<String> storedProcTextLines = dataModel.getStoredProcText(storedProc);
 
-				if (storedProc != null && storedProc.getStatus() != StoredProcStatus.DEAD)
-					storedProcTextLines = dataModel.getStoredProcText(storedProc);
+					view.showStoredProcText(storedProcTextLines);
+				}
+				catch (Exception e)
+				{
+					view.showException(e);
+				}
+	}
 
-				view.showStoredProcText(storedProcTextLines);
-			}
-			catch (Exception e)
-			{
-				view.showException(e);
-			}
+	public void clearCurrentViewData()
+	{
+		if (checkView())
+			view.clearCurrentData();
 	}
 
 	public void showStoredProcedureInfo()
@@ -152,7 +169,8 @@ public class Controller
 				if (storedProc != null)
 				{
 					spExecutor = new StoredProcExecutor(storedProc, dataModel, view);
-					spExecutor.getPropertyChangeSupport().addPropertyChangeListener(WORKER_PROPERTY_NAME_STATE,
+					spExecutor.getPropertyChangeSupport().addPropertyChangeListener(
+							AppConstants.MESS_WORKER_PROPERTY_NAME_STATE,
 							evt -> doForWorkerEvent(evt));
 					spExecutor.execute();
 				}
@@ -170,8 +188,8 @@ public class Controller
 		{
 			try
 			{
-				if (spExecutor != null && !spExecutor.isDone() && !spExecutor.isCancelled())
-					spExecutor.cancel(false);
+				if (spExecutor != null && !spExecutor.isDone() && !spExecutor.isInterrupted())
+					spExecutor.interrupt();
 			}
 			catch (Exception e)
 			{
@@ -261,7 +279,7 @@ public class Controller
 
 	private void doForWorkerEvent(PropertyChangeEvent event)
 	{
-		if (WORKER_PROPERTY_NAME_STATE.equals(event.getPropertyName()))
+		if (AppConstants.MESS_WORKER_PROPERTY_NAME_STATE.equals(event.getPropertyName()))
 		{
 			Object newValue = event.getNewValue();
 

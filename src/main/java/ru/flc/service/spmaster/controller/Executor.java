@@ -2,6 +2,7 @@ package ru.flc.service.spmaster.controller;
 
 public interface Executor
 {
-	boolean isCancelled();
+	void interrupt();
+	boolean isInterrupted();
 	void publishMessages(String... messages);
 }

@@ -97,10 +97,12 @@ public final class AppConstants
 	public static final String MESS_SP_PARAM_COL_VALUE_NUMERIC = "NUMERIC";
 	public static final String MESS_SP_PARAM_COL_VALUE_DECIMAL = "DECIMAL";
 	public static final String MESS_SP_PARAM_COL_VALUE_VARCHAR = "VARCHAR";
+	public static final String MESS_WORKER_PROPERTY_NAME_STATE = "state";
 
 	//Messages
 	public static final String MESS_EXECUTOR_SP_STARTED = " - started.";
 	public static final String MESS_EXECUTOR_SP_ENDED = " - ended.";
+	public static final String MESS_EXECUTOR_SP_INTERRUPTED = "interrupted.";
 	public static final String MESS_EXECUTOR_NULL = "null";
 	public static final String MESS_EXECUTOR_OUTPUT = "OUT ";
 

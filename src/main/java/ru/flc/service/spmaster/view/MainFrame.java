@@ -178,16 +178,12 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	}
 
 	@Override
-	public void clearData()
+	public void clearAllData()
 	{
 		procListTableModel.clear();
 		procListTableModel.fireTableDataChanged();
 
-		procTextArea.setText("");
-
-		clearDataPages();
-
-		clearLog();
+		clearCurrentData();
 	}
 
 	@Override
@@ -234,10 +230,6 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	@Override
 	public void showStoredProcText(List<String> storedProcTextLines)
 	{
-		procTextArea.setText("");
-		clearDataPages();
-		clearLog();
-
 		if (storedProcTextLines != null && (!storedProcTextLines.isEmpty()))
 		{
 			for (String line : storedProcTextLines)
@@ -256,7 +248,6 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 			{
 				executionDialog = new ExecutionDialog(this, this,
 						resourceManager, actionsManager.getExecSpAction(), actionsManager.getCancelSpAction());
-				executionDialog.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 			}
 			catch (Exception e)
 			{
@@ -338,6 +329,14 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	}
 
 	@Override
+	public void clearCurrentData()
+	{
+		procTextArea.setText("");
+		clearDataPages();
+		clearLog();
+	}
+
+	@Override
 	public void log(Exception e)
 	{
 		LogEventWriter.writeThrowable(e, logTableModel);
@@ -407,7 +406,8 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 		TableRowSorter<TableModel> rowSorter = new TableRowSorter<>(procListTableModel);
 
 		procListTable = new StoredProcListTable(procListTableModel, resourceManager);
-		procListTable.getSelectionModel().addListSelectionListener(new StoredProcListSelectionListener(procListTable, controller));
+		procListTable.getSelectionModel().addListSelectionListener(new StoredProcListSelectionListener(
+				procListTable, procListTableModel,  controller));
 		procListTable.addMouseListener(new StoredProcListMouseListener(actionsManager));
 		procListTable.setRowSorter(rowSorter);
 
