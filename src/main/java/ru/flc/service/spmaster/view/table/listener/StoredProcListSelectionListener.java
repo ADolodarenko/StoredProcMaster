@@ -4,21 +4,17 @@ import ru.flc.service.spmaster.controller.Controller;
 import ru.flc.service.spmaster.model.data.entity.StoredProc;
 import ru.flc.service.spmaster.util.AppConstants;
 import ru.flc.service.spmaster.view.table.StoredProcListTable;
-import ru.flc.service.spmaster.view.table.StoredProcListTableModel;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.TableModel;
 
 public class StoredProcListSelectionListener implements ListSelectionListener
 {
 	private StoredProcListTable table;
-	private StoredProcListTableModel tableModel;
 	private Controller controller;
 
 	public StoredProcListSelectionListener(StoredProcListTable table,
-										   StoredProcListTableModel tableModel,
 										   Controller controller)
 	{
 		if (table == null)
@@ -28,7 +24,6 @@ public class StoredProcListSelectionListener implements ListSelectionListener
 			throw new IllegalArgumentException(AppConstants.EXCPT_CONTROLLER_EMPTY);
 
 		this.table = table;
-		this.tableModel = tableModel;
 		this.controller = controller;
 	}
 
@@ -50,10 +45,6 @@ public class StoredProcListSelectionListener implements ListSelectionListener
 				if (storedProc != null)
 				{
 					controller.updateStoredProcedureHeaders(storedProc);
-
-					int index = table.convertRowIndexToModel(selectionIndex);
-					tableModel.fireTableRowsUpdated(index, index);
-
 					controller.showStoredProcedureText(storedProc);
 				}
 			}

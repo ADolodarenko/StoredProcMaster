@@ -27,4 +27,6 @@ public interface View
 	void showStoredProcOutput(List<DataTable> resultTables);
 	void addToLog(Object value);
 	void clearCurrentData();
+	void showStoredProc(StoredProc storedProc);
+	void showStoredProcWarning(StoredProc storedProc);
 }

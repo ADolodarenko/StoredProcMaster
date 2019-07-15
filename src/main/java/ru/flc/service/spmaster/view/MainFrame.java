@@ -20,6 +20,7 @@ import ru.flc.service.spmaster.controller.Controller;
 import ru.flc.service.spmaster.model.data.entity.DataTable;
 import ru.flc.service.spmaster.model.data.entity.DataTableType;
 import ru.flc.service.spmaster.model.data.entity.StoredProc;
+import ru.flc.service.spmaster.model.data.entity.StoredProcStatus;
 import ru.flc.service.spmaster.model.settings.ViewConstraints;
 import ru.flc.service.spmaster.util.AppConstants;
 import ru.flc.service.spmaster.util.AppStatus;
@@ -46,7 +47,9 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 /**
@@ -67,6 +70,7 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 
 	private StoredProcListTableModel procListTableModel;
 	private StoredProcListTable procListTable;
+	private Map<StoredProc, Integer> procListMap;
 	private JScrollPane procListPane;
 	private JPanel procListPanel;
 	private JTextField procSearchField;
@@ -180,6 +184,7 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	@Override
 	public void clearAllData()
 	{
+		procListMap.clear();
 		procListTableModel.clear();
 		procListTableModel.fireTableDataChanged();
 
@@ -222,6 +227,8 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	{
 		procListTableModel.addAllRows(storedProcList);
 		procListTableModel.fireTableDataChanged();
+
+		updateProcListMap();
 
 		titleAdjuster.resetComponents();
 		procListTableModel.fireTableDataChanged();
@@ -337,6 +344,35 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	}
 
 	@Override
+	public void showStoredProc(StoredProc storedProc)
+	{
+		if (procListTableModel != null && procListMap != null)
+		{
+			Integer storedProcIndex = procListMap.get(storedProc);
+
+			if (storedProcIndex != null && procListTableModel.getRowCount() > storedProcIndex)
+				procListTableModel.fireTableRowsUpdated(storedProcIndex, storedProcIndex);
+		}
+	}
+
+	@Override
+	public void showStoredProcWarning(StoredProc storedProc)
+	{
+		//TODO: make a correct messaging logic here.
+
+		String pattern = "The stored procedure %s is %s.";
+		String name = storedProc.getName();
+		String status = "in unknown status";
+
+		if (storedProc.getStatus() == StoredProcStatus.DEAD)
+			status = "dead";
+		else if (storedProc.getStatus() == StoredProcStatus.OCCUPIED)
+			status = "occupied";
+
+		JOptionPane.showMessageDialog(null, String.format(pattern, name, status), "Verevkin", JOptionPane.WARNING_MESSAGE);
+	}
+
+	@Override
 	public void log(Exception e)
 	{
 		LogEventWriter.writeThrowable(e, logTableModel);
@@ -402,12 +438,13 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 
 	private void initProcListPanel()
 	{
+		procListMap = new HashMap<>();
 		procListTableModel = new StoredProcListTableModel(resourceManager, StoredProc.getTitleKeys(), null);
 		TableRowSorter<TableModel> rowSorter = new TableRowSorter<>(procListTableModel);
 
 		procListTable = new StoredProcListTable(procListTableModel, resourceManager);
 		procListTable.getSelectionModel().addListSelectionListener(new StoredProcListSelectionListener(
-				procListTable, procListTableModel,  controller));
+				procListTable, controller));
 		procListTable.addMouseListener(new StoredProcListMouseListener(actionsManager));
 		procListTable.setRowSorter(rowSorter);
 
@@ -586,6 +623,17 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 
 		controller.setViewPreferredBounds();
 		controller.setViewActualBounds();
+	}
+
+	private void updateProcListMap()
+	{
+		if (procListMap != null && procListTableModel != null)
+		{
+			procListMap.clear();
+
+			for (int i = 0; i < procListTableModel.getRowCount(); i++)
+				procListMap.put(procListTableModel.getRow(i), i);
+		}
 	}
 
 	private void setResizingPolicy()

@@ -108,6 +108,8 @@ public class Controller
 				try
 				{
 					dataModel.updateStoredProcHeaders(storedProc);
+
+					view.showStoredProc(storedProc);
 				}
 				catch (Exception e)
 				{
@@ -144,11 +146,17 @@ public class Controller
 			try
 			{
 				StoredProc storedProc = view.getCurrentStoredProc();
+				updateStoredProcedureHeaders(storedProc);
 
-				if (storedProc != null && storedProc.getStatus() != StoredProcStatus.DEAD)
+				if (storedProc != null)
 				{
-					dataModel.attachStoredProcParams(storedProc);
-					view.showStoredProcInfo(storedProc);
+					if (storedProc.getStatus() == StoredProcStatus.AVAILABLE)
+					{
+						dataModel.attachStoredProcParams(storedProc);
+						view.showStoredProcInfo(storedProc);
+					}
+					else
+						view.showStoredProcWarning(storedProc);
 				}
 			}
 			catch (Exception e)
@@ -156,6 +164,14 @@ public class Controller
 				view.showException(e);
 			}
 		}
+	}
+
+	public boolean activeStoredProcExists()
+	{
+		if (checkView())
+			return view.getCurrentStoredProc() != null;
+		else
+			return false;
 	}
 
 	public void execStoredProcedure()

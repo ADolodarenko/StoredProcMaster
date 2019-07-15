@@ -3,6 +3,7 @@ package ru.flc.service.spmaster.model.data.entity;
 import ru.flc.service.spmaster.util.AppConstants;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * This class represents one stored procedure.
@@ -31,6 +32,22 @@ public class StoredProc
 		this.description = description;
 		this.status = status;
 		this.occupant = occupant;
+	}
+
+	@Override
+	public boolean equals(Object o)
+	{
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		StoredProc that = (StoredProc) o;
+		return id == that.id &&
+				name.equals(that.name);
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return Objects.hash(id, name);
 	}
 
 	public int getId()
