@@ -1,0 +1,1 @@
+[15.07.2019 18:08:34] Отправлено сообщение! Отправитель: it-support@ksdbook.ru; Получатели: alexey.dolodarenko@ksdbook.ru; Тема: StoredProcMaster services - log 15.07.2019 18:08; Вложения: C:\DBTasks\spm_service\log\20190715_18-08_spm_update_proc_refs.txt

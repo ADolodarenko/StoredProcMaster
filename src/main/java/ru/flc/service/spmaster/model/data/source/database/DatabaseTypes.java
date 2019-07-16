@@ -1,4 +1,4 @@
-package ru.flc.service.spmaster.model.data.source;
+package ru.flc.service.spmaster.model.data.source.database;
 
 import java.math.BigDecimal;
 import java.sql.*;

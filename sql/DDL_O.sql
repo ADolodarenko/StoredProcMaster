@@ -341,8 +341,12 @@ if (object_id('spm_update_proc_refs') is not null) drop proc spm_update_proc_ref
 go
 create proc spm_update_proc_refs
 as
-declare @db_id int, @db_name varchar(255), @cmd_text varchar(2048)
+declare @db_id int, @db_name varchar(255), @cmd_text varchar(2048), @dt datetime
 begin
+
+	set @dt = getdate()
+	
+	print 'spm_update_proc_refs - %1!', @dt
 
 	select database_id, proc_name, proc_id as old_proc_id, convert(int, null) as new_proc_id
 	into #inf
@@ -435,8 +439,12 @@ if (object_id('spm_add_new_proc') is not null) drop proc spm_add_new_proc
 go
 create proc spm_add_new_proc
 as
-declare @db_id int, @db_name varchar(255), @cmd_text varchar(2048)
+declare @db_id int, @db_name varchar(255), @cmd_text varchar(2048), @dt datetime
 begin
+
+	set @dt = getdate()
+	
+	print 'spm_add_new_proc - %1!', @dt
 
 	declare db_cur cursor for
 	select dbid, name

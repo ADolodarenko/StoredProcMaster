@@ -181,14 +181,20 @@ public class Controller
 			try
 			{
 				StoredProc storedProc = view.getCurrentStoredProc();
+				updateStoredProcedureHeaders(storedProc);
 
 				if (storedProc != null)
 				{
-					spExecutor = new StoredProcExecutor(storedProc, dataModel, view);
-					spExecutor.getPropertyChangeSupport().addPropertyChangeListener(
-							AppConstants.MESS_WORKER_PROPERTY_NAME_STATE,
-							evt -> doForWorkerEvent(evt));
-					spExecutor.execute();
+					if (storedProc.getStatus() == StoredProcStatus.AVAILABLE)
+					{
+						spExecutor = new StoredProcExecutor(storedProc, dataModel, view);
+						spExecutor.getPropertyChangeSupport().addPropertyChangeListener(
+								AppConstants.MESS_WORKER_PROPERTY_NAME_STATE,
+								evt -> doForWorkerEvent(evt));
+						spExecutor.execute();
+					}
+					else
+						view.showStoredProcWarning(storedProc);
 				}
 			}
 			catch (Exception e)

@@ -1,4 +1,4 @@
-package ru.flc.service.spmaster.model.data.source;
+package ru.flc.service.spmaster.model.data.source.database;
 
 import com.sybase.jdbcx.SybDriver;
 import org.dav.service.settings.DatabaseSettings;

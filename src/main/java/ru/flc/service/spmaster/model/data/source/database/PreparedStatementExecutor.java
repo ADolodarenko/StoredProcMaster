@@ -1,4 +1,4 @@
-package ru.flc.service.spmaster.model.data.source;
+package ru.flc.service.spmaster.model.data.source.database;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

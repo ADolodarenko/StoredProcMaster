@@ -19,7 +19,9 @@ set hh=%hh: =0%
 set mn=%tm:~3,2%
 set mn=%mn: =0%
 
-set ds=%yy%%mm%%dd%_%hh%-%mn%
+rem set ds=%dd%.%mm%.%yy% %hh%:%mn%
+set dt=%yy%%mm%%dd%
 
-isql -Udb_task -Pdb_task -SDBSRV -ispm_update_proc_refs.sql  -o%lp%\%ds%_spm_update_proc_refs.txt
-SendEmailConsole.exe it-support@ksdbook.ru "alexey.dolodarenko@ksdbook.ru" "%lp%\%ds%_spm_update_proc_refs.txt" "StoredProcMaster services - log %dd%.%mm%.%yy% %hh%:%mn%"
+isql -Udb_task -Pdb_task -SDBSRV -ispm_add_new_proc.sql >> %lp%\%dt%_spm_service.txt
+isql -Udb_task -Pdb_task -SDBSRV -ispm_update_proc_refs.sql >> %lp%\%dt%_spm_service.txt
+rem SendEmailConsole.exe it-support@ksdbook.ru "alexey.dolodarenko@ksdbook.ru" "%lp%\%dt%_spm_update_proc_refs.txt" "StoredProcMaster services - log %ds%"

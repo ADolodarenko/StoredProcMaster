@@ -194,12 +194,19 @@ public class ActionsManager
 		action.putValue(Action.SMALL_ICON, resourceManager.getImageIcon(actionIconName));
 	}
 
-	public void adjustToAppStatus()
+	public void adjustToAppStatus(AbstractAction actionToAdjust)
 	{
-		connectDbAction.setEnabled(controller.checkAppStatuses(AppStatus.DISCONNECTED));
-		disconnectDbAction.setEnabled(controller.checkAppStatuses(AppStatus.CONNECTED));
-		refreshSpListAction.setEnabled(controller.checkAppStatuses(AppStatus.CONNECTED));
-		showSpInfoAction.setEnabled(controller.checkAppStatuses(AppStatus.CONNECTED));
-		showSettingsAction.setEnabled(controller.checkAppStatuses(AppStatus.DISCONNECTED));
+		if (actionToAdjust == null)
+		{
+			connectDbAction.setEnabled(controller.checkAppStatuses(AppStatus.DISCONNECTED));
+			disconnectDbAction.setEnabled(controller.checkAppStatuses(AppStatus.CONNECTED));
+			refreshSpListAction.setEnabled(controller.checkAppStatuses(AppStatus.CONNECTED));
+			showSpInfoAction.setEnabled(controller.checkAppStatuses(AppStatus.CONNECTED) &&
+					controller.activeStoredProcExists());
+			showSettingsAction.setEnabled(controller.checkAppStatuses(AppStatus.DISCONNECTED));
+		}
+		else if (actionToAdjust.equals(showSpInfoAction))
+			showSpInfoAction.setEnabled(controller.checkAppStatuses(AppStatus.CONNECTED) &&
+					controller.activeStoredProcExists());
 	}
 }

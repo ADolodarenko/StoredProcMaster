@@ -1,0 +1,194 @@
+spm_update_proc_refs - Jul 16 2019 12:45PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+           7 spm_update_proc_refs                       382113571  1214116535 
+spm_update_proc_refs - Jul 16 2019 12:50PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019 12:55PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  1:00PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  1:05PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  1:10PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  1:15PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  1:20PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  1:25PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  1:30PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  1:35PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  1:40PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  1:45PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  1:50PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  1:55PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  2:00PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  2:05PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  2:10PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  2:15PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  2:20PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  2:25PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  2:30PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  2:35PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  2:40PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  2:45PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  2:50PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  2:55PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+           5 usp_shop_trade_report                     2060734208  1365532208 
+spm_update_proc_refs - Jul 16 2019  3:00PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  3:05PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  3:10PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+           5 usp_shop_trade_report                     1365532208  1413532379 
+spm_update_proc_refs - Jul 16 2019  3:15PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  3:20PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  3:25PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  3:30PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  3:35PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  3:40PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  3:45PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  3:50PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  3:55PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  4:00PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  4:05PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  4:10PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  4:15PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  4:20PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  4:25PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  4:30PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  4:35PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  4:40PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  4:45PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  4:50PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  4:55PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  5:00PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  5:05PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  5:10PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  5:15PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  5:20PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  5:25PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  5:30PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  5:35PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  5:40PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  5:45PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+           5 usp_shop_prodazhi_rep                      648953598  1429532436 
+spm_update_proc_refs - Jul 16 2019  5:50PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+spm_update_proc_refs - Jul 16 2019  5:55PM
+ database_id proc_name                                old_proc_id new_proc_id 
+ ----------- ---------------------------------------- ----------- ----------- 
+           7 spm_add_new_proc                           942115566  1230116592 

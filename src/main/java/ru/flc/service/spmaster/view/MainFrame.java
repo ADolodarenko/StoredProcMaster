@@ -216,7 +216,7 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	@Override
 	public void adjustToAppStatus()
 	{
-		actionsManager.adjustToAppStatus();
+		actionsManager.adjustToAppStatus(null);
 
 		if (executionDialog != null && executionDialog.isVisible())
 			executionDialog.adjustToAppStatus(controller.checkAppStatuses(AppStatus.RUNNING));
@@ -444,7 +444,7 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 
 		procListTable = new StoredProcListTable(procListTableModel, resourceManager);
 		procListTable.getSelectionModel().addListSelectionListener(new StoredProcListSelectionListener(
-				procListTable, controller));
+				procListTable, actionsManager, controller));
 		procListTable.addMouseListener(new StoredProcListMouseListener(actionsManager));
 		procListTable.setRowSorter(rowSorter);
 

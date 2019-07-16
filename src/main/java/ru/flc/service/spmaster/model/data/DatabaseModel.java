@@ -3,7 +3,7 @@ package ru.flc.service.spmaster.model.data;
 import org.dav.service.settings.Settings;
 import ru.flc.service.spmaster.controller.Executor;
 import ru.flc.service.spmaster.model.data.dao.AccessObjectFactory;
-import ru.flc.service.spmaster.model.data.dao.StoredProcDao;
+import ru.flc.service.spmaster.model.data.dao.DataAccessObject;
 import ru.flc.service.spmaster.model.data.entity.DataTable;
 import ru.flc.service.spmaster.model.data.entity.StoredProc;
 
@@ -11,12 +11,12 @@ import java.util.List;
 
 public class DatabaseModel implements DataModel
 {
-	private StoredProcDao storedProcDao;
+	private DataAccessObject storedProcDao;
 
 	@Override
 	public void connectToDatabase(Settings... settingsArray) throws Exception
 	{
-		storedProcDao = AccessObjectFactory.getStoredProcObject(settingsArray);
+		storedProcDao = AccessObjectFactory.getDataAccessObject(settingsArray);
 		storedProcDao.open();
 	}
 
