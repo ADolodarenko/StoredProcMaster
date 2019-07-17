@@ -26,7 +26,7 @@ import ru.flc.service.spmaster.util.AppConstants;
 import ru.flc.service.spmaster.util.AppStatus;
 import ru.flc.service.spmaster.view.dialog.AboutDialog;
 import ru.flc.service.spmaster.view.dialog.ExecutionDialog;
-import ru.flc.service.spmaster.view.entity.DataPage;
+import ru.flc.service.spmaster.model.data.entity.DataPage;
 import ru.flc.service.spmaster.view.table.*;
 import ru.flc.service.spmaster.view.table.filter.TableFilterListener;
 import ru.flc.service.spmaster.view.table.listener.StoredProcListMouseListener;
@@ -312,9 +312,9 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 			procResultsTabs.addTab(null, resultTabIcon, scrollPane);
 
 			if (dataTable.getType() == DataTableType.OUTPUT_PARAMS)
-				dataPages.add(new DataPage(-100, dataTable));
+				dataPages.add(new DataPage(-100, null, dataTable));
 			else
-				dataPages.add(new DataPage(index++, dataTable));
+				dataPages.add(new DataPage(index++, null, dataTable));
 		}
 
 		resetProcResultTabs();
@@ -370,6 +370,12 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 			status = "occupied";
 
 		JOptionPane.showMessageDialog(null, String.format(pattern, name, status), "Verevkin", JOptionPane.WARNING_MESSAGE);
+	}
+
+	@Override
+	public String getResultFileName()
+	{
+		return null;
 	}
 
 	@Override
@@ -590,13 +596,17 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 		for (int i = 0; i < procResultsTabs.getTabCount(); i++)
 		{
 			DataPage dataPage = dataPages.get(i);
+			String pageName;
 
 			if (dataPage.getDataTable().getType() == DataTableType.OUTPUT_PARAMS)
-				procResultsTabs.setTitleAt(i, new Title(resourceManager,
-						AppConstants.KEY_TAB_RESULT_OUTPUT_PARAMS).getText());
+				pageName = new Title(resourceManager,
+						AppConstants.KEY_TAB_RESULT_OUTPUT_PARAMS).getText();
 			else
-				procResultsTabs.setTitleAt(i, new Title(resourceManager,
-						AppConstants.KEY_TAB_RESULT_REGULAR, dataPage.getIndex()).getText());
+				pageName = new Title(resourceManager,
+						AppConstants.KEY_TAB_RESULT_REGULAR, dataPage.getIndex()).getText();
+
+			dataPage.setName(pageName);
+			procResultsTabs.setTitleAt(i, pageName);
 		}
 	}
 

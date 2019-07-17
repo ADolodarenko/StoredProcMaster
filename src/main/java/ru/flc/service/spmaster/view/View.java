@@ -29,4 +29,5 @@ public interface View
 	void clearCurrentData();
 	void showStoredProc(StoredProc storedProc);
 	void showStoredProcWarning(StoredProc storedProc);
+	String getResultFileName();
 }

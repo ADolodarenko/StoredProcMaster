@@ -4,8 +4,11 @@ import org.dav.service.settings.DatabaseSettings;
 import org.dav.service.settings.TransmissiveSettings;
 import org.dav.service.util.ResourceManager;
 import ru.flc.service.spmaster.model.data.DataModel;
+import ru.flc.service.spmaster.model.data.entity.DataPage;
+import ru.flc.service.spmaster.model.data.entity.DataTable;
 import ru.flc.service.spmaster.model.data.entity.StoredProc;
 import ru.flc.service.spmaster.model.data.entity.StoredProcStatus;
+import ru.flc.service.spmaster.model.file.FileModel;
 import ru.flc.service.spmaster.model.settings.OperationalSettings;
 import ru.flc.service.spmaster.model.settings.SettingsModel;
 import ru.flc.service.spmaster.util.AppConstants;
@@ -20,10 +23,17 @@ public class Controller
 {
 	private DataModel dataModel;
 	private SettingsModel settingsModel;
+	private FileModel fileModel;
+
 	private View view;
 	private AppStatus appStatus;
 
 	private StoredProcExecutor spExecutor;
+
+	public void setFileModel(FileModel fileModel)
+	{
+		this.fileModel = fileModel;
+	}
 
 	public void setDataModel(DataModel dataModel)
 	{
@@ -242,6 +252,25 @@ public class Controller
 			view.showHelpInfo();
 	}
 
+	public void saveStoredProcedureResult(List<DataPage> dataPages)
+	{
+		if (dataPages != null && !dataPages.isEmpty())
+			if (checkFileModel() && checkView())
+			{
+				String fileName = view.getResultFileName();
+
+				if (fileName != null)
+					try
+					{
+						fileModel.saveStoredProcResult(fileName, dataPages);
+					}
+					catch (Exception e)
+					{
+						view.showException(e);
+					}
+			}
+	}
+
 	public void resetCurrentLocale()
 	{
 		if (checkSettingsModel())
@@ -287,6 +316,11 @@ public class Controller
 	private boolean checkDataModel()
 	{
 		return dataModel != null;
+	}
+
+	private boolean checkFileModel()
+	{
+		return fileModel != null;
 	}
 
 	private boolean checkSettingsModel()
