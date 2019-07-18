@@ -106,6 +106,14 @@ public final class AppConstants
 	public static final String MESS_EXECUTOR_SP_INTERRUPTED = "interrupted.";
 	public static final String MESS_EXECUTOR_NULL = "null";
 	public static final String MESS_EXECUTOR_OUTPUT = "OUT ";
+	public static final String MESS_FILENAME_EXT_KEY_CSV = "CSV";
+	public static final String MESS_FILENAME_EXT_KEY_TXT = "CSV";
+	public static final String MESS_FILENAME_EXT_KEY_XLS = "XLS";
+	public static final String MESS_FILENAME_EXT_KEY_XLSX = "XLSX";
+	public static final String MESS_FILENAME_EXT_VALUE_CSV = "CSV";
+	public static final String MESS_FILENAME_EXT_VALUE_TXT = "CSV";
+	public static final String MESS_FILENAME_EXT_VALUE_XLS = "XLS";
+	public static final String MESS_FILENAME_EXT_VALUE_XLSX = "XLSX";
 
 	//Patterns
 	public static final String PATTERN_DATETIME = "dd.MM.yyyy HH:mm:ss";

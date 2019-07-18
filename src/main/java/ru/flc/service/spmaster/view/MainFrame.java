@@ -5,6 +5,7 @@ import org.dav.service.settings.TransmissiveSettings;
 import org.dav.service.settings.ViewSettings;
 import org.dav.service.util.Constants;
 import org.dav.service.util.ResourceManager;
+import org.dav.service.view.ExtensionInfoType;
 import org.dav.service.view.Title;
 import org.dav.service.view.TitleAdjuster;
 import org.dav.service.view.ViewUtils;
@@ -39,6 +40,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
@@ -46,6 +48,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -373,9 +376,18 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	}
 
 	@Override
-	public String getResultFileName()
+	public File getResultFile()
 	{
-		return null;
+		JFileChooser fileChooser = ViewUtils.getFileChooser(new File(Constants.MESS_CURRENT_PATH));
+
+		fileChooser.resetChoosableFileFilters();
+		for (FileNameExtensionFilter filter : ViewComponents.getFileNameExtensionFilters())
+			fileChooser.addChoosableFileFilter(filter);
+
+		if (fileChooser.showSaveDialog(ViewUtils.getDialogOwner()) == JFileChooser.APPROVE_OPTION)
+			return fileChooser.getSelectedFile();
+		else
+			return null;
 	}
 
 	@Override
@@ -412,6 +424,14 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 		initSplitPanels();
 
 		initStatusPanel();
+
+		titleAdjuster.registerComponent(this,
+				new Title(resourceManager,
+						Constants.KEY_MAIN_FRAME,
+						ViewUtils.getAssemblyInformationString(this,
+								" - ",
+								new ExtensionInfoType[]{ExtensionInfoType.IMPLEMENTATION_TITLE,
+														ExtensionInfoType.IMPLEMENTATION_VERSION})));
 
 		titleAdjuster.resetComponents();
 

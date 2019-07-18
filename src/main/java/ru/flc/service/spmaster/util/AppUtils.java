@@ -3,6 +3,9 @@ package ru.flc.service.spmaster.util;
 import java.util.Arrays;
 import java.util.Date;
 
+/**
+ * This class consists of static service methods.
+ */
 public class AppUtils
 {
 	private static Class<?>[] quotedStringValueClasses = { String.class, Date.class };

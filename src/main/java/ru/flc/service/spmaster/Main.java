@@ -6,6 +6,7 @@ import org.dav.service.util.ResourceManager;
 import org.dav.service.view.ViewUtils;
 import ru.flc.service.spmaster.controller.Controller;
 import ru.flc.service.spmaster.model.data.DatabaseModel;
+import ru.flc.service.spmaster.model.file.DefaultFileModel;
 import ru.flc.service.spmaster.model.settings.AppSettingsModel;
 import ru.flc.service.spmaster.util.AppConstants;
 import ru.flc.service.spmaster.util.AppResourceManager;
@@ -29,6 +30,7 @@ public class Main
 		Controller controller = new Controller();
 		controller.setSettingsModel(new AppSettingsModel(resourceManager));
 		controller.setDataModel(new DatabaseModel());
+		controller.setFileModel(new DefaultFileModel());
 
 		EventQueue.invokeLater(() -> runGUI(controller));
 	}

@@ -4,6 +4,8 @@ import org.dav.service.settings.Settings;
 import ru.flc.service.spmaster.model.data.source.database.AseDataSource;
 import ru.flc.service.spmaster.model.data.source.database.DataSource;
 
+import java.io.File;
+
 public class AccessObjectFactory
 {
 	public static DataAccessObject getDataAccessObject(Settings... settingsArray)
@@ -26,7 +28,7 @@ public class AccessObjectFactory
 		return object;
 	}
 
-	public static FileAccessObject getFileAccessObject(String fileName)
+	public static FileAccessObject getFileAccessObject(File file)
 	{
 		return null;
 	}

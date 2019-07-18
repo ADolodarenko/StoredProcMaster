@@ -17,6 +17,7 @@ import ru.flc.service.spmaster.view.View;
 
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;
+import java.io.File;
 import java.util.List;
 
 public class Controller
@@ -257,12 +258,12 @@ public class Controller
 		if (dataPages != null && !dataPages.isEmpty())
 			if (checkFileModel() && checkView())
 			{
-				String fileName = view.getResultFileName();
+				File file  = view.getResultFile();
 
-				if (fileName != null)
+				if (file != null)
 					try
 					{
-						fileModel.saveStoredProcResult(fileName, dataPages);
+						fileModel.saveStoredProcResult(file, dataPages);
 					}
 					catch (Exception e)
 					{

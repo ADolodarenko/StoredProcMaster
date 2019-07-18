@@ -7,6 +7,7 @@ import ru.flc.service.spmaster.model.data.entity.DataTable;
 import ru.flc.service.spmaster.model.data.entity.StoredProc;
 import ru.flc.service.spmaster.model.settings.ViewConstraints;
 
+import java.io.File;
 import java.util.List;
 
 public interface View
@@ -29,5 +30,5 @@ public interface View
 	void clearCurrentData();
 	void showStoredProc(StoredProc storedProc);
 	void showStoredProcWarning(StoredProc storedProc);
-	String getResultFileName();
+	File getResultFile();
 }
