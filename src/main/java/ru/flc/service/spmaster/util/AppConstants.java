@@ -16,6 +16,7 @@ public final class AppConstants
 	public static final String EXCPT_SP_EXECUTOR_EMPTY = "The stored procedure executor is empty.";
 	public static final String EXCPT_SP_RESULT_TABLE_EMPTY = "The stored procedure result is empty.";
 	public static final String EXCPT_ACTIONS_MANAGER_EMPTY = "The actions manager is empty.";
+	public static final String EXCPT_ACTION_LIST_EMPTY = "There are no actions specified.";
 
 	//Class names
 	public static final String CLASS_NAME_LONG = "Long";
@@ -47,6 +48,10 @@ public final class AppConstants
 	public static final String KEY_ACTION_SHOW_SETTINGS_DESCR = "ActionShowSettingsDescr";
 	public static final String KEY_ACTION_SHOW_HELP = "ActionShowHelp";
 	public static final String KEY_ACTION_SHOW_HELP_DESCR = "ActionShowHelpDescr";
+	public static final String KEY_ACTION_SAVE_ACTIVE_RESULT_PAGE = "ActionSaveActiveResultPage";
+	public static final String KEY_ACTION_SAVE_ACTIVE_RESULT_PAGE_DESCR = "ActionSaveActiveResultPageDescr";
+	public static final String KEY_ACTION_SAVE_ALL_RESULT_PAGES = "ActionSaveAllResultPages";
+	public static final String KEY_ACTION_SAVE_ALL_RESULT_PAGES_DESCR = "ActionSaveAllResultPagesDescr";
 
 	public static final String KEY_PARAM_SCRIPT_FILE_PATH = "ScriptFilePath";
 	public static final String KEY_PARAM_DB_SERVICE_CATALOG = "DatabaseServiceCatalog";
@@ -107,12 +112,12 @@ public final class AppConstants
 	public static final String MESS_EXECUTOR_NULL = "null";
 	public static final String MESS_EXECUTOR_OUTPUT = "OUT ";
 	public static final String MESS_FILENAME_EXT_KEY_CSV = "CSV";
-	public static final String MESS_FILENAME_EXT_KEY_TXT = "CSV";
-	public static final String MESS_FILENAME_EXT_KEY_XLS = "XLS";
-	public static final String MESS_FILENAME_EXT_KEY_XLSX = "XLSX";
 	public static final String MESS_FILENAME_EXT_VALUE_CSV = "CSV";
-	public static final String MESS_FILENAME_EXT_VALUE_TXT = "CSV";
+	public static final String MESS_FILENAME_EXT_KEY_TXT = "TXT";
+	public static final String MESS_FILENAME_EXT_VALUE_TXT = "TXT";
+	public static final String MESS_FILENAME_EXT_KEY_XLS = "XLS";
 	public static final String MESS_FILENAME_EXT_VALUE_XLS = "XLS";
+	public static final String MESS_FILENAME_EXT_KEY_XLSX = "XLSX";
 	public static final String MESS_FILENAME_EXT_VALUE_XLSX = "XLSX";
 
 	//Patterns
@@ -134,6 +139,8 @@ public final class AppConstants
 	public static final String ICON_NAME_PROC_OCCUPIED = "proc_occupied.png";
 	public static final String ICON_NAME_DATA_TABLE = "table01.png";
 	public static final String ICON_NAME_SEARCH = "search01.png";
+	public static final String ICON_NAME_SAVE = "save_2.png";
+	public static final String ICON_NAME_SAVE_ALL = "save_all_2.png";
 
 	private AppConstants(){}
 }

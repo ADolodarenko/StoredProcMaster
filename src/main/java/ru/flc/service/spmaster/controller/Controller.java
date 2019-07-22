@@ -5,7 +5,6 @@ import org.dav.service.settings.TransmissiveSettings;
 import org.dav.service.util.ResourceManager;
 import ru.flc.service.spmaster.model.data.DataModel;
 import ru.flc.service.spmaster.model.data.entity.DataPage;
-import ru.flc.service.spmaster.model.data.entity.DataTable;
 import ru.flc.service.spmaster.model.data.entity.StoredProc;
 import ru.flc.service.spmaster.model.data.entity.StoredProcStatus;
 import ru.flc.service.spmaster.model.file.FileModel;
@@ -253,7 +252,27 @@ public class Controller
 			view.showHelpInfo();
 	}
 
-	public void saveStoredProcedureResult(List<DataPage> dataPages)
+	public void saveActiveResultPage()
+	{
+		if (checkView())
+		{
+			List<DataPage> activePageList = view.getActiveResultPageList();
+
+			saveStoredProcedureResult(activePageList);
+		}
+	}
+
+	public void saveAllResultPages()
+	{
+		if (checkView())
+		{
+			List<DataPage> allPagesList = view.getAllResultPagesList();
+
+			saveStoredProcedureResult(allPagesList);
+		}
+	}
+
+	private void saveStoredProcedureResult(List<DataPage> dataPages)
 	{
 		if (dataPages != null && !dataPages.isEmpty())
 			if (checkFileModel() && checkView())

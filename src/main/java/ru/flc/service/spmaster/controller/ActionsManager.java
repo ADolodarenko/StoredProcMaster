@@ -19,6 +19,8 @@ public class ActionsManager
 	private AbstractAction cancelSpAction;
 	private AbstractAction showSettingsAction;
 	private AbstractAction showHelpAction;
+	private AbstractAction saveActiveResultPageAction;
+	private AbstractAction saveAllResultPagesAction;
 
 	private Controller controller;
 	private ResourceManager resourceManager;
@@ -98,6 +100,22 @@ public class ActionsManager
 			}
 		};
 
+		saveActiveResultPageAction = new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				controller.saveActiveResultPage();
+			}
+		};
+
+		saveAllResultPagesAction = new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				controller.saveAllResultPages();
+			}
+		};
+
 		resetActions();
 	}
 
@@ -142,6 +160,16 @@ public class ActionsManager
 				new Title(resourceManager, AppConstants.KEY_ACTION_SHOW_HELP).getText(),
 				new Title(resourceManager, AppConstants.KEY_ACTION_SHOW_HELP_DESCR).getText(),
 				AppConstants.ICON_NAME_QUESTION);
+
+		resetAction(saveActiveResultPageAction,
+				new Title(resourceManager, AppConstants.KEY_ACTION_SAVE_ACTIVE_RESULT_PAGE).getText(),
+				new Title(resourceManager, AppConstants.KEY_ACTION_SAVE_ACTIVE_RESULT_PAGE_DESCR).getText(),
+				AppConstants.ICON_NAME_SAVE);
+
+		resetAction(saveAllResultPagesAction,
+				new Title(resourceManager, AppConstants.KEY_ACTION_SAVE_ALL_RESULT_PAGES).getText(),
+				new Title(resourceManager, AppConstants.KEY_ACTION_SAVE_ALL_RESULT_PAGES_DESCR).getText(),
+				AppConstants.ICON_NAME_SAVE_ALL);
 	}
 
 	public AbstractAction getConnectDbAction()
@@ -184,6 +212,16 @@ public class ActionsManager
 		return showHelpAction;
 	}
 
+	public AbstractAction getSaveActiveResultPageAction()
+	{
+		return saveActiveResultPageAction;
+	}
+
+	public AbstractAction getSaveAllResultPagesAction()
+	{
+		return saveAllResultPagesAction;
+	}
+
 	private void resetAction(AbstractAction action,
 							 String actionName,
 							 String actionShortDescription,
@@ -194,9 +232,9 @@ public class ActionsManager
 		action.putValue(Action.SMALL_ICON, resourceManager.getImageIcon(actionIconName));
 	}
 
-	public void adjustToAppStatus(AbstractAction actionToAdjust)
+	public void adjustToAppStatus(AbstractAction... actionsToAdjust)
 	{
-		if (actionToAdjust == null)
+		if (actionsToAdjust == null || actionsToAdjust.length == 0)
 		{
 			connectDbAction.setEnabled(controller.checkAppStatuses(AppStatus.DISCONNECTED));
 			disconnectDbAction.setEnabled(controller.checkAppStatuses(AppStatus.CONNECTED));
@@ -204,9 +242,19 @@ public class ActionsManager
 			showSpInfoAction.setEnabled(controller.checkAppStatuses(AppStatus.CONNECTED) &&
 					controller.activeStoredProcExists());
 			showSettingsAction.setEnabled(controller.checkAppStatuses(AppStatus.DISCONNECTED));
-		}
-		else if (actionToAdjust.equals(showSpInfoAction))
-			showSpInfoAction.setEnabled(controller.checkAppStatuses(AppStatus.CONNECTED) &&
+
+			//TODO: Not like that exactly. Think about it later.
+			saveActiveResultPageAction.setEnabled(controller.checkAppStatuses(AppStatus.CONNECTED) &&
 					controller.activeStoredProcExists());
+			saveAllResultPagesAction.setEnabled(controller.checkAppStatuses(AppStatus.CONNECTED) &&
+					controller.activeStoredProcExists());
+		}
+		else
+			for (AbstractAction action : actionsToAdjust)
+				if (action.equals(showSpInfoAction) ||
+						action.equals(saveActiveResultPageAction) ||
+						action.equals(saveAllResultPagesAction))
+					action.setEnabled(controller.checkAppStatuses(AppStatus.CONNECTED) &&
+						controller.activeStoredProcExists());
 	}
 }

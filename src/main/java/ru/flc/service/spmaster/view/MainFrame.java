@@ -28,8 +28,10 @@ import ru.flc.service.spmaster.util.AppStatus;
 import ru.flc.service.spmaster.view.dialog.AboutDialog;
 import ru.flc.service.spmaster.view.dialog.ExecutionDialog;
 import ru.flc.service.spmaster.model.data.entity.DataPage;
+import ru.flc.service.spmaster.view.menu.MenuManager;
 import ru.flc.service.spmaster.view.table.*;
 import ru.flc.service.spmaster.view.table.filter.TableFilterListener;
+import ru.flc.service.spmaster.view.table.listener.StoredProcResultTableMouseListener;
 import ru.flc.service.spmaster.view.table.listener.StoredProcListMouseListener;
 import ru.flc.service.spmaster.view.table.listener.StoredProcListSelectionListener;
 import ru.flc.service.spmaster.view.table.renderer.ArbitraryTableCellRendererFactory;
@@ -49,8 +51,8 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -71,6 +73,8 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	private SettingsDialog settingsDialog;
 	private AboutDialog aboutDialog;
 
+	private MenuManager menuManager;
+
 	private StoredProcListTableModel procListTableModel;
 	private StoredProcListTable procListTable;
 	private Map<StoredProc, Integer> procListMap;
@@ -85,7 +89,8 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	private JTabbedPane procResultsTabs;
 	private JPanel procResultsPanel;
 	private Icon resultTabIcon;
-	private List<DataPage> dataPages;
+	private Map<Integer, DataPage> dataPageMap;
+	private StoredProcResultTableMouseListener resultTableMouseListener;
 
 	private LogEventTableModel logTableModel;
 	private LogEventTable logTable;
@@ -219,7 +224,7 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	@Override
 	public void adjustToAppStatus()
 	{
-		actionsManager.adjustToAppStatus(null);
+		actionsManager.adjustToAppStatus();
 
 		if (executionDialog != null && executionDialog.isVisible())
 			executionDialog.adjustToAppStatus(controller.checkAppStatuses(AppStatus.RUNNING));
@@ -308,16 +313,19 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 			StoredProcResultTable table = new StoredProcResultTable(model,
 					new ArbitraryTableCellRendererFactory(resourceManager), 1.3f);
 
+			table.addMouseListener(resultTableMouseListener);
+
 			JScrollPane scrollPane = new JScrollPane(table);
 			scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 			scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
 			procResultsTabs.addTab(null, resultTabIcon, scrollPane);
+			int tabIndex = procResultsTabs.getTabCount() - 1;
 
 			if (dataTable.getType() == DataTableType.OUTPUT_PARAMS)
-				dataPages.add(new DataPage(-100, null, dataTable));
+				dataPageMap.put(tabIndex, new DataPage(-100, null, dataTable));
 			else
-				dataPages.add(new DataPage(index++, null, dataTable));
+				dataPageMap.put(tabIndex, new DataPage(index++, null, dataTable));
 		}
 
 		resetProcResultTabs();
@@ -391,6 +399,33 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	}
 
 	@Override
+	public List<DataPage> getActiveResultPageList()
+	{
+		int pageIndex = procResultsTabs.getSelectedIndex();
+
+		if (pageIndex > -1 && !dataPageMap.isEmpty())
+		{
+			DataPage activeDataPage = dataPageMap.get(pageIndex);
+
+			List<DataPage> pageList = new LinkedList<>();
+			pageList.add(activeDataPage);
+
+			return pageList;
+		}
+		else
+			return null;
+	}
+
+	@Override
+	public List<DataPage> getAllResultPagesList()
+	{
+		if (!dataPageMap.isEmpty())
+			return new LinkedList<>(dataPageMap.values());
+		else
+			return null;
+	}
+
+	@Override
 	public void log(Exception e)
 	{
 		LogEventWriter.writeThrowable(e, logTableModel);
@@ -414,6 +449,7 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 		ViewUtils.adjustDialogs();
 
 		initActions();
+		initMenus();
 		initToolBar();
 
 		initProcListPanel();
@@ -441,6 +477,14 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	private void initActions()
 	{
 		actionsManager = new ActionsManager(controller, resourceManager);
+	}
+
+	private void initMenus()
+	{
+		menuManager = new MenuManager(actionsManager.getSaveActiveResultPageAction(),
+				actionsManager.getSaveAllResultPagesAction());
+
+		resultTableMouseListener = new StoredProcResultTableMouseListener(menuManager.getPopupMenu());
 	}
 
 	private void initToolBar()
@@ -513,7 +557,7 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 
 	private void initProcResultPanel()
 	{
-		dataPages = new ArrayList<>();
+		dataPageMap = new HashMap<>();
 		procResultsTabs = new JTabbedPane();
 
 		resultTabIcon = resourceManager.getImageIcon(AppConstants.ICON_NAME_DATA_TABLE);
@@ -615,7 +659,7 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	{
 		for (int i = 0; i < procResultsTabs.getTabCount(); i++)
 		{
-			DataPage dataPage = dataPages.get(i);
+			DataPage dataPage = dataPageMap.get(i);
 			String pageName;
 
 			if (dataPage.getDataTable().getType() == DataTableType.OUTPUT_PARAMS)
@@ -632,7 +676,7 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 
 	private void clearDataPages()
 	{
-		dataPages.clear();
+		dataPageMap.clear();
 
 		if (procResultsTabs.getTabCount() > 0)
 			procResultsTabs.removeAll();

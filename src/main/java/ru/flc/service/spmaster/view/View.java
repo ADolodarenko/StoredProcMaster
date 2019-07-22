@@ -3,6 +3,7 @@ package ru.flc.service.spmaster.view;
 import org.dav.service.settings.DatabaseSettings;
 import org.dav.service.settings.TransmissiveSettings;
 import org.dav.service.settings.ViewSettings;
+import ru.flc.service.spmaster.model.data.entity.DataPage;
 import ru.flc.service.spmaster.model.data.entity.DataTable;
 import ru.flc.service.spmaster.model.data.entity.StoredProc;
 import ru.flc.service.spmaster.model.settings.ViewConstraints;
@@ -31,4 +32,6 @@ public interface View
 	void showStoredProc(StoredProc storedProc);
 	void showStoredProcWarning(StoredProc storedProc);
 	File getResultFile();
+	List<DataPage> getActiveResultPageList();
+	List<DataPage> getAllResultPagesList();
 }
