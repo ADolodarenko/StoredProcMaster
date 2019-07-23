@@ -46,5 +46,15 @@ public class AppUtils
 			return null;
 	}
 
+	@SuppressWarnings("unchecked")
+	public static <X, Y> X getFirstValueFromArray(Class<X> valueClass, Y... array)
+	{
+		for (Y value : array)
+			if (valueClass.isAssignableFrom(value.getClass()))
+				return (X) value;
+
+		return null;
+	}
+
 	private AppUtils(){}
 }

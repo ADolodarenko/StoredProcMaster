@@ -3,8 +3,8 @@ package ru.flc.service.spmaster.model.file;
 import ru.flc.service.spmaster.model.data.dao.AccessObjectFactory;
 import ru.flc.service.spmaster.model.data.dao.FileAccessObject;
 import ru.flc.service.spmaster.model.data.entity.DataPage;
+import ru.flc.service.spmaster.model.settings.FileSettings;
 
-import java.io.File;
 import java.util.List;
 
 public class DefaultFileModel implements FileModel
@@ -12,9 +12,9 @@ public class DefaultFileModel implements FileModel
 	private FileAccessObject fileAccessObject;
 
 	@Override
-	public void saveStoredProcResult(File file, List<DataPage> dataPages) throws Exception
+	public void saveStoredProcResult(FileSettings fileSettings, List<DataPage> dataPages) throws Exception
 	{
-		fileAccessObject = AccessObjectFactory.getFileAccessObject(file);
+		fileAccessObject = AccessObjectFactory.getFileAccessObject(fileSettings);
 
 		if (fileAccessObject != null)
 		{

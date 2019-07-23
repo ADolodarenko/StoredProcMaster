@@ -8,6 +8,7 @@ import ru.flc.service.spmaster.model.data.entity.DataPage;
 import ru.flc.service.spmaster.model.data.entity.StoredProc;
 import ru.flc.service.spmaster.model.data.entity.StoredProcStatus;
 import ru.flc.service.spmaster.model.file.FileModel;
+import ru.flc.service.spmaster.model.settings.FileSettings;
 import ru.flc.service.spmaster.model.settings.OperationalSettings;
 import ru.flc.service.spmaster.model.settings.SettingsModel;
 import ru.flc.service.spmaster.util.AppConstants;
@@ -275,19 +276,24 @@ public class Controller
 	private void saveStoredProcedureResult(List<DataPage> dataPages)
 	{
 		if (dataPages != null && !dataPages.isEmpty())
-			if (checkFileModel() && checkView())
+			if (checkFileModel() && checkSettingsModel() && checkView())
 			{
 				File file  = view.getResultFile();
 
 				if (file != null)
+				{
+					FileSettings fileSettings = settingsModel.getFileSettings();
+					fileSettings.setFile(file);
+
 					try
 					{
-						fileModel.saveStoredProcResult(file, dataPages);
+						fileModel.saveStoredProcResult(fileSettings, dataPages);
 					}
 					catch (Exception e)
 					{
 						view.showException(e);
 					}
+				}
 			}
 	}
 

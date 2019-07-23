@@ -19,6 +19,7 @@ public class AppSettingsModel implements SettingsModel
 	private DatabaseSettings dbSettings;
 	private ViewSettings viewSettings;
 	private OperationalSettings operationalSettings;
+	private FileSettings fileSettings;
 
 	private ViewConstraints viewConstraints;
 
@@ -32,6 +33,7 @@ public class AppSettingsModel implements SettingsModel
 			dbSettings = new DatabaseSettings(this.resourceManager);
 			viewSettings = new ViewSettings(this.resourceManager, viewConstraints.getPreferredSize());
 			operationalSettings = new OperationalSettings(this.resourceManager);
+			fileSettings = new FileSettings(this.resourceManager);
 
 			loadAllSettings();
 		}
@@ -47,6 +49,7 @@ public class AppSettingsModel implements SettingsModel
 		loadSpecificSettings(dbSettings);
 		loadSpecificSettings(viewSettings);
 		loadSpecificSettings(operationalSettings);
+		loadSpecificSettings(fileSettings);
 	}
 
 	@Override
@@ -55,6 +58,7 @@ public class AppSettingsModel implements SettingsModel
 		saveSpecificSettings(dbSettings);
 		saveSpecificSettings(viewSettings);
 		saveSpecificSettings(operationalSettings);
+		saveSpecificSettings(fileSettings);
 	}
 
 	@Override
@@ -116,6 +120,12 @@ public class AppSettingsModel implements SettingsModel
 	}
 
 	@Override
+	public FileSettings getFileSettings()
+	{
+		return fileSettings;
+	}
+
+	@Override
 	public void updateViewBounds(View view)
 	{
 		if (view instanceof JFrame)
@@ -131,7 +141,7 @@ public class AppSettingsModel implements SettingsModel
 	@Override
 	public TransmissiveSettings[] getVisibleSettings()
 	{
-		return new TransmissiveSettings[]{dbSettings, viewSettings, operationalSettings};
+		return new TransmissiveSettings[]{dbSettings, viewSettings, operationalSettings, fileSettings};
 	}
 
 	@Override

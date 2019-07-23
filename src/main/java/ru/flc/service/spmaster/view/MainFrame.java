@@ -1,5 +1,6 @@
 package ru.flc.service.spmaster.view;
 
+import org.apache.commons.io.FilenameUtils;
 import org.dav.service.settings.DatabaseSettings;
 import org.dav.service.settings.TransmissiveSettings;
 import org.dav.service.settings.ViewSettings;
@@ -42,6 +43,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
@@ -393,9 +395,34 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 			fileChooser.addChoosableFileFilter(filter);
 
 		if (fileChooser.showSaveDialog(ViewUtils.getDialogOwner()) == JFileChooser.APPROVE_OPTION)
-			return fileChooser.getSelectedFile();
+			return getSelectedFile(fileChooser);
 		else
 			return null;
+	}
+
+	private File getSelectedFile(JFileChooser fileChooser)
+	{
+		File selectedFile = fileChooser.getSelectedFile();
+
+		if (selectedFile != null)
+		{
+			FileFilter filter = fileChooser.getFileFilter();
+
+			if (filter != null && FileNameExtensionFilter.class.isAssignableFrom(filter.getClass()))
+			{
+				FileNameExtensionFilter extensionFilter = (FileNameExtensionFilter) filter;
+
+				String expectedExtension = extensionFilter.getExtensions()[0].toLowerCase();
+				String actualExtension = FilenameUtils.getExtension(selectedFile.getName()).toLowerCase();
+
+				if (!actualExtension.equals(expectedExtension))
+					selectedFile = new File(selectedFile.getPath() + "." + expectedExtension);
+			}
+			else
+				selectedFile = null;
+		}
+
+		return selectedFile;
 	}
 
 	@Override

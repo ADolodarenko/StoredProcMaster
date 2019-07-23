@@ -20,6 +20,7 @@ public interface SettingsModel
 	ViewSettings getViewSettings();
 	DatabaseSettings getDatabaseSettings();
 	OperationalSettings getOperationalSettings();
+	FileSettings getFileSettings();
 	void updateViewBounds(View view);
 	TransmissiveSettings[] getVisibleSettings();
 }

@@ -111,14 +111,15 @@ public final class AppConstants
 	public static final String MESS_EXECUTOR_SP_INTERRUPTED = "interrupted.";
 	public static final String MESS_EXECUTOR_NULL = "null";
 	public static final String MESS_EXECUTOR_OUTPUT = "OUT ";
-	public static final String MESS_FILENAME_EXT_KEY_CSV = "CSV";
-	public static final String MESS_FILENAME_EXT_VALUE_CSV = "CSV";
-	public static final String MESS_FILENAME_EXT_KEY_TXT = "TXT";
-	public static final String MESS_FILENAME_EXT_VALUE_TXT = "TXT";
-	public static final String MESS_FILENAME_EXT_KEY_XLS = "XLS";
-	public static final String MESS_FILENAME_EXT_VALUE_XLS = "XLS";
-	public static final String MESS_FILENAME_EXT_KEY_XLSX = "XLSX";
-	public static final String MESS_FILENAME_EXT_VALUE_XLSX = "XLSX";
+	public static final String MESS_FILENAME_EXT_KEY_CSV = "csv";
+	public static final String MESS_FILENAME_EXT_VALUE_CSV = "csv";
+	public static final String MESS_FILENAME_EXT_KEY_TXT = "txt";
+	public static final String MESS_FILENAME_EXT_VALUE_TXT = "txt";
+	public static final String MESS_FILENAME_EXT_KEY_XLS = "xls";
+	public static final String MESS_FILENAME_EXT_VALUE_XLS = "xls";
+	public static final String MESS_FILENAME_EXT_KEY_XLSX = "xlsx";
+	public static final String MESS_FILENAME_EXT_VALUE_XLSX = "xlsx";
+	public static final String MESS_DEFAULT_FIELD_DELIMITER = "\t";
 
 	//Patterns
 	public static final String PATTERN_DATETIME = "dd.MM.yyyy HH:mm:ss";
