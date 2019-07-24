@@ -7,7 +7,7 @@ import ru.flc.service.spmaster.model.data.DataModel;
 import ru.flc.service.spmaster.model.data.entity.DataPage;
 import ru.flc.service.spmaster.model.data.entity.StoredProc;
 import ru.flc.service.spmaster.model.data.entity.StoredProcStatus;
-import ru.flc.service.spmaster.model.file.FileModel;
+import ru.flc.service.spmaster.model.data.FileModel;
 import ru.flc.service.spmaster.model.settings.FileSettings;
 import ru.flc.service.spmaster.model.settings.OperationalSettings;
 import ru.flc.service.spmaster.model.settings.SettingsModel;

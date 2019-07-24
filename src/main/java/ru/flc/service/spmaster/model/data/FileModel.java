@@ -1,4 +1,4 @@
-package ru.flc.service.spmaster.model.file;
+package ru.flc.service.spmaster.model.data;
 
 import ru.flc.service.spmaster.model.data.entity.DataPage;
 import ru.flc.service.spmaster.model.settings.FileSettings;

@@ -18,7 +18,7 @@ public class DateTimeTableCellRenderer extends DefaultTableCellRenderer
 		if (value != null && Date.class.isAssignableFrom(value.getClass()))
 		{
 			Date dateTime = (Date) value;
-			SimpleDateFormat format = new SimpleDateFormat(AppConstants.PATTERN_DATETIME);
+			SimpleDateFormat format = new SimpleDateFormat(AppConstants.DEFAULT_FORMAT_DATETIME);
 			label.setText(format.format(dateTime));
 		}
 

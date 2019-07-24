@@ -13,10 +13,7 @@ import ru.flc.service.spmaster.util.AppConstants;
 import ru.flc.service.spmaster.util.AppUtils;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class AseDataSource implements DataSource
 {
@@ -34,23 +31,23 @@ public class AseDataSource implements DataSource
 		Arrays.sort(preciseTypeNames);
 	}
 
-	private static String buildDatabaseUrl(DatabaseSettings settings)
+	private static String buildDatabaseUrl(DatabaseSettings dbSettings)
 	{
-		StringBuilder builder = new StringBuilder(settings.getConnectionPrefix());
+		StringBuilder builder = new StringBuilder();
+		fillDatabaseUrl(builder, dbSettings);
+
+		return builder.toString();
+	}
+
+	private static void fillDatabaseUrl(StringBuilder builder, DatabaseSettings settings)
+	{
+		builder.append(settings.getConnectionPrefix());
 		builder.append(':');
 		builder.append(settings.getHost());
 		builder.append(':');
 		builder.append(settings.getPort());
 		builder.append('/');
 		builder.append(settings.getCatalog());
-
-		/*
-		ClientHostName=computerName;
-		ClientHostProc=localProcessName;
-		ApplicationName=myAppName;
-		*/
-
-		return builder.toString();
 	}
 
 	private static String getServiceProcedureName(String serviceDatabaseName, String procedureBaseName)
@@ -470,6 +467,9 @@ public class AseDataSource implements DataSource
 	private String user;
 	private Password password;
 	private String serviceDbName;
+	private String clientHostName;
+	private String clientHostProc;
+	private String applicationName;
 	private String storedProcListGetterName = AppConstants.MESS_SP_LIST_GETTER_NAME;
 	private String storedProcTextGetterName = AppConstants.MESS_SP_TEXT_GETTER_NAME;
 
@@ -483,7 +483,9 @@ public class AseDataSource implements DataSource
 	@Override
 	public void open() throws SQLException
 	{
-		connection = DriverManager.getConnection(url, user, new String(password.getKey()));
+		Properties connectionProperties = buildConnectionProperties();
+
+		connection = DriverManager.getConnection(url, connectionProperties);
 
 		SQLWarning warning = connection.getWarnings();
 		if (warning != null)
@@ -525,29 +527,29 @@ public class AseDataSource implements DataSource
 			if ( dbSettings == null )
 				throw new IllegalArgumentException(Constants.EXCPT_DATABASE_SETTINGS_EMPTY);
 
-			resetParameters(dbSettings);
-
-			if (operSettings != null)
-				resetParameters(operSettings);
+			resetParameters(dbSettings, operSettings);
 		}
 		else
 			throw new IllegalArgumentException(Constants.EXCPT_DATABASE_SETTINGS_EMPTY);
 	}
 
-	private void resetParameters(DatabaseSettings settings) throws Exception
+	private void resetParameters(DatabaseSettings dbSettings, OperationalSettings operSettings) throws Exception
 	{
-		SybDriver sybDriver = (SybDriver) Class.forName(settings.getDriverName()).newInstance();
+		SybDriver sybDriver = (SybDriver) Class.forName(dbSettings.getDriverName()).newInstance();
 		DriverManager.registerDriver(sybDriver);
 
-		url = buildDatabaseUrl(settings);
-		dbName = settings.getCatalog();
-		user = settings.getUserName();
-		password = settings.getPassword();
-	}
+		url = buildDatabaseUrl(dbSettings);
+		dbName = dbSettings.getCatalog();
+		user = dbSettings.getUserName();
+		password = dbSettings.getPassword();
 
-	private void resetParameters(OperationalSettings settings)
-	{
-		serviceDbName = settings.getServiceCatalog();
+		if (operSettings != null)
+		{
+			serviceDbName = operSettings.getServiceCatalog();
+			clientHostName = operSettings.getClientHostName();
+			clientHostProc = operSettings.getClientHostProc();
+			applicationName = operSettings.getApplicationName();
+		}
 	}
 
 	@Override
@@ -710,6 +712,24 @@ public class AseDataSource implements DataSource
 		setStoredProcParameters(storedProc, spStatement, executor);
 
 		return spStatement;
+	}
+
+	private Properties buildConnectionProperties()
+	{
+		Properties properties = new Properties();
+		properties.put(AppConstants.MESS_CONN_PARAM_USER, user);
+		properties.put(AppConstants.MESS_CONN_PARAM_PASSWORD, new String(password.getKey()));
+
+		if (clientHostName != null && !clientHostName.isEmpty())
+			properties.put(AppConstants.MESS_CONN_PARAM_HOSTNAME, clientHostName);
+
+		if (clientHostProc != null && !clientHostProc.isEmpty())
+			properties.put(AppConstants.MESS_CONN_PARAM_HOSTPROC, clientHostProc);
+
+		if (applicationName != null && !applicationName.isEmpty())
+			properties.put(AppConstants.MESS_CONN_PARAM_APPLICATIONNAME, applicationName);
+
+		return properties;
 	}
 
 	private static class SingletonHelper

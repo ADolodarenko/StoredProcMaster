@@ -6,7 +6,7 @@ import org.dav.service.util.ResourceManager;
 import org.dav.service.view.ViewUtils;
 import ru.flc.service.spmaster.controller.Controller;
 import ru.flc.service.spmaster.model.data.DatabaseModel;
-import ru.flc.service.spmaster.model.file.DefaultFileModel;
+import ru.flc.service.spmaster.model.data.DefaultFileModel;
 import ru.flc.service.spmaster.model.settings.AppSettingsModel;
 import ru.flc.service.spmaster.util.AppConstants;
 import ru.flc.service.spmaster.util.AppResourceManager;

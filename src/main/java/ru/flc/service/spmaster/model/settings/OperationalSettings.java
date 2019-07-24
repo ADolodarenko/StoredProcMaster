@@ -5,13 +5,21 @@ import org.dav.service.settings.TransmissiveSettings;
 import org.dav.service.settings.parameter.ParameterHeader;
 import org.dav.service.util.Constants;
 import org.dav.service.util.ResourceManager;
+import org.dav.service.view.ExtensionInfoType;
+import org.dav.service.view.ViewUtils;
 import ru.flc.service.spmaster.util.AppConstants;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 
 public class OperationalSettings extends TransmissiveSettings
 {
 	private static final int PARAM_COUNT = 2;
+
+	private String clientHostName;
+	private String clientHostProc;
+	private String applicationName;
 
 	public OperationalSettings(ResourceManager resourceManager) throws Exception
 	{
@@ -28,6 +36,8 @@ public class OperationalSettings extends TransmissiveSettings
 	public void load() throws Exception
 	{
 		super.load();
+
+		tune();
 	}
 
 	@Override
@@ -39,6 +49,20 @@ public class OperationalSettings extends TransmissiveSettings
 		SettingsManager.saveSettings(resourceManager.getConfig());
 	}
 
+	private void tune()
+	{
+		try
+		{
+			InetAddress localHost = InetAddress.getLocalHost();
+			setClientHostName(localHost.getHostName());
+
+			setApplicationName(ViewUtils.getAssemblyInformationString(this, " ",
+					ExtensionInfoType.IMPLEMENTATION_TITLE));
+		}
+		catch (UnknownHostException e)
+		{}
+	}
+
 	public Charset getScriptCharset()
 	{
 		return ((Charset) paramMap.get(headers[0].getKeyString()).getValue());
@@ -47,5 +71,35 @@ public class OperationalSettings extends TransmissiveSettings
 	public String getServiceCatalog()
 	{
 		return ((String) paramMap.get(headers[1].getKeyString()).getValue());
+	}
+
+	public String getClientHostName()
+	{
+		return clientHostName;
+	}
+
+	public void setClientHostName(String clientHostName)
+	{
+		this.clientHostName = clientHostName;
+	}
+
+	public String getClientHostProc()
+	{
+		return clientHostProc;
+	}
+
+	public void setClientHostProc(String clientHostProc)
+	{
+		this.clientHostProc = clientHostProc;
+	}
+
+	public String getApplicationName()
+	{
+		return applicationName;
+	}
+
+	public void setApplicationName(String applicationName)
+	{
+		this.applicationName = applicationName;
 	}
 }

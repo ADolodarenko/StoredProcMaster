@@ -21,6 +21,7 @@ public final class AppConstants
 	//Class names
 	public static final String CLASS_NAME_LONG = "Long";
 	public static final String CLASS_NAME_FLOAT = "Float";
+	public static final String CLASS_NAME_BIGINTEGER = "BigInteger";
 	public static final String CLASS_NAME_BIGDECIMAL = "BigDecimal";
 	public static final String CLASS_NAME_TIMESTAMP = "Timestamp";
 	public static final String CLASS_NAME_NUMBEREDITOR = "NumberEditor";
@@ -55,6 +56,7 @@ public final class AppConstants
 
 	public static final String KEY_PARAM_SCRIPT_FILE_PATH = "ScriptFilePath";
 	public static final String KEY_PARAM_DB_SERVICE_CATALOG = "DatabaseServiceCatalog";
+	public static final String KEY_PARAM_DATETIME_FORMAT = "DateTimeFormat";
 
 	//Titles for main frame
 	public static final String KEY_PANEL_PROC_LIST = "PanelStoredProcList";
@@ -104,6 +106,11 @@ public final class AppConstants
 	public static final String MESS_SP_PARAM_COL_VALUE_DECIMAL = "DECIMAL";
 	public static final String MESS_SP_PARAM_COL_VALUE_VARCHAR = "VARCHAR";
 	public static final String MESS_WORKER_PROPERTY_NAME_STATE = "state";
+	public static final String MESS_CONN_PARAM_USER = "USER";
+	public static final String MESS_CONN_PARAM_PASSWORD = "PASSWORD";
+	public static final String MESS_CONN_PARAM_HOSTNAME = "HOSTNAME";
+	public static final String MESS_CONN_PARAM_HOSTPROC = "HOSTPROC";
+	public static final String MESS_CONN_PARAM_APPLICATIONNAME = "APPLICATIONNAME";
 
 	//Messages
 	public static final String MESS_EXECUTOR_SP_STARTED = " - started.";
@@ -121,8 +128,8 @@ public final class AppConstants
 	public static final String MESS_FILENAME_EXT_VALUE_XLSX = "xlsx";
 	public static final String MESS_DEFAULT_FIELD_DELIMITER = "\t";
 
-	//Patterns
-	public static final String PATTERN_DATETIME = "dd.MM.yyyy HH:mm:ss";
+	//Format
+	public static final String DEFAULT_FORMAT_DATETIME = "dd.MM.yyyy HH:mm:ss";
 
 	//Images
 	public static final String ICON_NAME_ABOUT = "hedgehogs.png";

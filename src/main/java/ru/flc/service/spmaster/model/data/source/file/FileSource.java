@@ -9,4 +9,5 @@ public interface FileSource extends Source
 {
 	void setDataSheet(String sheetName) throws Exception;
 	void addDataLine(List<DataElement> line) throws Exception;
+	void addBlankLine() throws Exception;
 }

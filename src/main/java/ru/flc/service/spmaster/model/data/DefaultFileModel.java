@@ -1,4 +1,4 @@
-package ru.flc.service.spmaster.model.file;
+package ru.flc.service.spmaster.model.data;
 
 import ru.flc.service.spmaster.model.data.dao.AccessObjectFactory;
 import ru.flc.service.spmaster.model.data.dao.FileAccessObject;
