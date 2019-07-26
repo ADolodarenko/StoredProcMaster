@@ -51,13 +51,13 @@ public abstract class ExcelFileSource extends DefaultFileSource
 
 			if (value == null)
 			{
-				cell.setBlank();
+				cell.setCellType(CellType.BLANK);
 			}
 			else if (Date.class.isAssignableFrom(valueClass))
 			{
 				cell.setCellStyle(dateCellStyle);
 				cell.setCellValue((Date) currentElement.getValue());
-				sheet.autoSizeColumn(i);
+				//sheet.autoSizeColumn(i);
 			}
 			else if (Number.class.isAssignableFrom(valueClass))
 			{
@@ -73,7 +73,7 @@ public abstract class ExcelFileSource extends DefaultFileSource
 	{
 		Row newRow = sheet.createRow(lastRowNumber++);
 		Cell cell = newRow.createCell(0);
-		cell.setBlank();
+		cell.setCellType(CellType.BLANK);
 	}
 
 	@Override

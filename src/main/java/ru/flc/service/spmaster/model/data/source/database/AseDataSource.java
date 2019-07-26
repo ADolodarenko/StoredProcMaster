@@ -524,13 +524,41 @@ public class AseDataSource implements DataSource
 					operSettings = (OperationalSettings) settings;
 			}
 
-			if ( dbSettings == null )
-				throw new IllegalArgumentException(Constants.EXCPT_DATABASE_SETTINGS_EMPTY);
+			checkSettings(dbSettings, operSettings);
 
 			resetParameters(dbSettings, operSettings);
 		}
 		else
 			throw new IllegalArgumentException(Constants.EXCPT_DATABASE_SETTINGS_EMPTY);
+	}
+
+	private void checkSettings(DatabaseSettings dbSettings, OperationalSettings operSettings) throws IllegalArgumentException
+	{
+		checkOneSetting(dbSettings, Constants.EXCPT_DATABASE_SETTINGS_EMPTY);
+		checkOneSetting(dbSettings.getDriverName(), AppConstants.EXCPT_DATABASE_DRIVER_WRONG);
+		checkOneSetting(dbSettings.getConnectionPrefix(), AppConstants.EXCPT_DATABASE_CONN_PREFIX_WRONG);
+		checkOneSetting(dbSettings.getHost(), AppConstants.EXCPT_DATABASE_HOST_WRONG);
+		checkOneSetting(dbSettings.getPort(), AppConstants.EXCPT_DATABASE_PORT_WRONG);
+		checkOneSetting(dbSettings.getCatalog(), AppConstants.EXCPT_DATABASE_CATALOG_WRONG);
+		checkOneSetting(dbSettings.getUserName(), AppConstants.EXCPT_DATABASE_USER_WRONG);
+		checkOneSetting(dbSettings.getPassword(), AppConstants.EXCPT_DATABASE_PASSWORD_WRONG);
+
+		if (operSettings != null)
+			checkOneSetting(operSettings.getServiceCatalog(), AppConstants.EXCPT_DATABASE_SERVICE_CATALOG_WRONG);
+	}
+
+	private void checkOneSetting(Object parameter, String message) throws IllegalArgumentException
+	{
+		if (parameter == null)
+			throw new IllegalArgumentException(message);
+
+		String parameterClassName = parameter.getClass().getSimpleName();
+
+		if (Constants.CLASS_NAME_STRING.equals(parameterClassName))
+		{
+			if ( ((String) parameter).isEmpty() )
+				throw new IllegalArgumentException(message);
+		}
 	}
 
 	private void resetParameters(DatabaseSettings dbSettings, OperationalSettings operSettings) throws Exception

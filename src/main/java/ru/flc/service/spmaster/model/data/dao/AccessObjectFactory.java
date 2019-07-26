@@ -14,22 +14,15 @@ import java.io.File;
 
 public class AccessObjectFactory
 {
-	public static DataAccessObject getDataAccessObject(Settings... settingsArray)
+	public static DataAccessObject getDataAccessObject(Settings... settingsArray) throws Exception
 	{
 		if (settingsArray == null || settingsArray.length == 0)
 			return null;
 
 		DataSource source = AseDataSource.getInstance();
+		source.tune(settingsArray);
 
-		DataAccessObject object = null;
-
-		try
-		{
-			source.tune(settingsArray);
-			object = new DataAccessObject(source);
-		}
-		catch (Exception e)
-		{}
+		DataAccessObject object = new DataAccessObject(source);
 
 		return object;
 	}

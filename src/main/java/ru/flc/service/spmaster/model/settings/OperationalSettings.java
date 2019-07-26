@@ -9,6 +9,7 @@ import org.dav.service.view.ExtensionInfoType;
 import org.dav.service.view.ViewUtils;
 import ru.flc.service.spmaster.util.AppConstants;
 
+import java.lang.management.ManagementFactory;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
@@ -58,6 +59,8 @@ public class OperationalSettings extends TransmissiveSettings
 
 			setApplicationName(ViewUtils.getAssemblyInformationString(this, " ",
 					ExtensionInfoType.IMPLEMENTATION_TITLE));
+
+			setClientHostProc(ManagementFactory.getRuntimeMXBean().getName());
 		}
 		catch (UnknownHostException e)
 		{}

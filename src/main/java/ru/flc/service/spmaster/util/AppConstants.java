@@ -17,6 +17,14 @@ public final class AppConstants
 	public static final String EXCPT_SP_RESULT_TABLE_EMPTY = "The stored procedure result is empty.";
 	public static final String EXCPT_ACTIONS_MANAGER_EMPTY = "The actions manager is empty.";
 	public static final String EXCPT_ACTION_LIST_EMPTY = "There are no actions specified.";
+	public static final String EXCPT_DATABASE_DRIVER_WRONG = "Wrong database driver specified.";
+	public static final String EXCPT_DATABASE_CONN_PREFIX_WRONG = "Wrong database connection prefix specified.";
+	public static final String EXCPT_DATABASE_HOST_WRONG = "Wrong database host specified.";
+	public static final String EXCPT_DATABASE_PORT_WRONG = "Wrong database port specified.";
+	public static final String EXCPT_DATABASE_CATALOG_WRONG = "Wrong database catalog specified.";
+	public static final String EXCPT_DATABASE_USER_WRONG = "Wrong database user specified.";
+	public static final String EXCPT_DATABASE_PASSWORD_WRONG = "Wrong database password specified.";
+	public static final String EXCPT_DATABASE_SERVICE_CATALOG_WRONG = "Wrong database service catalog specified.";
 
 	//Class names
 	public static final String CLASS_NAME_LONG = "Long";
