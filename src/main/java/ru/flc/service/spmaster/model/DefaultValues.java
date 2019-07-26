@@ -1,8 +1,10 @@
 package ru.flc.service.spmaster.model;
 
+import ru.flc.service.spmaster.util.AppUtils;
+
 import java.math.BigDecimal;
 import java.sql.*;
-import java.util.Calendar;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,9 +23,9 @@ public class DefaultValues
 		valuesMap.put(Long.class, new Long(0));
 		valuesMap.put(Float.class, new Float(0));
 		valuesMap.put(Double.class, new Double(0));
-		valuesMap.put(Date.class, new Date(Calendar.getInstance().getTimeInMillis()));
-		valuesMap.put(Time.class, new Time(Calendar.getInstance().getTimeInMillis()));
-		valuesMap.put(Timestamp.class, new Timestamp(Calendar.getInstance().getTimeInMillis()));
+		valuesMap.put(Date.class, AppUtils.getSqlDate(null));
+		valuesMap.put(Time.class, AppUtils.getSqlTime(null, ChronoUnit.SECONDS));
+		valuesMap.put(Timestamp.class, AppUtils.getSqlTimestamp(null, ChronoUnit.SECONDS));
 	}
 
 	public static Object getValue(Class<?> type)

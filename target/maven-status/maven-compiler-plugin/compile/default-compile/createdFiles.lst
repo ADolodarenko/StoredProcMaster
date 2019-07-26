@@ -9,6 +9,7 @@ ru\flc\service\spmaster\view\thirdparty\TableColumnAdjuster$ColumnAction.class
 ru\flc\service\spmaster\model\data\DatabaseModel.class
 ru\flc\service\spmaster\view\menu\MenuManager.class
 ru\flc\service\spmaster\model\data\source\database\AseDataSource$SingletonHelper.class
+ru\flc\service\spmaster\view\table\renderer\SqlDateTableCellRenderer.class
 ru\flc\service\spmaster\model\data\source\database\DataSource.class
 ru\flc\service\spmaster\model\data\source\Source.class
 ru\flc\service\spmaster\view\dialog\AboutDialog.class
@@ -17,6 +18,7 @@ ru\flc\service\spmaster\model\settings\OperationalSettings.class
 ru\flc\service\spmaster\view\table\listener\StoredProcResultTableMouseListener.class
 ru\flc\service\spmaster\model\data\source\file\DefaultFileSource.class
 ru\flc\service\spmaster\model\data\dao\FileAccessObject.class
+ru\flc\service\spmaster\view\table\editor\SqlDateCellEditor.class
 ru\flc\service\spmaster\view\thirdparty\TextLineNumber.class
 ru\flc\service\spmaster\controller\ActionsManager$7.class
 ru\flc\service\spmaster\model\data\source\file\FileSourceFactory.class
@@ -29,12 +31,12 @@ ru\flc\service\spmaster\model\data\entity\StoredProc.class
 ru\flc\service\spmaster\controller\ActionsManager$3.class
 ru\flc\service\spmaster\view\table\editor\TableCellEditorFactory.class
 ru\flc\service\spmaster\model\settings\FileSettings.class
-ru\flc\service\spmaster\view\table\editor\TimestampCellEditor.class
 ru\flc\service\spmaster\view\table\renderer\DateTimeTableCellRenderer.class
 ru\flc\service\spmaster\util\AppConstants.class
 ru\flc\service\spmaster\view\table\StoredProcResultTableModel.class
 ru\flc\service\spmaster\view\table\renderer\FiguredTableCellRenderer.class
 ru\flc\service\spmaster\model\settings\AppSettingsModel.class
+ru\flc\service\spmaster\view\table\editor\SqlTimestampCellEditor.class
 ru\flc\service\spmaster\controller\StoredProcExecutor.class
 ru\flc\service\spmaster\model\data\source\file\excel\XLSFileSource.class
 ru\flc\service\spmaster\controller\ActionsManager$2.class
@@ -49,6 +51,7 @@ ru\flc\service\spmaster\util\AppStatus.class
 ru\flc\service\spmaster\controller\Controller$1.class
 ru\flc\service\spmaster\view\table\renderer\StatusIconTableCellRenderer.class
 ru\flc\service\spmaster\view\table\StoredProcListTable.class
+ru\flc\service\spmaster\view\table\renderer\SqlTimeTableCellRenderer.class
 ru\flc\service\spmaster\view\MainFrame$1.class
 ru\flc\service\spmaster\view\thirdparty\TextLineNumber$1.class
 ru\flc\service\spmaster\view\table\StoredProcParamsTableModel.class
@@ -69,6 +72,7 @@ ru\flc\service\spmaster\model\data\source\file\plain\PlainTextFileSource.class
 ru\flc\service\spmaster\view\table\listener\StoredProcListMouseListener.class
 ru\flc\service\spmaster\model\data\dao\AccessObjectFactory.class
 ru\flc\service\spmaster\view\dialog\ExecutionDialog.class
+ru\flc\service\spmaster\view\table\editor\SqlTimeCellEditor.class
 ru\flc\service\spmaster\controller\ActionsManager.class
 ru\flc\service\spmaster\model\data\source\database\AseDataSource$1.class
 ru\flc\service\spmaster\model\data\source\file\excel\XLSXFileSource.class

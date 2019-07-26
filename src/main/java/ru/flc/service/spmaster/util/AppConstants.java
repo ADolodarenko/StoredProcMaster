@@ -138,6 +138,8 @@ public final class AppConstants
 
 	//Format
 	public static final String DEFAULT_FORMAT_DATETIME = "dd.MM.yyyy HH:mm:ss";
+	public static final String DEFAULT_FORMAT_DATE = "dd.MM.yyyy";
+	public static final String DEFAULT_FORMAT_TIME = "HH:mm:ss";
 
 	//Images
 	public static final String ICON_NAME_ABOUT = "hedgehogs.png";

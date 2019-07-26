@@ -31,12 +31,29 @@ public class TableCellEditorFactory
 
 	private TableCellEditor createEditor(TableCellEditorKey editorKey)
 	{
+		Class<?> valueClass = editorKey.getValueClass();
+		String valueClassName = valueClass.getSimpleName();
+		boolean confirmationRequired = editorKey.isConfirmationRequired();
+		int valuePrecision = editorKey.getPrecision();
+		short valueScale = editorKey.getScale();
+
+		TableCellEditor editor = createEditorForClassName(valueClassName, valuePrecision, valueScale, confirmationRequired);
+
+		if (editor == null)
+			editor = createEditorForClass(valueClass, valuePrecision, valueScale, confirmationRequired);
+
+		if (editor != null)
+			editors.put(editorKey, editor);
+
+		return editor;
+	}
+
+	private TableCellEditor createEditorForClassName(String className, int precision, short scale,
+													 boolean confirmationRequired)
+	{
 		TableCellEditor editor = null;
 
-		String forClassName = editorKey.getValueClass().getSimpleName();
-		boolean confirmationRequired = editorKey.isConfirmationRequired();
-
-		switch (forClassName)
+		switch (className)
 		{
 			case Constants.CLASS_NAME_BOOLEAN:
 				editor = new BooleanCellEditor(confirmationRequired);
@@ -58,9 +75,6 @@ public class TableCellEditorFactory
 						0.0, -Double.MAX_VALUE, Double.MAX_VALUE, 0.01);
 				break;
 			case AppConstants.CLASS_NAME_BIGDECIMAL:
-				int precision = editorKey.getPrecision();
-				short scale = editorKey.getScale();
-
 				BigDecimal currentValue = new BigDecimal(0.0);
 				currentValue.setScale(scale);
 
@@ -69,17 +83,26 @@ public class TableCellEditorFactory
 						precision, scale);
 				break;
 			case AppConstants.CLASS_NAME_TIMESTAMP:
-				editor = new TimestampCellEditor();
+				editor = new SqlTimestampCellEditor(confirmationRequired);
 				break;
 			case Constants.CLASS_NAME_STRING:
 				editor = new StringCellEditor(confirmationRequired);
 				break;
 		}
 
-		if (editor != null)
-			editors.put(editorKey, editor);
-
 		return editor;
 	}
 
+	private TableCellEditor createEditorForClass(Class<?> cls, int precision, short scale,
+													 boolean confirmationRequired)
+	{
+		TableCellEditor editor = null;
+
+		if (java.sql.Date.class.isAssignableFrom(cls))
+			editor = new SqlDateCellEditor(confirmationRequired);
+		else if (java.sql.Time.class.isAssignableFrom(cls))
+			editor = new SqlTimeCellEditor(confirmationRequired);
+
+		return editor;
+	}
 }

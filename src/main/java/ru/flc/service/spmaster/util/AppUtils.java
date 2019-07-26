@@ -1,5 +1,10 @@
 package ru.flc.service.spmaster.util;
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -44,6 +49,36 @@ public class AppUtils
 		}
 		else
 			return null;
+	}
+
+	public static Timestamp getSqlTimestamp(LocalDateTime localDateTime, ChronoUnit unitUpTo)
+	{
+		if (localDateTime == null)
+			localDateTime = LocalDateTime.now();
+
+		if (unitUpTo != null)
+			localDateTime = localDateTime.truncatedTo(unitUpTo);
+
+		return Timestamp.valueOf(localDateTime);
+	}
+
+	public static java.sql.Date getSqlDate(LocalDate localDate)
+	{
+		if (localDate == null)
+			localDate = LocalDate.now();
+
+		return java.sql.Date.valueOf(localDate);
+	}
+
+	public static java.sql.Time getSqlTime(LocalTime localTime, ChronoUnit unitUpTo)
+	{
+		if (localTime == null)
+			localTime = LocalTime.now();
+
+		if (unitUpTo != null)
+			localTime = localTime.truncatedTo(unitUpTo);
+
+		return java.sql.Time.valueOf(localTime);
 	}
 
 	@SuppressWarnings("unchecked")

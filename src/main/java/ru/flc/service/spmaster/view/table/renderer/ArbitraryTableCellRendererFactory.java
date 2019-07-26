@@ -4,7 +4,6 @@ import org.dav.service.util.ResourceManager;
 import org.dav.service.view.table.renderer.TableCellRendererFactory;
 
 import javax.swing.table.TableCellRenderer;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,7 +40,11 @@ public class ArbitraryTableCellRendererFactory extends TableCellRendererFactory
 	{
 		TableCellRenderer renderer = null;
 
-		if (Date.class.isAssignableFrom(dataClass))
+		if (java.sql.Date.class.isAssignableFrom(dataClass))
+			renderer = new SqlDateTableCellRenderer();
+		else if (java.sql.Time.class.isAssignableFrom(dataClass))
+			renderer = new SqlTimeTableCellRenderer();
+		else if (java.util.Date.class.isAssignableFrom(dataClass))
 			renderer = new DateTimeTableCellRenderer();
 
 		if (renderer != null)
