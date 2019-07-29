@@ -11,7 +11,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.util.Map;
 
-public class StatusIconTableCellRenderer extends DefaultTableCellRenderer
+public class StatusIconCellRenderer extends DefaultTableCellRenderer
 {
 	private static void setLabelToolTipText(JTable table, int row, StoredProcStatus procStatus, JLabel cellLabel)
 	{
@@ -33,7 +33,7 @@ public class StatusIconTableCellRenderer extends DefaultTableCellRenderer
 	private Map<StoredProcStatus, ImageIcon> statusIconMap;
 	private boolean keepTheText;
 
-	public StatusIconTableCellRenderer(Map<StoredProcStatus, ImageIcon> statusIconMap, boolean keepTheText)
+	public StatusIconCellRenderer(Map<StoredProcStatus, ImageIcon> statusIconMap, boolean keepTheText)
 	{
 		this.statusIconMap = statusIconMap;
 		this.keepTheText = keepTheText;

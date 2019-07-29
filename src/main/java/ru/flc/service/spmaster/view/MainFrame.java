@@ -35,7 +35,7 @@ import ru.flc.service.spmaster.view.table.filter.TableFilterListener;
 import ru.flc.service.spmaster.view.table.listener.StoredProcResultTableMouseListener;
 import ru.flc.service.spmaster.view.table.listener.StoredProcListMouseListener;
 import ru.flc.service.spmaster.view.table.listener.StoredProcListSelectionListener;
-import ru.flc.service.spmaster.view.table.renderer.ArbitraryTableCellRendererFactory;
+import ru.flc.service.spmaster.view.table.renderer.ArbitraryCellRendererFactory;
 import ru.flc.service.spmaster.view.thirdparty.TextLineNumber;
 import ru.flc.service.spmaster.view.util.ViewComponents;
 
@@ -313,7 +313,7 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 		{
 			StoredProcResultTableModel model = new StoredProcResultTableModel(dataTable);
 			StoredProcResultTable table = new StoredProcResultTable(model,
-					new ArbitraryTableCellRendererFactory(resourceManager), 1.3f);
+					new ArbitraryCellRendererFactory(resourceManager), 1.3f);
 
 			table.addMouseListener(resultTableMouseListener);
 
@@ -604,7 +604,7 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 		LogEventWriter.setLogger(LOGGER);
 
 		logTableModel = new LogEventTableModel(resourceManager, null);
-		logTable = new LogEventTable(logTableModel);
+		logTable = new TooltipLogEventTable(logTableModel);
 
 		logPane = new JScrollPane(logTable);
 		logPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);

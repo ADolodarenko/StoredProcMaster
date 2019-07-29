@@ -25,12 +25,14 @@ public class Main
 		setLogger();
 
 		ResourceManager resourceManager = AppResourceManager.getInstance();
-		ViewUtils.resetResourceManager(resourceManager);
 
 		Controller controller = new Controller();
 		controller.setSettingsModel(new AppSettingsModel(resourceManager));
 		controller.setDataModel(new DatabaseModel());
 		controller.setFileModel(new DefaultFileModel());
+
+		controller.resetCurrentLocale();
+		ViewUtils.resetResourceManager(resourceManager);
 
 		EventQueue.invokeLater(() -> runGUI(controller));
 	}

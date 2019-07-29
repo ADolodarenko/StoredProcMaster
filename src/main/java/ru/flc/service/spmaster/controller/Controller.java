@@ -303,7 +303,8 @@ public class Controller
 		{
 			settingsModel.resetCurrentLocale();
 
-			view.repaintFrame();
+			if (checkView())
+				view.repaintFrame();
 		}
 	}
 

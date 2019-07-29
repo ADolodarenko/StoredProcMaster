@@ -1,6 +1,7 @@
 package ru.flc.service.spmaster.view.table.editor;
 
 import org.dav.service.util.Constants;
+import org.dav.service.util.ResourceManager;
 import ru.flc.service.spmaster.util.AppConstants;
 
 import javax.swing.table.TableCellEditor;
@@ -10,11 +11,16 @@ import java.util.Map;
 
 public class TableCellEditorFactory
 {
+	private ResourceManager resourceManager;
 	private Map<TableCellEditorKey, TableCellEditor> editors;
 
-	public TableCellEditorFactory()
+	public TableCellEditorFactory(ResourceManager resourceManager)
 	{
-		editors = new HashMap<>();
+		if (resourceManager == null)
+			throw new IllegalArgumentException(Constants.EXCPT_RESOURCE_MANAGER_EMPTY);
+
+		this.resourceManager = resourceManager;
+		this.editors = new HashMap<>();
 	}
 
 	public TableCellEditor getEditor(Class<?> dataClass, int precision, short scale, boolean confirmationRequired)
@@ -79,6 +85,7 @@ public class TableCellEditorFactory
 				currentValue.setScale(scale);
 
 				editor = new BigDecimalCellEditor(confirmationRequired,
+						resourceManager,
 						currentValue, null, null, new BigDecimal(1),
 						precision, scale);
 				break;

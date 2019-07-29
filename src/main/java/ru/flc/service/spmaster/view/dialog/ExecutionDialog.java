@@ -6,7 +6,6 @@ import org.dav.service.view.Title;
 import org.dav.service.view.TitleAdjuster;
 import org.dav.service.view.UsableGBC;
 import org.dav.service.view.dialog.SettingsDialogInvoker;
-import org.dav.service.view.table.renderer.TableCellRendererFactory;
 import ru.flc.service.spmaster.model.data.entity.StoredProc;
 import ru.flc.service.spmaster.model.data.entity.StoredProcParamType;
 import ru.flc.service.spmaster.model.data.entity.StoredProcParameter;
@@ -14,7 +13,7 @@ import ru.flc.service.spmaster.util.AppConstants;
 import ru.flc.service.spmaster.view.table.StoredProcParamsTable;
 import ru.flc.service.spmaster.view.table.StoredProcParamsTableModel;
 import ru.flc.service.spmaster.view.table.editor.TableCellEditorFactory;
-import ru.flc.service.spmaster.view.table.renderer.ArbitraryTableCellRendererFactory;
+import ru.flc.service.spmaster.view.table.renderer.ArbitraryCellRendererFactory;
 import ru.flc.service.spmaster.view.util.ViewComponents;
 import ru.flc.service.spmaster.view.thirdparty.TableColumnAdjuster;
 
@@ -23,8 +22,6 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -200,8 +197,8 @@ public class ExecutionDialog extends JDialog
 		tableModel = new StoredProcParamsTableModel(resourceManager, StoredProcParameter.getTitleKeys(), null);
 
 		table = new StoredProcParamsTable(tableModel,
-				new TableCellEditorFactory(),
-				new ArbitraryTableCellRendererFactory(resourceManager), 1.3F);
+				new TableCellEditorFactory(resourceManager),
+				new ArbitraryCellRendererFactory(resourceManager), 1.3F);
 		table.setFillsViewportHeight(false);
 
 		columnAdjuster = new TableColumnAdjuster(table, 6, 200);

@@ -1,6 +1,7 @@
 package ru.flc.service.spmaster.view.table;
 
 import org.dav.service.util.Constants;
+import org.dav.service.util.ResourceManager;
 import org.dav.service.view.table.renderer.TableCellRendererFactory;
 import org.dav.service.view.table.renderer.TableHeaderRenderer;
 import ru.flc.service.spmaster.model.data.entity.StoredProcParameter;
@@ -26,7 +27,8 @@ public class StoredProcParamsTable extends JTable
 
 	private TableCellRenderer baseHeaderRenderer;
 
-	public StoredProcParamsTable(TableModel model, TableCellEditorFactory editorFactory,
+	public StoredProcParamsTable(TableModel model,
+								 TableCellEditorFactory editorFactory,
 								 TableCellRendererFactory rendererFactory,
 								 float rowHeightCoefficient)
 	{
