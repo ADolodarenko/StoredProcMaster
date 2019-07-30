@@ -1,43 +1,42 @@
 package ru.flc.service.spmaster.view.table.editor;
 
+import org.dav.service.util.ResourceManager;
 import org.dav.service.view.ViewUtils;
 import ru.flc.service.spmaster.util.AppConstants;
 import ru.flc.service.spmaster.view.util.ViewComponents;
 
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
-import javax.swing.text.DefaultFormatter;
 import java.awt.*;
-import java.text.ParseException;
 
-public class FloatCellEditor extends AbstractCellEditor implements TableCellEditor
+public class FloatCellEditor extends NumericCellEditor implements TableCellEditor
 {
 	private JSpinner editor;
-
 	private boolean confirmationRequired;
 	private Object oldValue;
 
 	public FloatCellEditor(boolean confirmationRequired,
-						  float initialValue, float minimum, float maximum, float stepSize)
+						  ResourceManager resourceManager,
+						  float initialValue, float minimum, float maximum, float stepSize,
+						  int precision, short scale)
 	{
+		super(resourceManager, precision, scale);
+
 		SpinnerNumberModel model = new SpinnerNumberModel(Float.valueOf(initialValue),
 				Float.valueOf(minimum), Float.valueOf(maximum), Float.valueOf(stepSize));
 
-		editor = new JSpinner(model);
-
-		DefaultFormatter formatter = ViewComponents.getSpinnerNumberFormatter(editor);
-		if (formatter != null)
-			formatter.setCommitsOnValidEdit(true);
-
+		this.editor = new JSpinner(model);
+		this.editorField = ViewComponents.getSpinnerNumberTextField(this.editor);
 		this.confirmationRequired = confirmationRequired;
 	}
-
 
 	@Override
 	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column)
 	{
 		if (confirmationRequired)
 			oldValue = value;
+
+		customize();
 
 		editor.setValue(Float.valueOf(0.0F));
 

@@ -1,6 +1,7 @@
 package ru.flc.service.spmaster.view.table.editor;
 
 import org.dav.service.util.Constants;
+import org.dav.service.util.ResourceManager;
 import org.dav.service.view.ViewUtils;
 import ru.flc.service.spmaster.view.util.ViewComponents;
 
@@ -9,23 +10,27 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.text.DefaultFormatter;
 import java.awt.*;
 
-public class IntegerCellEditor extends AbstractCellEditor implements TableCellEditor
+public class IntegerCellEditor extends NumericCellEditor implements TableCellEditor
 {
 	private JSpinner editor;
-
 	private boolean confirmationRequired;
 	private Object oldValue;
 
 	public IntegerCellEditor(boolean confirmationRequired,
-							 int initialValue, int minimum, int maximum, int stepSize)
+							 ResourceManager resourceManager,
+							 int initialValue, int minimum, int maximum, int stepSize,
+							 int precision, short scale)
 	{
+		super(resourceManager, precision, scale);
+
 		SpinnerNumberModel model = new SpinnerNumberModel(initialValue, minimum, maximum, stepSize);
 
-		editor = new JSpinner(model);
+		this.editor = new JSpinner(model);
+		this.editorField = ViewComponents.getSpinnerNumberTextField(this.editor);
 
-		DefaultFormatter formatter = ViewComponents.getSpinnerNumberFormatter(editor);
+		/*DefaultFormatter formatter = ViewComponents.getSpinnerNumberFormatter(editor);
 		if (formatter != null)
-			formatter.setCommitsOnValidEdit(true);
+			formatter.setCommitsOnValidEdit(true);*/
 
 		this.confirmationRequired = confirmationRequired;
 	}
@@ -35,6 +40,8 @@ public class IntegerCellEditor extends AbstractCellEditor implements TableCellEd
 	{
 		if (confirmationRequired)
 			oldValue = value;
+
+		customize();
 
 		editor.setValue(0);
 

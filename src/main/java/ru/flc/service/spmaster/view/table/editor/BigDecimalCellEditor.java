@@ -7,20 +7,15 @@ import ru.flc.service.spmaster.util.AppConstants;
 
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
-import javax.swing.text.DefaultFormatter;
-import javax.swing.text.DefaultFormatterFactory;
-import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.Locale;
 
 import org.scijava.ui.swing.widget.SpinnerBigDecimalModel;
+import ru.flc.service.spmaster.view.util.ViewComponents;
 
-public class BigDecimalCellEditor extends AbstractCellEditor implements TableCellEditor
+public class BigDecimalCellEditor extends NumericCellEditor implements TableCellEditor
 {
 	private static String getFormatPattern(int precision, short scale)
 	{
@@ -50,27 +45,16 @@ public class BigDecimalCellEditor extends AbstractCellEditor implements TableCel
 	}
 
 	private JSpinner editor;
-
 	private boolean confirmationRequired;
-	private ResourceManager resourceManager;
 	private Object oldValue;
 	private BigDecimal zeroValue;
-
-	private int precision;
-	private short scale;
 
 	public BigDecimalCellEditor(boolean confirmationRequired,
 								ResourceManager resourceManager,
 								BigDecimal initialValue, BigDecimal minimum, BigDecimal maximum, BigDecimal stepSize,
 								int precision, short scale)
 	{
-		if (resourceManager == null)
-			throw new IllegalArgumentException(Constants.EXCPT_RESOURCE_MANAGER_EMPTY);
-
-		this.resourceManager = resourceManager;
-
-		this.precision = precision;
-		this.scale = scale;
+		super(resourceManager, precision, scale);
 
 		BigDecimal minValue = (minimum != null) ? minimum : getUtmostDecimal(precision, scale, true);
 		BigDecimal maxValue = (maximum != null) ? maximum : getUtmostDecimal(precision, scale, false);
@@ -80,7 +64,7 @@ public class BigDecimalCellEditor extends AbstractCellEditor implements TableCel
 		this.zeroValue = new BigDecimal(new BigInteger("0"), this.scale);
 
 		this.editor = new JSpinner(model);
-
+		this.editorField = ViewComponents.getSpinnerNumberTextField(this.editor);
 		this.confirmationRequired = confirmationRequired;
 	}
 
@@ -90,7 +74,7 @@ public class BigDecimalCellEditor extends AbstractCellEditor implements TableCel
 		if (confirmationRequired)
 			oldValue = value;
 
-		resetEditorFormat();
+		customize();
 
 		editor.setValue(zeroValue);
 
@@ -117,31 +101,5 @@ public class BigDecimalCellEditor extends AbstractCellEditor implements TableCel
 			newValue = ViewUtils.confirmedValue(oldValue, newValue);
 
 		return newValue;
-	}
-
-	private void resetEditorFormat()
-	{
-		JComponent innerEditorComponent = editor.getEditor();
-
-		if (innerEditorComponent.getClass().getSimpleName().equals(AppConstants.CLASS_NAME_NUMBEREDITOR))
-		{
-			JSpinner.NumberEditor innerEditor = (JSpinner.NumberEditor) innerEditorComponent;
-			JFormattedTextField editorField = innerEditor.getTextField();
-
-			//DefaultFormatter formatter = new NumberFormatter(new DecimalFormat(getFormatPattern(precision, scale)));
-			NumberFormat format = DecimalFormat.getInstance(this.resourceManager.getCurrentLocale());
-			format.setMinimumIntegerDigits(1);
-			format.setMaximumIntegerDigits(precision - scale);
-			format.setMinimumFractionDigits(0);
-			format.setMaximumFractionDigits(scale);
-			DefaultFormatter formatter = new NumberFormatter(format);
-
-			formatter.setValueClass(editorField.getValue().getClass());
-
-			formatter.setCommitsOnValidEdit(true);
-
-			DefaultFormatterFactory factory = new DefaultFormatterFactory(formatter, formatter, formatter);
-			editorField.setFormatterFactory(factory);
-		}
 	}
 }

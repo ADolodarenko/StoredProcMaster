@@ -9,7 +9,9 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.DefaultFormatter;
+import javax.swing.text.NumberFormatter;
 import java.awt.*;
+import java.text.DecimalFormat;
 
 public class ViewComponents
 {
