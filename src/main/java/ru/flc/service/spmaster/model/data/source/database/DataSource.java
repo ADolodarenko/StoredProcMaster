@@ -1,6 +1,6 @@
 package ru.flc.service.spmaster.model.data.source.database;
 
-import ru.flc.service.spmaster.controller.Executor;
+import ru.flc.service.spmaster.controller.executor.Executor;
 import ru.flc.service.spmaster.model.data.entity.DataTable;
 import ru.flc.service.spmaster.model.data.entity.StoredProc;
 import ru.flc.service.spmaster.model.data.source.Source;

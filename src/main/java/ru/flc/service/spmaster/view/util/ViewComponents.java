@@ -9,9 +9,9 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.DefaultFormatter;
-import javax.swing.text.NumberFormatter;
 import java.awt.*;
-import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ViewComponents
 {
@@ -25,6 +25,18 @@ public class ViewComponents
 			new FileNameExtensionFilter(AppConstants.MESS_FILENAME_EXT_KEY_XLSX,
 										AppConstants.MESS_FILENAME_EXT_VALUE_XLSX)
 	};
+
+	private static final Map<String, Title> titlesMap = new HashMap<>();
+
+	public static void addTitle(String key, Title title)
+	{
+		titlesMap.put(key, title);
+	}
+
+	public static Title getTitle(String key)
+	{
+		return titlesMap.get(key);
+	}
 
 	public static JPanel getTitledPanelWithBorderLayout(ResourceManager resourceManager, TitleAdjuster titleAdjuster,
 														Component inhabitant, Object constraints, Border baseBorder,
@@ -78,6 +90,16 @@ public class ViewComponents
 		}
 
 		return formatter;
+	}
+
+	public static void setComponentAnySize(JComponent component, Dimension size)
+	{
+		if (component != null && size != null)
+		{
+			component.setMinimumSize(size);
+			component.setPreferredSize(size);
+			component.setMaximumSize(size);
+		}
 	}
 
 	public static FileNameExtensionFilter[] getFileNameExtensionFilters()

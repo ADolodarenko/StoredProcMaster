@@ -3,6 +3,7 @@ package ru.flc.service.spmaster.view;
 import org.dav.service.settings.DatabaseSettings;
 import org.dav.service.settings.TransmissiveSettings;
 import org.dav.service.settings.ViewSettings;
+import org.dav.service.view.Title;
 import ru.flc.service.spmaster.model.data.entity.DataPage;
 import ru.flc.service.spmaster.model.data.entity.DataTable;
 import ru.flc.service.spmaster.model.data.entity.StoredProc;
@@ -34,4 +35,8 @@ public interface View
 	File getResultFile();
 	List<DataPage> getActiveResultPageList();
 	List<DataPage> getAllResultPagesList();
+	void showProcess(String messageKey);
+	void showProcessMessage(String messageKey);
+	void addTitle(String titleKey);
+	Title getTitle(String titleKey);
 }

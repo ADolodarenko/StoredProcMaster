@@ -5,7 +5,7 @@ import org.dav.service.settings.DatabaseSettings;
 import org.dav.service.settings.Settings;
 import org.dav.service.settings.type.Password;
 import org.dav.service.util.Constants;
-import ru.flc.service.spmaster.controller.Executor;
+import ru.flc.service.spmaster.controller.executor.Executor;
 import ru.flc.service.spmaster.model.DefaultValues;
 import ru.flc.service.spmaster.model.data.entity.*;
 import ru.flc.service.spmaster.model.settings.OperationalSettings;
@@ -306,7 +306,7 @@ public class AseDataSource implements DataSource
 		builder.delete(builder.length() - 2, builder.length());
 		builder.append(AppConstants.MESS_EXECUTOR_SP_STARTED);
 
-		executor.publishMessages(builder.toString());
+		executor.publishObjects(builder.toString());
 	}
 
 	private static void executeStatement(PreparedStatement statement,
@@ -322,7 +322,7 @@ public class AseDataSource implements DataSource
 			SQLException exception = executor.getException();
 
 			if (exception != null)
-				procExecutor.publishMessages(exception.toString());
+				procExecutor.publishObjects(exception.toString());
 			else if (executor.isResultSet())
 				resultTables.add(getDataTable(executor.getResultSet()));
 			else
@@ -330,7 +330,7 @@ public class AseDataSource implements DataSource
 				int updateCount = executor.getUpdateCount();
 
 				if (updateCount >= 0)
-					procExecutor.publishMessages(String.format(Constants.MESS_ROWS_AFFECTED, updateCount));
+					procExecutor.publishObjects(String.format(Constants.MESS_ROWS_AFFECTED, updateCount));
 				else
 					done = true;
 			}
@@ -346,7 +346,7 @@ public class AseDataSource implements DataSource
 
 		while (warning != null)
 		{
-			procExecutor.publishMessages(warning.getMessage());
+			procExecutor.publishObjects(warning.getMessage());
 
 			warning = warning.getNextWarning();
 		}
@@ -403,7 +403,7 @@ public class AseDataSource implements DataSource
 
 		builder.delete(builder.length() - 2, builder.length());
 		builder.append(AppConstants.MESS_EXECUTOR_SP_ENDED);
-		executor.publishMessages(builder.toString());
+		executor.publishObjects(builder.toString());
 	}
 
 	private static void showInterruptedStatus(StoredProc storedProc, Executor executor)
@@ -413,7 +413,7 @@ public class AseDataSource implements DataSource
 		builder.append(": ");
 		builder.append(AppConstants.MESS_EXECUTOR_SP_INTERRUPTED);
 
-		executor.publishMessages(builder.toString());
+		executor.publishObjects(builder.toString());
 	}
 
 	private static DataTable getDataTable(ResultSet resultSet) throws SQLException

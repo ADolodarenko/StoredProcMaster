@@ -1,7 +1,7 @@
 package ru.flc.service.spmaster.model.data;
 
 import org.dav.service.settings.Settings;
-import ru.flc.service.spmaster.controller.Executor;
+import ru.flc.service.spmaster.controller.executor.Executor;
 import ru.flc.service.spmaster.model.data.entity.DataTable;
 import ru.flc.service.spmaster.model.data.entity.StoredProc;
 

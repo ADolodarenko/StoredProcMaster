@@ -1,27 +1,24 @@
-package ru.flc.service.spmaster.controller;
+package ru.flc.service.spmaster.controller.executor;
 
 import ru.flc.service.spmaster.model.data.DataModel;
 import ru.flc.service.spmaster.model.data.entity.DataTable;
 import ru.flc.service.spmaster.model.data.entity.StoredProc;
 import ru.flc.service.spmaster.view.View;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StoredProcExecutor extends SwingWorker<Void, String> implements Executor
+public class StoredProcExecutor extends AbstractExecutor<Void, Object>
 {
-	private boolean interrupted;
-
 	private StoredProc storedProc;
 	private DataModel model;
 	private View view;
 
 	private List<DataTable> resultTables;
 
-	public StoredProcExecutor(StoredProc storedProc, DataModel model, View view)
+	public StoredProcExecutor(StoredProc storedProc, DataModel model, View view, String executionMessage)
 	{
-		this.interrupted = false;
+		super(executionMessage);
 
 		this.storedProc = storedProc;
 		this.model = model;
@@ -41,7 +38,7 @@ public class StoredProcExecutor extends SwingWorker<Void, String> implements Exe
 			}
 			catch (Exception e)
 			{
-				view.addToLog(e);
+				publishObjects(e);
 			}
 		}
 
@@ -49,10 +46,10 @@ public class StoredProcExecutor extends SwingWorker<Void, String> implements Exe
 	}
 
 	@Override
-	protected void process(List<String> chunks)
+	protected void process(List<Object> chunks)
 	{
-		for (String message : chunks)
-			view.addToLog(message);
+		for (Object chunk : chunks)
+			view.addToLog(chunk);
 	}
 
 	@Override
@@ -60,23 +57,5 @@ public class StoredProcExecutor extends SwingWorker<Void, String> implements Exe
 	{
 		if ( !isInterrupted() )
 			view.showStoredProcOutput(resultTables);
-	}
-
-	@Override
-	public void publishMessages(String... messages)
-	{
-		publish(messages);
-	}
-
-	@Override
-	public void interrupt()
-	{
-		interrupted = true;
-	}
-
-	@Override
-	public boolean isInterrupted()
-	{
-		return interrupted;
 	}
 }

@@ -29,6 +29,7 @@ import ru.flc.service.spmaster.util.AppStatus;
 import ru.flc.service.spmaster.view.dialog.AboutDialog;
 import ru.flc.service.spmaster.view.dialog.ExecutionDialog;
 import ru.flc.service.spmaster.model.data.entity.DataPage;
+import ru.flc.service.spmaster.view.dialog.ProcessDialog;
 import ru.flc.service.spmaster.view.menu.MenuManager;
 import ru.flc.service.spmaster.view.table.*;
 import ru.flc.service.spmaster.view.table.filter.TableFilterListener;
@@ -74,6 +75,7 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	private ExecutionDialog executionDialog;
 	private SettingsDialog settingsDialog;
 	private AboutDialog aboutDialog;
+	private ProcessDialog processDialog;
 
 	private MenuManager menuManager;
 
@@ -450,6 +452,52 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 			return new LinkedList<>(dataPageMap.values());
 		else
 			return null;
+	}
+
+	@Override
+	public void showProcess(String messageKey)
+	{
+		boolean isRunning = controller.checkAppStatuses(AppStatus.RUNNING);
+
+		if (isRunning || processDialog != null)
+		{
+			if (processDialog == null)
+			{
+				try
+				{
+					processDialog = new ProcessDialog(this, this, resourceManager);
+				}
+				catch (Exception e)
+				{
+					log(e);
+				}
+			}
+
+			if (isRunning)
+				processDialog.setMessage(getTitle(messageKey).getText());
+
+			if (processDialog != null)
+				processDialog.setVisible(isRunning);
+		}
+	}
+
+	@Override
+	public void showProcessMessage(String messageKey)
+	{
+		if (processDialog != null && processDialog.isVisible())
+			processDialog.setMessage(getTitle(messageKey).getText());
+	}
+
+	@Override
+	public void addTitle(String titleKey)
+	{
+		ViewComponents.addTitle(titleKey, new Title(resourceManager, titleKey));
+	}
+
+	@Override
+	public Title getTitle(String titleKey)
+	{
+		return ViewComponents.getTitle(titleKey);
 	}
 
 	@Override

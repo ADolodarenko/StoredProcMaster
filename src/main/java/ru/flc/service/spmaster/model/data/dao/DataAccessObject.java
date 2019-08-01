@@ -1,7 +1,7 @@
 package ru.flc.service.spmaster.model.data.dao;
 
 import org.dav.service.util.Constants;
-import ru.flc.service.spmaster.controller.Executor;
+import ru.flc.service.spmaster.controller.executor.Executor;
 import ru.flc.service.spmaster.model.data.entity.DataTable;
 import ru.flc.service.spmaster.model.data.entity.StoredProc;
 import ru.flc.service.spmaster.model.data.source.database.DataSource;

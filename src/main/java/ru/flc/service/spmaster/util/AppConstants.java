@@ -89,6 +89,8 @@ public final class AppConstants
 	public static final String KEY_COLUMN_SP_PARAM_VALUETYPE = "ColumnStoredProcParamValueType";
 	public static final String KEY_COLUMN_SP_PARAM_NULL = "ColumnStoredProcParamNull";
 	public static final String KEY_COLUMN_SP_PARAM_VALUE = "ColumnStoredProcParamValue";
+	public static final String KEY_EXECUTOR_SP_EXECUTION_MESS = "MessageStoredProcExecution";
+	public static final String KEY_EXECUTOR_SP_LOADING_MESS = "MessageStoredProcLoading";
 
 	//Names
 	public static final String MESS_LOGGING_PROPERTIES_FILE_NAME = "sp_master_logging.conf";

@@ -3,6 +3,9 @@ package ru.flc.service.spmaster.controller;
 import org.dav.service.settings.DatabaseSettings;
 import org.dav.service.settings.TransmissiveSettings;
 import org.dav.service.util.ResourceManager;
+import ru.flc.service.spmaster.controller.executor.Executor;
+import ru.flc.service.spmaster.controller.executor.StoredProcExecutor;
+import ru.flc.service.spmaster.controller.executor.StoredProcListLoader;
 import ru.flc.service.spmaster.model.data.DataModel;
 import ru.flc.service.spmaster.model.data.entity.DataPage;
 import ru.flc.service.spmaster.model.data.entity.StoredProc;
@@ -30,6 +33,7 @@ public class Controller
 	private AppStatus appStatus;
 
 	private StoredProcExecutor spExecutor;
+	private StoredProcListLoader spListLoader;
 
 	public void setFileModel(FileModel fileModel)
 	{
@@ -99,17 +103,18 @@ public class Controller
 	public void refreshStoredProcedureList()
 	{
 		if (checkDataModel() && checkView() && checkAppStatuses(AppStatus.CONNECTED))
-			try
-			{
-				view.clearAllData();
+		{
+			view.clearAllData();
 
-				List<StoredProc> storedProcList = dataModel.getStoredProcList();
-				view.showStoredProcList(storedProcList);
-			}
-			catch (Exception e)
-			{
-				view.showException(e);
-			}
+			String messageKey = AppConstants.KEY_EXECUTOR_SP_LOADING_MESS;
+			view.addTitle(messageKey);
+
+			spListLoader = new StoredProcListLoader(dataModel, view, messageKey);
+			spListLoader.getPropertyChangeSupport().addPropertyChangeListener(
+					AppConstants.MESS_WORKER_PROPERTY_NAME_STATE,
+					evt -> doForWorkerEvent(spListLoader, evt));
+			spListLoader.execute();
+		}
 	}
 
 	public void updateStoredProcedureHeaders(StoredProc storedProc)
@@ -198,10 +203,13 @@ public class Controller
 				{
 					if (storedProc.getStatus() == StoredProcStatus.AVAILABLE)
 					{
-						spExecutor = new StoredProcExecutor(storedProc, dataModel, view);
+						String messageKey = AppConstants.KEY_EXECUTOR_SP_EXECUTION_MESS;
+						view.addTitle(messageKey);
+
+						spExecutor = new StoredProcExecutor(storedProc, dataModel, view, messageKey);
 						spExecutor.getPropertyChangeSupport().addPropertyChangeListener(
 								AppConstants.MESS_WORKER_PROPERTY_NAME_STATE,
-								evt -> doForWorkerEvent(evt));
+								evt -> doForWorkerEvent(spExecutor, evt));
 						spExecutor.execute();
 					}
 					else
@@ -360,7 +368,7 @@ public class Controller
 		return view != null;
 	}
 
-	private void doForWorkerEvent(PropertyChangeEvent event)
+	private void doForWorkerEvent(Executor executor, PropertyChangeEvent event)
 	{
 		if (AppConstants.MESS_WORKER_PROPERTY_NAME_STATE.equals(event.getPropertyName()))
 		{
@@ -374,9 +382,13 @@ public class Controller
 				{
 					case STARTED:
 						changeAppStatus(AppStatus.RUNNING);
+						if (executor == spListLoader)
+							showProcess(executor.getExecutionMessageKey());
 						break;
 					case DONE:
 						changeAppStatus(AppStatus.CONNECTED);
+						if (executor == spListLoader)
+							showProcess(executor.getExecutionMessageKey());
 				}
 			}
 		}
@@ -388,6 +400,12 @@ public class Controller
 
 		if (checkView())
 			view.adjustToAppStatus();
+	}
+
+	public void showProcess(String messageKey)
+	{
+		if (checkView())
+			view.showProcess(messageKey);
 	}
 
 	public boolean checkAppStatuses(AppStatus... desirableStatuses)
