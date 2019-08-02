@@ -27,20 +27,23 @@ public class ProcessDialog extends JDialog
 	private SettingsDialogInvoker invoker;
 	private ResourceManager resourceManager;
 	private TitleAdjuster titleAdjuster;
+	private boolean cancellationPossible;
 	private String message;
 
+	private JPanel mainPanel;
 	private JLabel imageLabel;
 	private JLabel messageLabel;
 	private JButton cancelButton;
 
-	public ProcessDialog(Frame owner, SettingsDialogInvoker invoker, ResourceManager resourceManager)
+	public ProcessDialog(Frame owner, SettingsDialogInvoker invoker,
+						 ResourceManager resourceManager)
 	{
 		super(owner, "", true);
 
 		this.owner = owner;
 		this.invoker = invoker;
-
 		this.resourceManager = resourceManager;
+
 		this.titleAdjuster = new TitleAdjuster();
 
 		initComponents();
@@ -77,58 +80,130 @@ public class ProcessDialog extends JDialog
 		}
 	}
 
-	private void initComponents()
+	public boolean isCancellationPossible()
 	{
-		add(initMainPanel(), BorderLayout.CENTER);
+		return cancellationPossible;
 	}
 
-	private JPanel initMainPanel()
+	public void setCancellationPossible(boolean cancellationPossible)
+	{
+		if (this.cancellationPossible != cancellationPossible)
+		{
+			this.cancellationPossible = cancellationPossible;
+
+			rebuildMainPanel();
+		}
+	}
+
+	private void initComponents()
+	{
+		mainPanel = buildMainPanel();
+
+		add(mainPanel, BorderLayout.CENTER);
+	}
+
+	private JPanel buildMainPanel()
 	{
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridBagLayout());
 
-		UsableGBC constraints;
+		addImageLabel(panel);
+		addMessageLabel(panel);
 
-		constraints = new UsableGBC(0, 0);
+		if (cancellationPossible)
+			addCancelButton(panel);
+
+		return panel;
+	}
+
+	private void rebuildMainPanel()
+	{
+		if (cancelButton != null)
+			mainPanel.remove(cancelButton);
+		mainPanel.remove(messageLabel);
+
+		addMessageLabel(mainPanel);
+		messageLabel.setText(this.message);
+
+		if (cancellationPossible)
+			addCancelButton(mainPanel);
+	}
+
+	private void addImageLabel(JPanel parentPanel)
+	{
+		UsableGBC constraints = new UsableGBC(0, 0);
 		constraints.setInsets(new Insets(0, OUTER_SIDE_INSET, 0, INNER_SIDE_INSET));
 
-		imageLabel = new JLabel();
-		ViewComponents.setComponentAnySize(imageLabel, IMAGE_SIZE);
-		imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		imageLabel.setIcon(resourceManager.getImageIcon(AppConstants.ICON_NAME_EXECUTING));
+		imageLabel = createImageLabel();
+		parentPanel.add(imageLabel, constraints);
+	}
 
-		panel.add(imageLabel, constraints);
+	private void addMessageLabel(JPanel parentPanel)
+	{
+		UsableGBC constraints = new UsableGBC(1, 0);
 
-		constraints = new UsableGBC(1, 0);
-		constraints.setInsets(new Insets(0, INNER_SIDE_INSET, 0, INNER_SIDE_INSET));
+		int rightInset = OUTER_SIDE_INSET;
+		if (cancellationPossible)
+			rightInset = INNER_SIDE_INSET;
 
-		messageLabel = new JLabel();
-		/*messageLabel.setMinimumSize(new Dimension(MESSAGE_MIN_WIDTH, COMPONENT_HEIGHT));
-		messageLabel.setPreferredSize(new Dimension(MESSAGE_PREFERRED_WIDTH, COMPONENT_HEIGHT));
-		messageLabel.setMaximumSize(new Dimension(getMaximumMessageWidth(), COMPONENT_HEIGHT));*/
-		messageLabel.setFont(new Font(Font.MONOSPACED, Font.BOLD + Font.ITALIC, 14));
-		panel.add(messageLabel, constraints);
+		constraints.setInsets(new Insets(0, INNER_SIDE_INSET, 0, rightInset));
 
-		constraints = new UsableGBC(2, 0);
+		messageLabel = createMessageLabel();
+		parentPanel.add(messageLabel, constraints);
+	}
+
+	private void addCancelButton(JPanel parentPanel)
+	{
+		UsableGBC constraints = new UsableGBC(2, 0);
 		constraints.setInsets(new Insets(0, INNER_SIDE_INSET, 0, OUTER_SIDE_INSET));
 
-		cancelButton = new JButton();
-		titleAdjuster.registerComponent(cancelButton, new Title(resourceManager, Constants.KEY_BUTTON_CANCEL));
-		ViewComponents.setComponentAnySize(cancelButton, BUTTON_MAX_SIZE);
-		cancelButton.setIcon(resourceManager.getImageIcon(Constants.ICON_NAME_CANCEL));
-		panel.add(cancelButton, constraints);
+		cancelButton = createCancelButton();
+		parentPanel.add(cancelButton, constraints);
 
 		//cancelButtonListener = new CancelButtonListener(false);
 		//cancelButton.addActionListener(cancelButtonListener);
+	}
 
-		return panel;
+	private JLabel createImageLabel()
+	{
+		JLabel label = new JLabel();
+		ViewComponents.setComponentAnySize(label, IMAGE_SIZE);
+		label.setHorizontalAlignment(SwingConstants.CENTER);
+		label.setIcon(resourceManager.getImageIcon(AppConstants.ICON_NAME_EXECUTING));
+
+		return label;
+	}
+
+	private JLabel createMessageLabel()
+	{
+		JLabel label = new JLabel();
+		label.setFont(new Font(Font.MONOSPACED, Font.BOLD + Font.ITALIC, 14));
+
+		return label;
+	}
+
+	private JButton createCancelButton()
+	{
+		JButton button = new JButton();
+		titleAdjuster.registerComponent(button, new Title(resourceManager, Constants.KEY_BUTTON_CANCEL));
+		ViewComponents.setComponentAnySize(button, BUTTON_MAX_SIZE);
+		button.setIcon(resourceManager.getImageIcon(Constants.ICON_NAME_CANCEL));
+
+		return button;
 	}
 
 	private int getMaximumMessageWidth()
 	{
 		int leftWidth = owner.getMinimumSize().width;
-		leftWidth -= 2 * OUTER_SIDE_INSET + 2 * 2 * INNER_SIDE_INSET;
-		leftWidth -= IMAGE_SIZE.width + BUTTON_MAX_SIZE.width;
+
+		leftWidth -= 2 * OUTER_SIDE_INSET + 2 * INNER_SIDE_INSET;
+		leftWidth -= IMAGE_SIZE.width;
+
+		if (cancellationPossible)
+		{
+			leftWidth -= 2 * INNER_SIDE_INSET;
+			leftWidth -= BUTTON_MAX_SIZE.width;
+		}
 
 		return leftWidth;
 	}
