@@ -73,6 +73,9 @@ public final class AppConstants
 	public static final String KEY_PANEL_LOG = "PanelLog";
 	public static final String KEY_PANEL_STATUS_CONNECTED = "PanelStatusConnected";
 	public static final String KEY_PANEL_STATUS_DISCONNECTED = "PanelStatusDisconnected";
+	public static final String KEY_PANEL_STATUS_SERVER = "PanelStatusServer";
+	public static final String KEY_PANEL_STATUS_USER = "PanelStatusUser";
+	public static final String KEY_PANEL_STATUS_DATABASE = "PanelStatusDatabase";
 	public static final String KEY_COLUMN_SP_STATUS = "ColumnStoredProcStatus";
 	public static final String KEY_COLUMN_SP_DESCRIPT = "ColumnStoredProcDescript";
 	public static final String KEY_COLUMN_SP_NAME = "ColumnStoredProcName";
@@ -90,7 +93,13 @@ public final class AppConstants
 	public static final String KEY_COLUMN_SP_PARAM_NULL = "ColumnStoredProcParamNull";
 	public static final String KEY_COLUMN_SP_PARAM_VALUE = "ColumnStoredProcParamValue";
 	public static final String KEY_EXECUTOR_SP_EXECUTION_MESS = "MessageStoredProcExecution";
-	public static final String KEY_EXECUTOR_SP_LOADING_MESS = "MessageStoredProcLoading";
+	public static final String KEY_EXECUTOR_SP_LIST_LOADING_MESS = "MessageStoredProcListLoading";
+	public static final String KEY_EXECUTOR_SP_INFO_LOADING_MESS = "MessageStoredProcInfoLoading";
+	public static final String KEY_WARNING_SP_TITLE = "WarningStoredProcTitle";
+	public static final String KEY_WARNING_SP_MESSAGE = "WarningStoredProcMessage";
+	public static final String KEY_WARNING_SP_DEAD = "WarningStoredProcDead";
+	public static final String KEY_WARNING_SP_OCCUPIED = "WarningStoredProcOccupied";
+	public static final String KEY_WARNING_SP_UNKNOWN = "WarningStoredProcUnknown";
 
 	//Names
 	public static final String MESS_LOGGING_PROPERTIES_FILE_NAME = "sp_master_logging.conf";

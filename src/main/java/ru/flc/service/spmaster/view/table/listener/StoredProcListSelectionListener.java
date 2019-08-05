@@ -52,8 +52,10 @@ public class StoredProcListSelectionListener implements ListSelectionListener
 
 				if (storedProc != null)
 				{
-					controller.updateStoredProcedureHeaders(storedProc);
-					controller.showStoredProcedureText(storedProc);
+					controller.updateSpHeadersAndShowText(storedProc);
+
+					/*controller.updateStoredProcedureHeaders(storedProc);
+					controller.showStoredProcedureText(storedProc);*/
 				}
 			}
 		}

@@ -67,6 +67,8 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 {
 	private static final Logger LOGGER = Logger.getLogger(MainFrame.class.getName());
 
+	private static final Dimension STATUS_PANEL_SPLITTER_SIZE = new Dimension(5, 0);
+
 	private Controller controller;
 	private ResourceManager resourceManager;
 	private ActionsManager actionsManager;
@@ -106,6 +108,9 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	private JSplitPane generalPane;
 
 	private JLabel statusLabel;
+	private JLabel serverLabel;
+	private JLabel userLabel;
+	private JLabel databaseLabel;
 
 	public MainFrame(Controller controller)
 	{
@@ -208,14 +213,33 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	{
 		if (settings != null)
 		{
-			titleAdjuster.changeComponentTitle(statusLabel, new Title(resourceManager,
-					AppConstants.KEY_PANEL_STATUS_CONNECTED,
-					settings.getHost(), settings.getUserName(), settings.getCatalog()));
+			titleAdjuster.changeComponentTitle(statusLabel,
+					new Title(resourceManager, AppConstants.KEY_PANEL_STATUS_CONNECTED));
+			titleAdjuster.changeComponentTitle(serverLabel,
+					new Title(resourceManager, AppConstants.KEY_PANEL_STATUS_SERVER, settings.getHost()));
+			titleAdjuster.changeComponentTitle(userLabel,
+					new Title(resourceManager, AppConstants.KEY_PANEL_STATUS_USER, settings.getUserName()));
+			titleAdjuster.changeComponentTitle(databaseLabel,
+					new Title(resourceManager, AppConstants.KEY_PANEL_STATUS_DATABASE, settings.getCatalog()));
+
+			serverLabel.setVisible(true);
+			userLabel.setVisible(true);
+			databaseLabel.setVisible(true);
 		}
 		else
 		{
-			titleAdjuster.changeComponentTitle(statusLabel, new Title(resourceManager,
-					AppConstants.KEY_PANEL_STATUS_DISCONNECTED));
+			titleAdjuster.changeComponentTitle(statusLabel,
+					new Title(resourceManager, AppConstants.KEY_PANEL_STATUS_DISCONNECTED));
+			titleAdjuster.changeComponentTitle(serverLabel,
+					new Title(resourceManager, AppConstants.KEY_PANEL_STATUS_SERVER, ""));
+			titleAdjuster.changeComponentTitle(userLabel,
+					new Title(resourceManager, AppConstants.KEY_PANEL_STATUS_USER, ""));
+			titleAdjuster.changeComponentTitle(databaseLabel,
+					new Title(resourceManager, AppConstants.KEY_PANEL_STATUS_DATABASE, ""));
+
+			serverLabel.setVisible(false);
+			userLabel.setVisible(false);
+			databaseLabel.setVisible(false);
 		}
 	}
 
@@ -373,18 +397,19 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	@Override
 	public void showStoredProcWarning(StoredProc storedProc)
 	{
-		//TODO: make a correct messaging logic here.
-
-		String pattern = "The stored procedure %s is %s.";
-		String name = storedProc.getName();
-		String status = "in unknown status";
+		String storedProcName = storedProc.getName();
+		String storedProcStatusKey = AppConstants.KEY_WARNING_SP_UNKNOWN;
 
 		if (storedProc.getStatus() == StoredProcStatus.DEAD)
-			status = "dead";
+			storedProcStatusKey = AppConstants.KEY_WARNING_SP_DEAD;
 		else if (storedProc.getStatus() == StoredProcStatus.OCCUPIED)
-			status = "occupied";
+			storedProcStatusKey = AppConstants.KEY_WARNING_SP_OCCUPIED;
 
-		JOptionPane.showMessageDialog(null, String.format(pattern, name, status), "Verevkin", JOptionPane.WARNING_MESSAGE);
+		JOptionPane.showMessageDialog(null,
+				new Title(resourceManager, AppConstants.KEY_WARNING_SP_MESSAGE,
+						storedProcName, new Title(resourceManager, storedProcStatusKey).getText()).getText(),
+				new Title(resourceManager, AppConstants.KEY_WARNING_SP_TITLE).getText(),
+				JOptionPane.WARNING_MESSAGE);
 	}
 
 	@Override
@@ -675,15 +700,30 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	private void initStatusPanel()
 	{
 		JPanel statusPanel = new JPanel();
-		statusPanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+		statusPanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 		statusPanel.setPreferredSize(new Dimension(getWidth(), 20));
 		statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.X_AXIS));
 
-		statusLabel = new JLabel();
-		statusLabel.setHorizontalAlignment(SwingConstants.LEFT);
+		statusPanel.add(Box.createRigidArea(STATUS_PANEL_SPLITTER_SIZE));
+		statusLabel = ViewComponents.getLabelWithEtchedBorder(SwingConstants.LEFT, -1);
 		statusPanel.add(statusLabel);
 
+		statusPanel.add(Box.createRigidArea(STATUS_PANEL_SPLITTER_SIZE));
+		serverLabel = ViewComponents.getLabelWithEtchedBorder(SwingConstants.LEFT, EtchedBorder.LOWERED);
+		statusPanel.add(serverLabel);
+
+		statusPanel.add(Box.createRigidArea(STATUS_PANEL_SPLITTER_SIZE));
+		userLabel = ViewComponents.getLabelWithEtchedBorder(SwingConstants.LEFT, EtchedBorder.LOWERED);
+		statusPanel.add(userLabel);
+
+		statusPanel.add(Box.createRigidArea(STATUS_PANEL_SPLITTER_SIZE));
+		databaseLabel = ViewComponents.getLabelWithEtchedBorder(SwingConstants.LEFT, EtchedBorder.LOWERED);
+		statusPanel.add(databaseLabel);
+
 		titleAdjuster.registerComponent(statusLabel, new Title(resourceManager, AppConstants.KEY_PANEL_STATUS_DISCONNECTED));
+		titleAdjuster.registerComponent(serverLabel, new Title(resourceManager, AppConstants.KEY_PANEL_STATUS_SERVER, ""));
+		titleAdjuster.registerComponent(userLabel, new Title(resourceManager, AppConstants.KEY_PANEL_STATUS_USER, ""));
+		titleAdjuster.registerComponent(databaseLabel, new Title(resourceManager, AppConstants.KEY_PANEL_STATUS_DATABASE, ""));
 
 		add(statusPanel, BorderLayout.SOUTH);
 

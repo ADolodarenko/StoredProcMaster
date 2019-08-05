@@ -52,6 +52,17 @@ public class ViewComponents
 		return panel;
 	}
 
+	public static JLabel getLabelWithEtchedBorder(int horizontalAlignment, int borderType)
+	{
+		JLabel label = new JLabel();
+		label.setHorizontalAlignment(horizontalAlignment);
+
+		if (borderType > -1)
+			label.setBorder(BorderFactory.createEtchedBorder(borderType));
+
+		return label;
+	}
+
 	public static DefaultFormatter getSpinnerNumberFormatter(JSpinner spinner)
 	{
 		JFormattedTextField textField = getSpinnerNumberTextField(spinner);

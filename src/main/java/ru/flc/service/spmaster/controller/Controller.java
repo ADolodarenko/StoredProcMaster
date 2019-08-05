@@ -5,6 +5,7 @@ import org.dav.service.settings.TransmissiveSettings;
 import org.dav.service.util.ResourceManager;
 import ru.flc.service.spmaster.controller.executor.Executor;
 import ru.flc.service.spmaster.controller.executor.StoredProcExecutor;
+import ru.flc.service.spmaster.controller.executor.StoredProcInfoLoader;
 import ru.flc.service.spmaster.controller.executor.StoredProcListLoader;
 import ru.flc.service.spmaster.model.data.DataModel;
 import ru.flc.service.spmaster.model.data.entity.DataPage;
@@ -34,6 +35,7 @@ public class Controller
 
 	private StoredProcExecutor spExecutor;
 	private StoredProcListLoader spListLoader;
+	private StoredProcInfoLoader spInfoLoader;
 
 	public void setFileModel(FileModel fileModel)
 	{
@@ -106,14 +108,29 @@ public class Controller
 		{
 			view.clearAllData();
 
-			String messageKey = AppConstants.KEY_EXECUTOR_SP_LOADING_MESS;
+			String messageKey = AppConstants.KEY_EXECUTOR_SP_LIST_LOADING_MESS;
 			view.addTitle(messageKey);
 
-			spListLoader = new StoredProcListLoader(dataModel, view, messageKey);
+			spListLoader = new StoredProcListLoader(messageKey, dataModel, view);
 			spListLoader.getPropertyChangeSupport().addPropertyChangeListener(
 					AppConstants.MESS_WORKER_PROPERTY_NAME_STATE,
 					evt -> doForWorkerEvent(spListLoader, evt));
 			spListLoader.execute();
+		}
+	}
+
+	public void updateSpHeadersAndShowText(StoredProc storedProc)
+	{
+		if (storedProc != null && checkDataModel() && checkView())
+		{
+			String messageKey = AppConstants.KEY_EXECUTOR_SP_INFO_LOADING_MESS;
+			view.addTitle(messageKey);
+
+			spInfoLoader = new StoredProcInfoLoader(messageKey, storedProc, dataModel, view);
+			spInfoLoader.getPropertyChangeSupport().addPropertyChangeListener(
+					AppConstants.MESS_WORKER_PROPERTY_NAME_STATE,
+					evt -> doForWorkerEvent(spInfoLoader, evt));
+			spInfoLoader.execute();
 		}
 	}
 
@@ -370,6 +387,8 @@ public class Controller
 
 	private void doForWorkerEvent(Executor executor, PropertyChangeEvent event)
 	{
+		view.addToLog(event.getPropertyName() + ":" + event.getOldValue() + ">" + event.getNewValue());
+
 		if (AppConstants.MESS_WORKER_PROPERTY_NAME_STATE.equals(event.getPropertyName()))
 		{
 			Object newValue = event.getNewValue();
@@ -382,12 +401,14 @@ public class Controller
 				{
 					case STARTED:
 						changeAppStatus(AppStatus.RUNNING);
-						if (executor == spListLoader)
+						view.addToLog("Process started.");
+						if (executor == spListLoader || executor == spInfoLoader)
 							showProcess(executor.getExecutionMessageKey());
 						break;
 					case DONE:
 						changeAppStatus(AppStatus.CONNECTED);
-						if (executor == spListLoader)
+						view.addToLog("Process done.");
+						if (executor == spListLoader || executor == spInfoLoader)
 							showProcess(executor.getExecutionMessageKey());
 				}
 			}

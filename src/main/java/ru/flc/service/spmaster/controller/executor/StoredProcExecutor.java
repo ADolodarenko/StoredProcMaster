@@ -56,6 +56,17 @@ public class StoredProcExecutor extends AbstractExecutor<Void, Object>
 	protected void done()
 	{
 		if ( !isInterrupted() )
+		{
+			try
+			{
+				get();
+			}
+			catch (Exception e)
+			{
+				view.addToLog(e);
+			}
+
 			view.showStoredProcOutput(resultTables);
+		}
 	}
 }

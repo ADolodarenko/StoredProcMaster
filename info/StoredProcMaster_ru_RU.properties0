@@ -51,7 +51,6 @@ FileChooserSaveToolTip=Save selected file
 FileChooserCancelToolTip=Abort file chooser dialog
 FieldDelimiter=Field delimiter
 DateTimeFormat=Date & time format
-Charset=Character set
 PanelStoredProcList=Available procedures
 PanelStoredProcText=Current procedure
 PanelStoredProcResult=Execution output

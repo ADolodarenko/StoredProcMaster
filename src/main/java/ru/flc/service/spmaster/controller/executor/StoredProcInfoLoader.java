@@ -3,21 +3,23 @@ package ru.flc.service.spmaster.controller.executor;
 import org.dav.service.util.Constants;
 import ru.flc.service.spmaster.model.data.DataModel;
 import ru.flc.service.spmaster.model.data.entity.StoredProc;
+import ru.flc.service.spmaster.model.data.entity.StoredProcStatus;
 import ru.flc.service.spmaster.view.View;
 
 import java.util.List;
 
-public class StoredProcListLoader extends AbstractExecutor<Void, Object>
+public class StoredProcInfoLoader extends AbstractExecutor<Void, Object>
 {
+	private StoredProc storedProc;
 	private DataModel model;
 	private View view;
+	private List<String> storedProcTextLines;
 
-	private List<StoredProc> storedProcList;
-
-	public StoredProcListLoader(String executionMessageKey, DataModel model, View view)
+	public StoredProcInfoLoader(String executionMessageKey, StoredProc storedProc, DataModel model, View view)
 	{
 		super(executionMessageKey);
 
+		this.storedProc = storedProc;
 		this.model = model;
 		this.view = view;
 	}
@@ -29,7 +31,10 @@ public class StoredProcListLoader extends AbstractExecutor<Void, Object>
 		{
 			try
 			{
-				storedProcList = model.getStoredProcList();
+				model.updateStoredProcHeaders(storedProc);
+
+				if (storedProc.getStatus() != StoredProcStatus.DEAD)
+					storedProcTextLines = model.getStoredProcText(storedProc);
 			}
 			catch (Exception e)
 			{
@@ -66,7 +71,10 @@ public class StoredProcListLoader extends AbstractExecutor<Void, Object>
 				view.addToLog(e);
 			}
 
-			view.showStoredProcList(storedProcList);
+			view.showStoredProc(storedProc);
+
+			if (storedProcTextLines != null)
+				view.showStoredProcText(storedProcTextLines);
 		}
 	}
 }
