@@ -498,11 +498,13 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 				}
 			}
 
-			if (isRunning)
-				processDialog.setMessage(getTitle(messageKey).getText());
-
 			if (processDialog != null)
-				processDialog.setVisible(isRunning);
+				EventQueue.invokeLater(() -> {
+					if (isRunning)
+						processDialog.setMessage(getTitle(messageKey).getText());
+
+					processDialog.setVisible(isRunning);
+				});
 		}
 	}
 
