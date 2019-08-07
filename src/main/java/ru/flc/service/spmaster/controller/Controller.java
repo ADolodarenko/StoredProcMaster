@@ -268,7 +268,13 @@ public class Controller
 		if (checkSettingsModel() && checkView())
 		{
 			TransmissiveSettings[] settingsArray = settingsModel.getVisibleSettings();
-			view.showSettings(settingsArray);
+
+			Exception lastException = settingsModel.getLastException();
+
+			if (lastException == null)
+				view.showSettings(settingsArray);
+			else
+				view.addToLog(lastException);
 		}
 	}
 
@@ -326,6 +332,18 @@ public class Controller
 	{
 		if (checkSettingsModel())
 		{
+			settingsModel.resetCurrentLocale();
+
+			if (checkView())
+				view.repaintFrame();
+		}
+	}
+
+	public void reloadAllSettings()
+	{
+		if (checkSettingsModel())
+		{
+			settingsModel.loadAllSettings();
 			settingsModel.resetCurrentLocale();
 
 			if (checkView())

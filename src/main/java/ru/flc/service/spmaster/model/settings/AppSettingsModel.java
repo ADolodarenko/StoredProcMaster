@@ -8,6 +8,9 @@ import org.dav.service.util.ResourceManager;
 import ru.flc.service.spmaster.view.View;
 
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 
 public class AppSettingsModel implements SettingsModel
@@ -21,19 +24,33 @@ public class AppSettingsModel implements SettingsModel
 	private OperationalSettings operationalSettings;
 	private FileSettings fileSettings;
 
+	private List<TransmissiveSettings> originalSettingsList;
+	private List<TransmissiveSettings> clonedSettingsList;
+
 	private ViewConstraints viewConstraints;
 
 	public AppSettingsModel(ResourceManager resourceManager)
 	{
 		this.resourceManager = resourceManager;
 
+		originalSettingsList = new ArrayList<>();
+		clonedSettingsList = new ArrayList<>();
+
 		try
 		{
 			viewConstraints = new ViewConstraints();
-			dbSettings = new DatabaseSettings(this.resourceManager);
-			viewSettings = new ViewSettings(this.resourceManager, viewConstraints.getPreferredSize());
-			operationalSettings = new OperationalSettings(this.resourceManager);
-			fileSettings = new FileSettings(this.resourceManager);
+
+			dbSettings = createDatabaseSettings();
+			addToSettingsLists(dbSettings, createDatabaseSettings());
+
+			viewSettings = createViewSettings();
+			addToSettingsLists(viewSettings, createViewSettings());
+
+			operationalSettings = createOperationalSettings();
+			addToSettingsLists(operationalSettings, createOperationalSettings());
+
+			fileSettings = createFileSettings();
+			addToSettingsLists(fileSettings, createFileSettings());
 
 			loadAllSettings();
 		}
@@ -43,22 +60,44 @@ public class AppSettingsModel implements SettingsModel
 		}
 	}
 
+	private DatabaseSettings createDatabaseSettings() throws Exception
+	{
+		return new DatabaseSettings(this.resourceManager);
+	}
+
+	private ViewSettings createViewSettings() throws Exception
+	{
+		return new ViewSettings(this.resourceManager, viewConstraints.getPreferredSize());
+	}
+
+	private OperationalSettings createOperationalSettings() throws Exception
+	{
+		return new OperationalSettings(this.resourceManager);
+	}
+
+	private FileSettings createFileSettings() throws Exception
+	{
+		return new FileSettings(this.resourceManager);
+	}
+
+	private void addToSettingsLists(TransmissiveSettings originalSettings, TransmissiveSettings clonedSettings)
+	{
+		originalSettingsList.add(originalSettings);
+		clonedSettingsList.add(clonedSettings);
+	}
+
 	@Override
 	public void loadAllSettings()
 	{
-		loadSpecificSettings(dbSettings);
-		loadSpecificSettings(viewSettings);
-		loadSpecificSettings(operationalSettings);
-		loadSpecificSettings(fileSettings);
+		for (Settings settings : originalSettingsList)
+			loadSpecificSettings(settings);
 	}
 
 	@Override
 	public void saveAllSettings()
 	{
-		saveSpecificSettings(dbSettings);
-		saveSpecificSettings(viewSettings);
-		saveSpecificSettings(operationalSettings);
-		saveSpecificSettings(fileSettings);
+		for (Settings settings : originalSettingsList)
+			saveSpecificSettings(settings);
 	}
 
 	@Override
@@ -141,7 +180,23 @@ public class AppSettingsModel implements SettingsModel
 	@Override
 	public TransmissiveSettings[] getVisibleSettings()
 	{
-		return new TransmissiveSettings[]{dbSettings, viewSettings, operationalSettings, fileSettings};
+		lastException = null;
+
+		TransmissiveSettings[] clonedSettingsArray = new TransmissiveSettings[clonedSettingsList.size()];
+
+		try
+		{
+			for (int i = 0; i < clonedSettingsList.size(); i++)
+				clonedSettingsList.get(i).init(originalSettingsList.get(i));
+
+			clonedSettingsArray = clonedSettingsList.toArray(clonedSettingsArray);
+		}
+		catch (Exception e)
+		{
+			lastException = e;
+		}
+
+		return clonedSettingsArray;
 	}
 
 	@Override

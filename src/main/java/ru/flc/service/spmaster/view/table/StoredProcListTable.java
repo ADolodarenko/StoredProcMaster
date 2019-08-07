@@ -45,6 +45,37 @@ public class StoredProcListTable extends JTable
 		setRowHeight((int) (getRowHeight() * 1.3));
 	}
 
+	public void setColumnAppearance()
+	{
+		SpListCellRendererFactory.setStatusIcons(statusIcons);
+
+		Enumeration<TableColumn> columns = getColumnModel().getColumns();
+
+		while (columns.hasMoreElements())
+		{
+			TableColumn column = columns.nextElement();
+			int columnModelIndex = column.getModelIndex();
+
+			SpListCellRendererType[] rendererTypes = SpListCellRendererType.values();
+
+			if (columnModelIndex < rendererTypes.length)
+			{
+				TableCellRenderer renderer = SpListCellRendererFactory.getRenderer(rendererTypes[columnModelIndex],
+						false);
+
+				if (renderer != null)
+					column.setCellRenderer(renderer);
+			}
+
+			if (columnModelIndex == 0)
+			{
+				column.setMinWidth(COLUMN_STATUS_WIDTH);
+				column.setWidth(COLUMN_STATUS_WIDTH);
+				column.setMaxWidth(COLUMN_STATUS_WIDTH);
+			}
+		}
+	}
+
 	public StoredProc getStoredProc(int row)
 	{
 		int modelRowIndex = convertRowIndexToModel(row);
@@ -75,37 +106,6 @@ public class StoredProcListTable extends JTable
 	{
 		JTableHeader header = getTableHeader();
 		header.setReorderingAllowed(true);
-	}
-
-	private void setColumnAppearance()
-	{
-		SpListCellRendererFactory.setStatusIcons(statusIcons);
-
-		Enumeration<TableColumn> columns = getColumnModel().getColumns();
-
-		while (columns.hasMoreElements())
-		{
-			TableColumn column = columns.nextElement();
-			int columnModelIndex = column.getModelIndex();
-
-			SpListCellRendererType[] rendererTypes = SpListCellRendererType.values();
-
-			if (columnModelIndex < rendererTypes.length)
-			{
-				TableCellRenderer renderer = SpListCellRendererFactory.getRenderer(rendererTypes[columnModelIndex],
-						false);
-
-				if (renderer != null)
-					column.setCellRenderer(renderer);
-			}
-
-			if (columnModelIndex == 0)
-			{
-				column.setMinWidth(COLUMN_STATUS_WIDTH);
-				column.setWidth(COLUMN_STATUS_WIDTH);
-				column.setMaxWidth(COLUMN_STATUS_WIDTH);
-			}
-		}
 	}
 
 	private void setSelectionStrategy()

@@ -131,6 +131,17 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	public void repaintFrame()
 	{
 		titleAdjuster.resetComponents();
+
+		if (procListTableModel != null)
+			procListTableModel.fireTableStructureChanged();
+		if (procListTable != null)
+			procListTable.setColumnAppearance();
+
+		if (logTableModel != null)
+			logTableModel.fireTableStructureChanged();
+		if (logTable != null)
+			logTable.setColumnAppearance();
+
 		validate();
 
 		ViewUtils.adjustDialogs();
@@ -185,7 +196,7 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 		{
 			try
 			{
-				settingsDialog = new SettingsDialog(this, this, resourceManager, settingsArray);
+				settingsDialog = new SettingsDialog(this, this, resourceManager);
 				settingsDialog.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 			}
 			catch (Exception e)
@@ -195,7 +206,10 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 		}
 
 		if (settingsDialog != null)
+		{
+			settingsDialog.resetSettingsList(settingsArray);
 			settingsDialog.setVisible(true);
+		}
 	}
 
 	@Override
@@ -542,7 +556,7 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	@Override
 	public void reloadSettings()
 	{
-		controller.resetCurrentLocale();
+		controller.reloadAllSettings();
 	}
 
 	private void initComponents()
