@@ -344,10 +344,21 @@ public class Controller
 		if (checkSettingsModel())
 		{
 			settingsModel.loadAllSettings();
-			settingsModel.resetCurrentLocale();
 
-			if (checkView())
-				view.repaintFrame();
+			Exception lastException = settingsModel.getLastException();
+
+			if (lastException == null)
+			{
+				settingsModel.resetCurrentLocale();
+
+				if (checkView())
+					view.repaintFrame();
+			}
+			else
+			{
+				if (checkView())
+					view.addToLog(lastException);
+			}
 		}
 	}
 
@@ -405,8 +416,6 @@ public class Controller
 
 	private void doForWorkerEvent(Executor executor, PropertyChangeEvent event)
 	{
-		view.addToLog(event.getPropertyName() + ":" + event.getOldValue() + ">" + event.getNewValue());
-
 		if (AppConstants.MESS_WORKER_PROPERTY_NAME_STATE.equals(event.getPropertyName()))
 		{
 			Object newValue = event.getNewValue();
@@ -419,13 +428,13 @@ public class Controller
 				{
 					case STARTED:
 						changeAppStatus(AppStatus.RUNNING);
-						view.addToLog("Process started.");
+
 						if (executor == spListLoader || executor == spInfoLoader)
 							showProcess(executor.getExecutionMessageKey());
 						break;
 					case DONE:
 						changeAppStatus(AppStatus.CONNECTED);
-						view.addToLog("Process done.");
+
 						if (executor == spListLoader || executor == spInfoLoader)
 							showProcess(executor.getExecutionMessageKey());
 				}

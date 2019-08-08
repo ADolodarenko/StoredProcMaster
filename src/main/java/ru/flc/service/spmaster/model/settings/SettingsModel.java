@@ -11,8 +11,8 @@ public interface SettingsModel
 {
 	void loadAllSettings();
 	void saveAllSettings();
-	void loadSpecificSettings(Settings settings);
-	void saveSpecificSettings(Settings settings);
+	void loadSpecificSettings(Settings settings) throws Exception;
+	void saveSpecificSettings(Settings settings) throws Exception;
 	Exception getLastException();
 	ResourceManager getResourceManager();
 	void resetCurrentLocale();

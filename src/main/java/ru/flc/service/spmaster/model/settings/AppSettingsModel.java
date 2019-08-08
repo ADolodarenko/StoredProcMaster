@@ -9,9 +9,7 @@ import ru.flc.service.spmaster.view.View;
 
 import javax.swing.*;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-
 
 public class AppSettingsModel implements SettingsModel
 {
@@ -31,6 +29,8 @@ public class AppSettingsModel implements SettingsModel
 
 	public AppSettingsModel(ResourceManager resourceManager)
 	{
+		lastException = null;
+
 		this.resourceManager = resourceManager;
 
 		originalSettingsList = new ArrayList<>();
@@ -89,43 +89,47 @@ public class AppSettingsModel implements SettingsModel
 	@Override
 	public void loadAllSettings()
 	{
-		for (Settings settings : originalSettingsList)
-			loadSpecificSettings(settings);
+		lastException = null;
+
+		try
+		{
+			for (Settings settings : originalSettingsList)
+				loadSpecificSettings(settings);
+		}
+		catch (Exception e)
+		{
+			lastException = e;
+		}
 	}
 
 	@Override
 	public void saveAllSettings()
 	{
-		for (Settings settings : originalSettingsList)
-			saveSpecificSettings(settings);
+		lastException = null;
+
+		try
+		{
+			for (Settings settings : originalSettingsList)
+				saveSpecificSettings(settings);
+		}
+		catch (Exception e)
+		{
+			lastException = e;
+		}
 	}
 
 	@Override
-	public void loadSpecificSettings(Settings settings)
+	public void loadSpecificSettings(Settings settings) throws Exception
 	{
 		if (settings != null)
-			try
-			{
-				settings.load();
-			}
-			catch (Exception e)
-			{
-				lastException = e;
-			}
+			settings.load();
 	}
 
 	@Override
-	public void saveSpecificSettings(Settings settings)
+	public void saveSpecificSettings(Settings settings) throws Exception
 	{
 		if (settings != null)
-			try
-			{
-				settings.save();
-			}
-			catch (Exception e)
-			{
-				lastException = e;
-			}
+			settings.save();
 	}
 
 	@Override

@@ -132,6 +132,8 @@ public class MainFrame extends JFrame implements View, SettingsDialogInvoker
 	{
 		titleAdjuster.resetComponents();
 
+		actionsManager.resetActions();
+
 		if (procListTableModel != null)
 			procListTableModel.fireTableStructureChanged();
 		if (procListTable != null)

@@ -89,6 +89,10 @@ public class ExecutionDialog extends JDialog
 			tableModel.clear();
 			tableModel.fireTableDataChanged();
 
+			titleAdjuster.resetComponents();
+
+			tableModel.fireTableStructureChanged();
+
 			if (parameterList != null && (!parameterList.isEmpty()))
 			{
 				tableModel.addAllRows(parameterList);
@@ -102,8 +106,6 @@ public class ExecutionDialog extends JDialog
 			}
 			else
 				settingsPanel.setVisible(false);
-
-			titleAdjuster.resetComponents();
 
 			pack();
 			repaint();

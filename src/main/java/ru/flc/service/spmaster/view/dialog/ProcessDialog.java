@@ -38,7 +38,7 @@ public class ProcessDialog extends JDialog
 	public ProcessDialog(Frame owner, SettingsDialogInvoker invoker,
 						 ResourceManager resourceManager)
 	{
-		super(owner, "", true);  //If we set "modal" to "true" here, we have to face with the SwingWorker trouble sometimes.
+		super(owner, "", true);
 
 		this.owner = owner;
 		this.invoker = invoker;

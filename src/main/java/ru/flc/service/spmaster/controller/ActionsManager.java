@@ -27,8 +27,11 @@ public class ActionsManager
 
 	public ActionsManager(Controller controller, ResourceManager resourceManager)
 	{
-		this.controller = controller;
+		if (resourceManager == null)
+			throw new IllegalArgumentException(Constants.EXCPT_RESOURCE_MANAGER_EMPTY);
+
 		this.resourceManager = resourceManager;
+		this.controller = controller;
 
 		initActions();
 	}
