@@ -131,6 +131,9 @@ public final class AppConstants
 	public static final String MESS_CONN_PARAM_HOSTPROC = "HOSTPROC";
 	public static final String MESS_CONN_PARAM_APPLICATIONNAME = "APPLICATIONNAME";
 
+	public static final String NAME_ACTION_CANCEL = "ActionCancel";
+	public static final String NAME_KEY_ESC = "ESC";
+
 	//Messages
 	public static final String MESS_EXECUTOR_SP_STARTED = " - started.";
 	public static final String MESS_EXECUTOR_SP_ENDED = " - ended.";

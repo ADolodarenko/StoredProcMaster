@@ -3,8 +3,10 @@ package ru.flc.service.spmaster.controller;
 import org.dav.service.util.Constants;
 import org.dav.service.util.ResourceManager;
 import org.dav.service.view.Title;
+import org.dav.service.view.ViewUtils;
 import ru.flc.service.spmaster.util.AppConstants;
 import ru.flc.service.spmaster.util.AppStatus;
+import ru.flc.service.spmaster.view.util.ViewComponents;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -124,54 +126,64 @@ public class ActionsManager
 
 	public void resetActions()
 	{
-		resetAction(connectDbAction,
-				new Title(resourceManager, AppConstants.KEY_ACTION_CONNECTDB).getText(),
-				new Title(resourceManager, AppConstants.KEY_ACTION_CONNECTDB_DESCR).getText(),
+		ViewUtils.resetAction(connectDbAction,
+				resourceManager,
+				AppConstants.KEY_ACTION_CONNECTDB,
+				AppConstants.KEY_ACTION_CONNECTDB_DESCR,
 				AppConstants.ICON_NAME_CONNECTDB);
 
-		resetAction(disconnectDbAction,
-				new Title(resourceManager, AppConstants.KEY_ACTION_DISCONNECTDB).getText(),
-				new Title(resourceManager, AppConstants.KEY_ACTION_DISCONNECTDB_DESCR).getText(),
+		ViewUtils.resetAction(disconnectDbAction,
+				resourceManager,
+				AppConstants.KEY_ACTION_DISCONNECTDB,
+				AppConstants.KEY_ACTION_DISCONNECTDB_DESCR,
 				AppConstants.ICON_NAME_DISCONNECTDB);
 
-		resetAction(refreshSpListAction,
-				new Title(resourceManager, AppConstants.KEY_ACTION_REFRESHSP).getText(),
-				new Title(resourceManager, AppConstants.KEY_ACTION_REFRESHSP_DESCR).getText(),
+		ViewUtils.resetAction(refreshSpListAction,
+				resourceManager,
+				AppConstants.KEY_ACTION_REFRESHSP,
+				AppConstants.KEY_ACTION_REFRESHSP_DESCR,
 				AppConstants.ICON_NAME_REFRESH);
 
-		resetAction(showSpInfoAction,
-				new Title(resourceManager, AppConstants.KEY_ACTION_EXECSP).getText(),
-				new Title(resourceManager, AppConstants.KEY_ACTION_EXECSP_DESCR).getText(),
+		ViewUtils.resetAction(showSpInfoAction,
+				resourceManager,
+				AppConstants.KEY_ACTION_EXECSP,
+				AppConstants.KEY_ACTION_EXECSP_DESCR,
 				AppConstants.ICON_NAME_EXECUTE);
 
-		resetAction(execSpAction,
-				new Title(resourceManager, AppConstants.KEY_ACTION_EXECSP).getText(),
-				new Title(resourceManager, AppConstants.KEY_ACTION_EXECSP_DESCR).getText(),
+		ViewUtils.resetAction(execSpAction,
+				resourceManager,
+				AppConstants.KEY_ACTION_EXECSP,
+				AppConstants.KEY_ACTION_EXECSP_DESCR,
 				AppConstants.ICON_NAME_EXECUTE);
 
-		resetAction(cancelSpAction,
-				new Title(resourceManager, AppConstants.KEY_ACTION_CANCELSP).getText(),
-				new Title(resourceManager, AppConstants.KEY_ACTION_CANCELSP_DESCR).getText(),
+		ViewUtils.resetAction(cancelSpAction,
+				resourceManager,
+				AppConstants.KEY_ACTION_CANCELSP,
+				AppConstants.KEY_ACTION_CANCELSP_DESCR,
 				Constants.ICON_NAME_CANCEL);
 
-		resetAction(showSettingsAction,
-				new Title(resourceManager, AppConstants.KEY_ACTION_SHOW_SETTINGS).getText(),
-				new Title(resourceManager, AppConstants.KEY_ACTION_SHOW_SETTINGS_DESCR).getText(),
+		ViewUtils.resetAction(showSettingsAction,
+				resourceManager,
+				AppConstants.KEY_ACTION_SHOW_SETTINGS,
+				AppConstants.KEY_ACTION_SHOW_SETTINGS_DESCR,
 				AppConstants.ICON_NAME_SETTINGS);
 
-		resetAction(showHelpAction,
-				new Title(resourceManager, AppConstants.KEY_ACTION_SHOW_HELP).getText(),
-				new Title(resourceManager, AppConstants.KEY_ACTION_SHOW_HELP_DESCR).getText(),
+		ViewUtils.resetAction(showHelpAction,
+				resourceManager,
+				AppConstants.KEY_ACTION_SHOW_HELP,
+				AppConstants.KEY_ACTION_SHOW_HELP_DESCR,
 				AppConstants.ICON_NAME_QUESTION);
 
-		resetAction(saveActiveResultPageAction,
-				new Title(resourceManager, AppConstants.KEY_ACTION_SAVE_ACTIVE_RESULT_PAGE).getText(),
-				new Title(resourceManager, AppConstants.KEY_ACTION_SAVE_ACTIVE_RESULT_PAGE_DESCR).getText(),
+		ViewUtils.resetAction(saveActiveResultPageAction,
+				resourceManager,
+				AppConstants.KEY_ACTION_SAVE_ACTIVE_RESULT_PAGE,
+				AppConstants.KEY_ACTION_SAVE_ACTIVE_RESULT_PAGE_DESCR,
 				AppConstants.ICON_NAME_SAVE);
 
-		resetAction(saveAllResultPagesAction,
-				new Title(resourceManager, AppConstants.KEY_ACTION_SAVE_ALL_RESULT_PAGES).getText(),
-				new Title(resourceManager, AppConstants.KEY_ACTION_SAVE_ALL_RESULT_PAGES_DESCR).getText(),
+		ViewUtils.resetAction(saveAllResultPagesAction,
+				resourceManager,
+				AppConstants.KEY_ACTION_SAVE_ALL_RESULT_PAGES,
+				AppConstants.KEY_ACTION_SAVE_ALL_RESULT_PAGES_DESCR,
 				AppConstants.ICON_NAME_SAVE_ALL);
 	}
 
@@ -223,16 +235,6 @@ public class ActionsManager
 	public AbstractAction getSaveAllResultPagesAction()
 	{
 		return saveAllResultPagesAction;
-	}
-
-	private void resetAction(AbstractAction action,
-							 String actionName,
-							 String actionShortDescription,
-							 String actionIconName)
-	{
-		action.putValue(Action.NAME, actionName);
-		action.putValue(Action.SHORT_DESCRIPTION, actionShortDescription);
-		action.putValue(Action.SMALL_ICON, resourceManager.getImageIcon(actionIconName));
 	}
 
 	public void adjustToAppStatus(AbstractAction... actionsToAdjust)

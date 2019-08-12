@@ -5,7 +5,9 @@ import org.dav.service.util.ResourceManager;
 import org.dav.service.view.Title;
 import org.dav.service.view.TitleAdjuster;
 import org.dav.service.view.UsableGBC;
+import org.dav.service.view.ViewUtils;
 import org.dav.service.view.dialog.SettingsDialogInvoker;
+import org.dav.service.view.table.listener.ForEditableCellsSelectionListener;
 import ru.flc.service.spmaster.model.data.entity.StoredProc;
 import ru.flc.service.spmaster.model.data.entity.StoredProcParamType;
 import ru.flc.service.spmaster.model.data.entity.StoredProcParameter;
@@ -21,7 +23,7 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -49,10 +51,9 @@ public class ExecutionDialog extends JDialog
 	private JLabel imageLabel; //102, 70
 	private JLabel procedureLabel;
 
+	private CancelAction cancelButtonAction;
 	private JButton executeButton;
 	private JButton cancelButton;
-
-	private CancelButtonListener cancelButtonListener;
 
 	public ExecutionDialog(Frame owner, SettingsDialogInvoker invoker,
 						   ResourceManager resourceManager, AbstractAction execAction, AbstractAction cancelAction)
@@ -90,11 +91,13 @@ public class ExecutionDialog extends JDialog
 			tableModel.fireTableDataChanged();
 
 			titleAdjuster.resetComponents();
+			resetActions();
 
 			tableModel.fireTableStructureChanged();
 
 			if (parameterList != null && (!parameterList.isEmpty()))
 			{
+
 				tableModel.addAllRows(parameterList);
 				tableModel.fireTableDataChanged();
 
@@ -144,7 +147,7 @@ public class ExecutionDialog extends JDialog
 
 	public void adjustToAppStatus(boolean isRunning)
 	{
-		cancelButtonListener.setSpRunning(isRunning);
+		cancelButtonAction.setSpRunning(isRunning);
 
 		setControlsEnabled( !isRunning );
 
@@ -203,6 +206,8 @@ public class ExecutionDialog extends JDialog
 				new ArbitraryCellRendererFactory(resourceManager), 1.3F);
 		table.setFillsViewportHeight(false);
 
+		table.getColumnModel().getSelectionModel().addListSelectionListener(new ForEditableCellsSelectionListener(table));
+
 		columnAdjuster = new TableColumnAdjuster(table, 6, 200);
 
 		tablePane = new JScrollPane(table);
@@ -220,6 +225,9 @@ public class ExecutionDialog extends JDialog
 		panel.setBorder(BorderFactory.createEtchedBorder());
 
 		initButtons();
+		resetActions();
+
+		assignKeyStrokes(panel);
 
 		panel.add(executeButton);
 		panel.add(cancelButton);
@@ -236,13 +244,19 @@ public class ExecutionDialog extends JDialog
 		executeButton.setIcon(resourceManager.getImageIcon(AppConstants.ICON_NAME_EXECUTE));
 		executeButton.addActionListener(event -> execute());
 
-		cancelButtonListener = new CancelButtonListener(false);
-		cancelButton = new JButton();
-		titleAdjuster.registerComponent(cancelButton, new Title(resourceManager, Constants.KEY_BUTTON_CANCEL));
+		cancelButtonAction = new CancelAction(false);
+		cancelButton = new JButton(cancelButtonAction);
 		cancelButton.setPreferredSize(BUTTON_MAX_SIZE);
 		cancelButton.setMaximumSize(BUTTON_MAX_SIZE);
-		cancelButton.setIcon(resourceManager.getImageIcon(Constants.ICON_NAME_CANCEL));
-		cancelButton.addActionListener(cancelButtonListener);
+	}
+
+	private void assignKeyStrokes(JComponent component)
+	{
+		InputMap inputMap = component.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), AppConstants.NAME_ACTION_CANCEL);
+
+		ActionMap actionMap = component.getActionMap();
+		actionMap.put(AppConstants.NAME_ACTION_CANCEL, cancelButtonAction);
 	}
 
 	private void execute()
@@ -283,11 +297,20 @@ public class ExecutionDialog extends JDialog
 			table.getCellEditor().stopCellEditing();
 	}
 
-	private class CancelButtonListener implements ActionListener
+	public void resetActions()
+	{
+		ViewUtils.resetAction(cancelButtonAction,
+				resourceManager,
+				Constants.KEY_BUTTON_CANCEL,
+				null,
+				Constants.ICON_NAME_CANCEL);
+	}
+
+	private class CancelAction extends AbstractAction
 	{
 		private boolean isSpRunning;
 
-		public CancelButtonListener(boolean isSpRunning)
+		public CancelAction(boolean isSpRunning)
 		{
 			this.isSpRunning = isSpRunning;
 		}

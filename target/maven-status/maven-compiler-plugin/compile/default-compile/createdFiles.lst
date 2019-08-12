@@ -32,6 +32,7 @@ ru\flc\service\spmaster\model\data\entity\DataTable.class
 ru\flc\service\spmaster\view\thirdparty\TableColumnAdjuster$1.class
 ru\flc\service\spmaster\model\data\FileModel.class
 ru\flc\service\spmaster\model\data\entity\StoredProc.class
+ru\flc\service\spmaster\view\dialog\ExecutionDialog$CancelAction.class
 ru\flc\service\spmaster\view\table\renderer\SpListCellRendererFactory$1.class
 ru\flc\service\spmaster\controller\ActionsManager$3.class
 ru\flc\service\spmaster\view\dialog\ProcessDialog.class
@@ -67,7 +68,6 @@ ru\flc\service\spmaster\controller\ActionsManager$5.class
 ru\flc\service\spmaster\controller\executor\StoredProcExecutor.class
 ru\flc\service\spmaster\model\data\source\file\FileSource.class
 ru\flc\service\spmaster\view\table\renderer\TooltipCellRenderer.class
-ru\flc\service\spmaster\view\dialog\ExecutionDialog$CancelButtonListener.class
 ru\flc\service\spmaster\model\DefaultValues.class
 ru\flc\service\spmaster\view\dialog\AboutDialog$AboutDialogMouseListener.class
 ru\flc\service\spmaster\view\table\editor\StringCellEditor.class

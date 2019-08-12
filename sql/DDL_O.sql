@@ -477,8 +477,47 @@ begin
 	deallocate cursor db_cur
 	
 end
-	
+----------------
 
+if (object_id('spm_get_proc_text') is not null) drop proc spm_get_proc_text
+go
+create proc spm_get_proc_text(@db_name varchar(255), @proc_id int)
+as
+declare @db_id smallint, @cmd_text varchar(2048)
+begin
+
+	---------------------------------------
+	--	Project: StoredProcMaster
+	--	Description: Getting the text of the specified procedure at the specified database.
+	--	Author: Dolodarenko A.V., 12.03.2019
+	---------------------------------------
+
+	--Checking input parameters	
+	select @db_id = dbid from master..sysdatabases where name = @db_name
+	
+	if (@db_id is null)
+	begin
+		
+		print 'Couldn''t find database ''%1!''', @db_name
+		
+		return
+		
+	end
+	
+	--Getting the text
+	set @cmd_text = 'select text ' + 
+					'from ' + @db_name + '..syscomments ' +
+					'where id = @proc_id'
+					
+	exec(@cmd_text)
+	
+end
+go
+
+
+exec spm_get_available_proc 'lopatin', 'FLC_RU', null
+	
+------------------------------
 delete spm_login_proc
 
 insert spm_login_proc (login_id, database_id, proc_id)
