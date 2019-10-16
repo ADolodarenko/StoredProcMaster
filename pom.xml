@@ -7,6 +7,40 @@
     <groupId>ru.flc.service</groupId>
     <artifactId>stored-proc-master</artifactId>
     <version>1.0.0</version>
+    <packaging>jar</packaging>
+    <name>StoredProcMaster</name>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.1.2</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>ru.flc.service.spmaster.Main</mainClass>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                        </manifest>
+                        <manifestEntries>
+                            <Class-Path>../lib/commons-codec-1.10.jar ../lib/dav-service-1.1.5.jar ../lib/poi-4.0.0.jar ../lib/poi-ooxml-4.0.0.jar ../lib/poi-ooxml-schemas-4.0.0.jar ../lib/commons-io-2.6.jar ../lib/xmlbeans-3.0.1.jar ../lib/curvesapi-1.04.jar ../lib/jconn3.jar ../lib/commons-compress-1.18.jar ../lib/commons-collections4-4.2.jar ../lib/scijava-ui-swing-0.12.0.jar</Class-Path>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <dependencies>
         <dependency>
@@ -22,13 +56,43 @@
         <dependency>
             <groupId>org.dav.service</groupId>
             <artifactId>dav-service</artifactId>
-            <version>1.1</version>
+            <version>1.1.5</version>
             <scope>system</scope>
             <systemPath>
-                D:/JavaLib/dav/dav-service-1.1.jar
+                D:/JavaLib/dav/dav-service-1.1.5.jar
             </systemPath>
         </dependency>
-    </dependencies>
 
+        <dependency>
+            <groupId>org.scijava</groupId>
+            <artifactId>scijava-ui-swing</artifactId>
+            <version>0.12.0</version>
+            <scope>system</scope>
+            <systemPath>
+                D:/JavaLib/scijava-ui-swing-0.12.0/scijava-ui-swing-0.12.0.jar
+            </systemPath>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.poi/poi -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>4.0.0</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>4.0.0</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.6</version>
+        </dependency>
+    </dependencies>
 
 </project>
